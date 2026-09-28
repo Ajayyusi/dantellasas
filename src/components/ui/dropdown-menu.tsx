@@ -6,7 +6,13 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-const DropdownMenu = DropdownMenuPrimitive.Root;
+/**
+ * Non-modal by default: a modal menu that opens a Dialog/Sheet from one of its
+ * items can leave `pointer-events: none` on <body> and freeze the page.
+ */
+function DropdownMenu({ modal = false, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
+  return <DropdownMenuPrimitive.Root modal={modal} {...props} />;
+}
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 const DropdownMenuSub = DropdownMenuPrimitive.Sub;

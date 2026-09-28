@@ -491,7 +491,7 @@ export async function seedDemoData(input: SeedDemoInput): Promise<SeedDemoResult
         noShows: c.noShows,
         cancellations: c.cancellations,
       },
-      createdAt: Timestamp.fromMillis((c.first ?? now) - 30 * 86_400_000),
+      createdAt: Timestamp.fromMillis((c.first ?? now) - 2 * 86_400_000),
       updatedAt: created,
     });
   }

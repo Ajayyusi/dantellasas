@@ -65,7 +65,7 @@ export function StaffProfileView({
   };
 
   return (
-    <PageContainer className="grid gap-6">
+    <PageContainer className="grid grid-cols-1 gap-6">
       <ProfileHeader staff={staff} today={today} onEdit={edit ? () => setEditing(true) : null} />
       <ProfileStats stats={stats} />
       <Tabs value={tab} onValueChange={(v) => setTab(v as ProfileTab)}>
