@@ -1,0 +1,23 @@
+rules_version = '2';
+
+// Files live under organizations/{orgId}/… (expense receipts, staff photos,
+// logos). Members of the organization may read them; uploads happen on the
+// server after permission, size and content-type checks.
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isMember(orgId) {
+      return request.auth != null
+        && firestore.exists(/databases/(default)/documents/organizations/$(orgId)/members/$(request.auth.uid))
+        && firestore.get(/databases/(default)/documents/organizations/$(orgId)/members/$(request.auth.uid)).data.status == 'active';
+    }
+
+    match /organizations/{orgId}/{allPaths=**} {
+      allow read: if isMember(orgId);
+      allow write: if false;
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

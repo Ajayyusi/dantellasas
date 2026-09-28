@@ -36,3 +36,7 @@ coverage/
 
 # research captures may contain customer PII — never commit
 docs/research-captures/
+.emulator-data/
+.firebaserc
+test-results/
+playwright-report/

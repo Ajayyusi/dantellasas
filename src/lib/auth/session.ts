@@ -4,38 +4,36 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 
-import { getServerEnv } from "@/lib/env.server";
+import { getServerEnv, SESSION_COOKIE } from "@/lib/env.server";
 import { getAdminAuth } from "@/lib/firebase/admin";
 
 /**
- * Auth architecture (see docs/architecture/auth.md):
- *  1. Client signs in with the Firebase Web SDK (provider TBD).
- *  2. Client POSTs the ID token to /api/auth/session.
- *  3. Server verifies it and sets an httpOnly Firebase *session cookie*.
- *  4. Server components / route handlers call `getSession()`.
- *  5. `src/proxy.ts` only checks cookie presence for fast redirects; real
- *     verification always happens server-side here.
+ * Session model (docs/architecture/auth.md):
+ *  1. The browser signs in with the Firebase Web SDK (email/password today;
+ *     Google/phone later — only the sign-in call changes).
+ *  2. It POSTs the fresh ID token to /api/auth/session.
+ *  3. The server verifies it and sets an httpOnly Firebase *session cookie*.
+ *  4. Server code calls `getSession()`, which verifies the cookie with
+ *     revocation checks. `src/proxy.ts` only checks cookie presence.
  */
 
 export interface Session {
   uid: string;
-  email?: string;
-  phoneNumber?: string;
+  email: string;
+  name: string;
   emailVerified: boolean;
 }
 
 export const getSession = cache(async (): Promise<Session | null> => {
-  const { SESSION_COOKIE_NAME } = getServerEnv();
   const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+  const token = cookieStore.get(SESSION_COOKIE)?.value;
   if (!token) return null;
   try {
-    // checkRevoked=true so sign-out-everywhere / disabled users take effect.
     const decoded = await getAdminAuth().verifySessionCookie(token, true);
     return {
       uid: decoded.uid,
-      email: decoded.email,
-      phoneNumber: decoded.phone_number,
+      email: decoded.email ?? "",
+      name: (decoded.name as string | undefined) ?? decoded.email?.split("@")[0] ?? "",
       emailVerified: decoded.email_verified ?? false,
     };
   } catch {
@@ -55,8 +53,7 @@ export async function createSessionCookie(idToken: string) {
   const auth = getAdminAuth();
   const decoded = await auth.verifyIdToken(idToken, true);
   // Require a recent sign-in to mint a long-lived session (mitigates stolen tokens).
-  const authAgeSec = Date.now() / 1000 - decoded.auth_time;
-  if (authAgeSec > 5 * 60) {
+  if (Date.now() / 1000 - decoded.auth_time > 5 * 60) {
     throw new Error("recent_login_required");
   }
   const cookie = await auth.createSessionCookie(idToken, { expiresIn });

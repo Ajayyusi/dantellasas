@@ -1,26 +1,26 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 /**
- * Next.js 16 "proxy" (formerly middleware). Optimistic check only: if there
- * is no session cookie, redirect protected routes to /login. The cookie is
- * NOT verified here — server components/route handlers do that via
- * `getSession()` / `requireOrg()`.
+ * Optimistic redirect only: visitors without a session cookie are sent to
+ * /login. The cookie is NOT trusted here — every page and action verifies it
+ * server-side (src/lib/auth/session.ts, src/lib/tenancy/context.ts).
  */
-const COOKIE = process.env.SESSION_COOKIE_NAME ?? "__session";
-const PROTECTED_PREFIXES = ["/orgs", "/o/"];
+const SESSION_COOKIE = "__session";
 
 export function proxy(req: NextRequest) {
-  const { pathname, search } = req.nextUrl;
-  const isProtected = PROTECTED_PREFIXES.some((p) => pathname === p || pathname.startsWith(p));
-  if (isProtected && !req.cookies.has(COOKIE)) {
+  if (!req.cookies.has(SESSION_COOKIE)) {
     const url = req.nextUrl.clone();
+    const next = req.nextUrl.pathname + req.nextUrl.search;
     url.pathname = "/login";
-    url.search = `?next=${encodeURIComponent(pathname + search)}`;
+    url.search = next && next !== "/" ? `?next=${encodeURIComponent(next)}` : "";
     return NextResponse.redirect(url);
   }
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/orgs/:path*", "/o/:path*"],
+  // Everything except public auth pages, API routes and static assets.
+  matcher: [
+    "/((?!login|signup|forgot-password|reset-password|auth/action|api|_next|favicon.ico|icon|apple-icon|robots.txt|.*\\.(?:png|jpg|jpeg|svg|webp|ico|css|js|woff2?)$).*)",
+  ],
 };

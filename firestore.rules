@@ -1,54 +1,60 @@
 rules_version = '2';
 
-// Multi-tenant rules. Source of truth for access:
-//   organizations/{orgId}/members/{uid}  → { role, branchIds[], status }
-// Tenancy-structure writes (orgs, members, branches, user→org index) are
-// SERVER-ONLY via the Admin SDK, which bypasses these rules.
-// Domain collections (appointments, clients, sales…) are NOT defined yet;
-// the catch-all below denies them until they are added deliberately.
+// Dantella CRM — Firestore security rules.
+//
+// Model (docs/firestore-schema.md):
+//  • Every tenant document lives under organizations/{orgId}.
+//  • Access comes from organizations/{orgId}/members/{uid}:
+//      { status, roleKey, permissions[], allBranches, branchIds[], staffId }
+//    Members can't write their own membership, so nobody can grant themselves access.
+//  • Reads are permission-aware and branch-scoped.
+//  • The browser never writes domain data. All mutations run in Server Actions
+//    (Admin SDK, bypasses these rules) after the same checks in code, because
+//    many writes must update several documents atomically.
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    function signedIn() { return request.auth != null; }
-
-    function memberDoc(orgId) {
-      return get(/databases/$(database)/documents/organizations/$(orgId)/members/$(request.auth.uid));
+    function signedIn() {
+      return request.auth != null;
     }
 
-    function isActiveMember(orgId) {
-      return signedIn()
-        && exists(/databases/$(database)/documents/organizations/$(orgId)/members/$(request.auth.uid))
-        && memberDoc(orgId).data.status == 'active';
+    function memberPath(orgId) {
+      return /databases/$(database)/documents/organizations/$(orgId)/members/$(request.auth.uid);
     }
 
-    function roleRank(role) {
-      return role == 'owner' ? 40
-        : role == 'admin' ? 30
-        : role == 'manager' ? 20
-        : role == 'staff' ? 10
-        : 0;
+    function member(orgId) {
+      return get(memberPath(orgId)).data;
     }
 
-    function hasRole(orgId, minRole) {
-      return isActiveMember(orgId) && roleRank(memberDoc(orgId).data.role) >= roleRank(minRole);
+    function isMember(orgId) {
+      return signedIn() && exists(memberPath(orgId)) && member(orgId).status == 'active';
     }
 
-    function canAccessBranch(orgId, branchId) {
-      let m = memberDoc(orgId).data;
-      return isActiveMember(orgId)
-        && (roleRank(m.role) >= roleRank('admin')
-            || m.branchIds.size() == 0
-            || branchId in m.branchIds);
+    function hasPerm(orgId, permission) {
+      return isMember(orgId) && permission in member(orgId).permissions;
     }
 
-    // ── Users ────────────────────────────────────────────────────────────
+    function orgWide(orgId) {
+      let m = member(orgId);
+      return m.allBranches == true || m.roleKey in ['owner', 'admin'];
+    }
+
+    function branchOk(orgId, branchId) {
+      return orgWide(orgId) || branchId in member(orgId).branchIds;
+    }
+
+    function isOwnStaff(orgId, staffId) {
+      let m = member(orgId);
+      return m.get('staffId', null) != null && m.staffId == staffId;
+    }
+
+    // ── Users ──────────────────────────────────────────────────────────
     match /users/{uid} {
       allow read: if signedIn() && request.auth.uid == uid;
-      // Users may edit only harmless profile fields.
       allow update: if signedIn() && request.auth.uid == uid
         && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['displayName', 'lastActiveOrgId', 'updatedAt']);
+             .hasOnly(['displayName', 'locale', 'lastOrgId', 'updatedAt']);
       allow create, delete: if false;
 
       match /orgs/{orgId} {
@@ -57,41 +63,163 @@ service cloud.firestore {
       }
     }
 
-    // ── Organizations ────────────────────────────────────────────────────
+    // ── Organizations ──────────────────────────────────────────────────
     match /organizations/{orgId} {
-      allow read: if isActiveMember(orgId);
+      allow read: if isMember(orgId);
       allow write: if false;
 
       match /members/{memberUid} {
-        allow read: if (signedIn() && request.auth.uid == memberUid) || hasRole(orgId, 'manager');
+        allow read: if (signedIn() && request.auth.uid == memberUid) || hasPerm(orgId, 'manage_users');
+        allow write: if false;
+      }
+
+      match /roles/{roleId} {
+        allow read: if isMember(orgId);
         allow write: if false;
       }
 
       match /branches/{branchId} {
-        allow read: if canAccessBranch(orgId, branchId);
+        allow read: if isMember(orgId);
         allow write: if false;
       }
 
-      match /auditLog/{entryId} {
-        allow read: if hasRole(orgId, 'admin');
+      // Catalog shared by the calendar and checkout.
+      match /serviceCategories/{id} {
+        allow read: if isMember(orgId);
+        allow write: if false;
+      }
+      match /services/{id} {
+        allow read: if isMember(orgId);
+        allow write: if false;
+      }
+      match /packages/{id} {
+        allow read: if isMember(orgId);
+        allow write: if false;
+      }
+      match /membershipPlans/{id} {
+        allow read: if isMember(orgId);
+        allow write: if false;
+      }
+      match /discounts/{id} {
+        allow read: if hasPerm(orgId, 'create_sales') || hasPerm(orgId, 'manage_catalog');
         allow write: if false;
       }
 
-      // Template for future branch-scoped domain collections (keep commented
-      // until the entity is verified and modelled):
-      //
-      // match /<collection>/{docId} {
-      //   allow read: if canAccessBranch(orgId, resource.data.branchId);
-      //   allow create: if canAccessBranch(orgId, request.resource.data.branchId)
-      //     && request.resource.data.orgId == orgId;
-      //   allow update: if canAccessBranch(orgId, resource.data.branchId)
-      //     && request.resource.data.branchId == resource.data.branchId
-      //     && request.resource.data.orgId == orgId;
-      //   allow delete: if hasRole(orgId, 'manager');
-      // }
+      match /staff/{staffId} {
+        allow read: if hasPerm(orgId, 'view_staff')
+          || hasPerm(orgId, 'view_appointments')
+          || hasPerm(orgId, 'create_sales');
+        allow write: if false;
+      }
+
+      // Clients and everything attached to them.
+      match /clients/{clientId} {
+        allow read: if hasPerm(orgId, 'view_customers');
+        allow write: if false;
+
+        match /notes/{noteId} {
+          allow read: if hasPerm(orgId, 'view_customers');
+          allow write: if false;
+        }
+      }
+      match /clientPackages/{id} {
+        allow read: if hasPerm(orgId, 'view_customers');
+        allow write: if false;
+      }
+      match /clientMemberships/{id} {
+        allow read: if hasPerm(orgId, 'view_customers');
+        allow write: if false;
+      }
+
+      // Calendar. Without view_all_appointments, only lines assigned to the
+      // member's own staff record are visible.
+      match /appointments/{id} {
+        allow read: if hasPerm(orgId, 'view_appointments')
+          && branchOk(orgId, resource.data.branchId)
+          && (hasPerm(orgId, 'view_all_appointments')
+              || (member(orgId).get('staffId', null) != null
+                  && member(orgId).staffId in resource.data.staffIds));
+        allow write: if false;
+      }
+      match /blockedTimes/{id} {
+        allow read: if hasPerm(orgId, 'view_appointments') && branchOk(orgId, resource.data.branchId);
+        allow write: if false;
+      }
+
+      // Money.
+      match /transactions/{id} {
+        allow read: if hasPerm(orgId, 'view_sales') && branchOk(orgId, resource.data.branchId);
+        allow write: if false;
+      }
+      match /giftCards/{id} {
+        allow read: if hasPerm(orgId, 'create_sales') || hasPerm(orgId, 'manage_catalog');
+        allow write: if false;
+      }
+      match /expenses/{id} {
+        allow read: if hasPerm(orgId, 'view_expenses') && branchOk(orgId, resource.data.branchId);
+        allow write: if false;
+      }
+      match /expenseCategories/{id} {
+        allow read: if hasPerm(orgId, 'view_expenses');
+        allow write: if false;
+      }
+      match /commissionRules/{id} {
+        allow read: if hasPerm(orgId, 'view_commissions') || hasPerm(orgId, 'manage_staff');
+        allow write: if false;
+      }
+      match /counters/{id} {
+        allow read, write: if false;
+      }
+
+      // Inventory.
+      match /products/{id} {
+        allow read: if hasPerm(orgId, 'manage_inventory') || hasPerm(orgId, 'create_sales');
+        allow write: if false;
+      }
+      match /productCategories/{id} {
+        allow read: if hasPerm(orgId, 'manage_inventory') || hasPerm(orgId, 'create_sales');
+        allow write: if false;
+      }
+      match /suppliers/{id} {
+        allow read: if hasPerm(orgId, 'manage_inventory') || hasPerm(orgId, 'view_expenses');
+        allow write: if false;
+      }
+      match /inventoryMovements/{id} {
+        allow read: if hasPerm(orgId, 'manage_inventory') && branchOk(orgId, resource.data.branchId);
+        allow write: if false;
+      }
+
+      // People operations.
+      match /attendance/{id} {
+        allow read: if isMember(orgId)
+          && ((hasPerm(orgId, 'manage_attendance') && branchOk(orgId, resource.data.branchId))
+              || isOwnStaff(orgId, resource.data.staffId));
+        allow write: if false;
+      }
+      match /leave/{id} {
+        allow read: if hasPerm(orgId, 'manage_staff')
+          || hasPerm(orgId, 'manage_attendance')
+          || (isMember(orgId) && isOwnStaff(orgId, resource.data.staffId));
+        allow write: if false;
+      }
+
+      match /notifications/{id} {
+        allow read: if isMember(orgId);
+        allow write: if false;
+      }
+
+      match /auditLogs/{id} {
+        allow read: if hasPerm(orgId, 'view_audit_log');
+        allow write: if false;
+      }
+
+      // Anything not listed above stays private.
+      match /{collection}/{docId=**} {
+        allow read, write: if false;
+      }
     }
 
-    // Deny everything else by default.
+    // Deny everything else.
     match /{document=**} {
       allow read, write: if false;
     }

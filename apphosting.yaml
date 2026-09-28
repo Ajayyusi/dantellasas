@@ -1,0 +1,25 @@
+# Firebase App Hosting configuration.
+# Firebase config (NEXT_PUBLIC_FIREBASE_*) is derived automatically from
+# FIREBASE_WEBAPP_CONFIG in next.config.ts; the Admin SDK uses the backend's
+# service account (Application Default Credentials). No secrets live here.
+runConfig:
+  minInstances: 0
+  maxInstances: 4
+  concurrency: 80
+  cpu: 1
+  memoryMiB: 1024
+
+env:
+  - variable: NEXT_PUBLIC_APP_NAME
+    value: Dantella CRM
+    availability: [BUILD, RUNTIME]
+  - variable: NEXT_PUBLIC_DEFAULT_LOCALE
+    value: en
+    availability: [BUILD, RUNTIME]
+  - variable: SESSION_COOKIE_MAX_AGE_DAYS
+    value: "5"
+    availability: [RUNTIME]
+  # Demo data loader in Settings → Data. Set to "false" to hide it.
+  - variable: ALLOW_DEMO_DATA
+    value: "true"
+    availability: [RUNTIME]

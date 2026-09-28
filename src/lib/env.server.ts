@@ -5,8 +5,11 @@ const serverSchema = z.object({
   FIREBASE_ADMIN_PROJECT_ID: z.string().optional(),
   FIREBASE_ADMIN_CLIENT_EMAIL: z.string().optional(),
   FIREBASE_ADMIN_PRIVATE_KEY: z.string().optional(),
-  SESSION_COOKIE_NAME: z.string().min(1).default("__session"),
   SESSION_COOKIE_MAX_AGE_DAYS: z.coerce.number().min(1).max(14).default(5),
+  ALLOW_DEMO_DATA: z
+    .enum(["true", "false"])
+    .default("true")
+    .transform((v) => v === "true"),
 });
 
 export type ServerEnv = z.infer<typeof serverSchema>;
@@ -24,3 +27,6 @@ export function getServerEnv(): ServerEnv {
   cached = parsed.data;
   return cached;
 }
+
+/** Firebase requires `__session` for cookies forwarded through its CDN. */
+export const SESSION_COOKIE = "__session";
