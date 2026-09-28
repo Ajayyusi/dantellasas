@@ -32,12 +32,12 @@ export function getFirebaseApp(): FirebaseApp {
   return app;
 }
 
-const useEmulators = () => getPublicEnv().NEXT_PUBLIC_USE_FIREBASE_EMULATORS;
+const emulatorsEnabled = () => getPublicEnv().NEXT_PUBLIC_USE_FIREBASE_EMULATORS;
 
 export function getClientAuth(): Auth {
   if (!auth) {
     auth = getAuth(getFirebaseApp());
-    if (useEmulators()) {
+    if (emulatorsEnabled()) {
       connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
     }
   }
@@ -47,7 +47,7 @@ export function getClientAuth(): Auth {
 export function getClientDb(): Firestore {
   if (!db) {
     db = getFirestore(getFirebaseApp());
-    if (useEmulators()) connectFirestoreEmulator(db, "127.0.0.1", 8080);
+    if (emulatorsEnabled()) connectFirestoreEmulator(db, "127.0.0.1", 8080);
   }
   return db;
 }
