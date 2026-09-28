@@ -258,10 +258,14 @@ export interface PaymentDTO {
 export interface RefundDTO {
   id: string;
   /** Credit note number, e.g. CRD-000001 */
-  number?: string;
+  number: string;
   amountMinor: number;
+  tipMinor: number;
   reason: string;
   methodId: string;
+  methodLabel: string;
+  restocked: boolean;
+  lines: { itemId: string; quantity: number; amountMinor: number; taxMinor: number; commissionMinor: number }[];
   at: ISODate | null;
   byName: string;
 }
@@ -347,6 +351,7 @@ export interface ProductDTO {
   costMinor: number;
   priceMinor: number;
   taxRateId: string | null;
+  taxExempt: boolean;
   minStock: number;
   trackStock: boolean;
   usage: "retail" | "professional" | "both";

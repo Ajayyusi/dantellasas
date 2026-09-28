@@ -51,3 +51,25 @@ export function useTheme(): [Theme, (theme: Theme) => void] {
   }, []);
   return [theme, setTheme];
 }
+
+const minuteListeners = new Set<() => void>();
+let minuteTimer: ReturnType<typeof setInterval> | undefined;
+
+/** Current minute (epoch minutes), ticking once a minute; null during SSR. */
+export function useNowMinute(): number | null {
+  return useSyncExternalStore(
+    (cb) => {
+      minuteListeners.add(cb);
+      if (!minuteTimer) minuteTimer = setInterval(() => minuteListeners.forEach((l) => l()), 30_000);
+      return () => {
+        minuteListeners.delete(cb);
+        if (minuteListeners.size === 0 && minuteTimer) {
+          clearInterval(minuteTimer);
+          minuteTimer = undefined;
+        }
+      };
+    },
+    () => Math.floor(Date.now() / 60_000),
+    () => null,
+  );
+}

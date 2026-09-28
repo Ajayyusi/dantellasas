@@ -37,3 +37,17 @@ export const quickClientInput = z.object({
   email: z.union([z.literal(""), z.email("validation.email")]).default(""),
 });
 export type QuickClientInput = z.input<typeof quickClientInput>;
+
+export const clientNoteInput = z.object({
+  clientId: z.string().min(1),
+  body: z.string().trim().min(1, "validation.required").max(2000, "validation.tooLong"),
+  pinned: z.boolean().default(false),
+});
+export type ClientNoteInput = z.input<typeof clientNoteInput>;
+
+export const clientNoteRefInput = z.object({ clientId: z.string().min(1), noteId: z.string().min(1) });
+
+export const addClientTagsInput = z.object({
+  ids: z.array(z.string().min(1)).min(1).max(200),
+  tags: z.array(z.string().trim().min(1).max(30)).min(1).max(10),
+});

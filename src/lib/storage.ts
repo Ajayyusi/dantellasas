@@ -29,7 +29,7 @@ export async function uploadTenantFile(
   file: File,
   opts: { maxMB: number; types: string[] },
 ): Promise<StoredFile> {
-  if (file.size > opts.maxMB * 1024 * 1024) fail("errors.fileTooLarge");
+  if (file.size > opts.maxMB * 1024 * 1024) fail("errors.fileTooLarge", undefined, { max: opts.maxMB });
   if (!opts.types.includes(file.type)) fail("errors.fileType");
   const safeName = file.name.replace(/[^\w.\-]+/g, "_").slice(-80) || "file";
   const path = `organizations/${ctx.org.id}/${folder}/${Date.now()}-${randomUUID().slice(0, 8)}-${safeName}`;

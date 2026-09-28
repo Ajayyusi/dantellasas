@@ -59,6 +59,8 @@ export interface DataTableProps<T> {
   searchPlaceholder?: string;
   facets?: FacetFilter<T>[];
   initialSort?: SortingState;
+  /** Columns hidden until the user shows them, e.g. { status: false }. */
+  initialVisibility?: VisibilityState;
   pageSize?: number;
   onRowClick?: (row: T) => void;
   getRowId?: (row: T) => string;
@@ -78,13 +80,18 @@ export interface DataTableProps<T> {
  * the server already scoped and authorised; server components decide which
  * rows exist, this decides how they're browsed.
  */
+// Stable defaults: a fresh [] each render re-filters rows and loops page-index resets.
+const NO_FACETS: FacetFilter<never>[] = [];
+const NO_SORT: SortingState = [];
+
 export function DataTable<T>({
   data,
   columns,
   searchText,
   searchPlaceholder,
-  facets = [],
-  initialSort = [],
+  facets = NO_FACETS as FacetFilter<T>[],
+  initialSort = NO_SORT,
+  initialVisibility = {},
   pageSize = 25,
   onRowClick,
   getRowId,
@@ -100,7 +107,7 @@ export function DataTable<T>({
   const [query, setQuery] = useState("");
   const [facetValues, setFacetValues] = useState<Record<string, string>>({});
   const [sorting, setSorting] = useState<SortingState>(initialSort);
-  const [visibility, setVisibility] = useState<VisibilityState>({});
+  const [visibility, setVisibility] = useState<VisibilityState>(initialVisibility);
   const [selection, setSelection] = useState<RowSelectionState>({});
 
   const filtered = useMemo(() => {
@@ -175,7 +182,7 @@ export function DataTable<T>({
     <div className={cn("overflow-hidden rounded-xl border bg-card shadow-sm", className)}>
       <div className="flex flex-wrap items-center gap-2 border-b p-3">
         {searchText ? (
-          <div className="relative min-w-0 flex-1 sm:max-w-xs">
+          <div className="relative min-w-0 flex-1 basis-full sm:max-w-xs sm:basis-auto">
             <SearchIcon className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={query}

@@ -40,3 +40,4 @@ docs/research-captures/
 .firebaserc
 test-results/
 playwright-report/
+.tmp-*

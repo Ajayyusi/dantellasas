@@ -15,33 +15,52 @@ export type DateStyle =
   | "monthYear"
   | "dayNumber";
 
-const OPTIONS: Record<DateStyle, Intl.DateTimeFormatOptions> = {
-  date: { day: "numeric", month: "short", year: "numeric" },
-  dateLong: { weekday: "long", day: "numeric", month: "long", year: "numeric" },
-  datetime: { day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" },
-  time: { hour: "numeric", minute: "2-digit" },
-  weekday: { weekday: "short" },
-  weekdayDate: { weekday: "short", day: "numeric", month: "short" },
-  monthDay: { day: "numeric", month: "short" },
-  monthYear: { month: "long", year: "numeric" },
-  dayNumber: { day: "numeric" },
-};
+const partsCache = new Map<string, Intl.DateTimeFormat>();
 
-const cache = new Map<string, Intl.DateTimeFormat>();
-
-function formatter(locale: Locale, tz: string, style: DateStyle) {
-  const key = `${locale}|${tz}|${style}`;
-  let f = cache.get(key);
+function partsFormatter(locale: Locale, tz: string) {
+  const key = `${locale}|${tz}`;
+  let f = partsCache.get(key);
   if (!f) {
     f = new Intl.DateTimeFormat(locale === "ar" ? "ar-AE-u-nu-latn" : "en-GB", {
-      ...OPTIONS[style],
       timeZone: tz,
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hourCycle: "h23",
     });
-    cache.set(key, f);
+    partsCache.set(key, f);
   }
   return f;
 }
 
+const SHORT_MONTHS_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** 12-hour clock with our own AM/PM strings, identical on server and browser. */
+export function formatClock(totalMinutes: number, locale: Locale): string {
+  const m = ((totalMinutes % 1440) + 1440) % 1440;
+  const h = Math.floor(m / 60);
+  const mm = String(m % 60).padStart(2, "0");
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  const suffix = locale === "ar" ? (h < 12 ? "ص" : "م") : h < 12 ? "AM" : "PM";
+  return `${h12}:${mm} ${suffix}`;
+}
+
+/** Compact hour label for calendar gutters: "10 AM" / "10 ص". */
+export function formatHour(totalMinutes: number, locale: Locale): string {
+  const h = Math.floor((((totalMinutes % 1440) + 1440) % 1440) / 60);
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  const suffix = locale === "ar" ? (h < 12 ? "ص" : "م") : h < 12 ? "AM" : "PM";
+  return `${h12} ${suffix}`;
+}
+
+/**
+ * Deterministic formatting: Node and browsers ship different ICU data (commas,
+ * narrow spaces), which breaks hydration. We take the parts from Intl and join
+ * them ourselves.
+ */
 export function formatDate(
   value: string | Date | number | null | undefined,
   locale: Locale,
@@ -51,7 +70,36 @@ export function formatDate(
   if (value === null || value === undefined || value === "") return "—";
   const d = value instanceof Date ? value : new Date(value);
   if (Number.isNaN(d.getTime())) return "—";
-  return formatter(locale, tz, style).format(d);
+  const parts = Object.fromEntries(partsFormatter(locale, tz).formatToParts(d).map((p) => [p.type, p.value])) as Record<string, string>;
+  const monthIndex = Number(new Intl.DateTimeFormat("en-GB", { timeZone: tz, month: "numeric" }).format(d)) - 1;
+  const month = parts.month ?? "";
+  const shortMonth = locale === "ar" ? month : (SHORT_MONTHS_EN[monthIndex] ?? month);
+  const weekday = parts.weekday ?? "";
+  const shortWeekday = locale === "ar" ? weekday : weekday.slice(0, 3);
+  const day = parts.day ?? "";
+  const year = parts.year ?? "";
+  const clock = formatClock(Number(parts.hour ?? 0) * 60 + Number(parts.minute ?? 0), locale);
+  const comma = locale === "ar" ? "،" : ",";
+  switch (style) {
+    case "date":
+      return `${day} ${shortMonth} ${year}`;
+    case "dateLong":
+      return `${weekday}${comma} ${day} ${month} ${year}`;
+    case "datetime":
+      return `${day} ${shortMonth} ${year}${comma} ${clock}`;
+    case "time":
+      return clock;
+    case "weekday":
+      return shortWeekday;
+    case "weekdayDate":
+      return `${shortWeekday}${comma} ${day} ${shortMonth}`;
+    case "monthDay":
+      return `${day} ${shortMonth}`;
+    case "monthYear":
+      return `${month} ${year}`;
+    case "dayNumber":
+      return day;
+  }
 }
 
 /** Formats a YYYY-MM-DD key (a calendar date, no time zone involved). */

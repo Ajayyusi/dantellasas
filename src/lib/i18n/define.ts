@@ -56,8 +56,9 @@ export function createTranslator(tree: MessageTree, locale: string) {
     return interpolate(s, { count, ...vars });
   }
   /** Returns the message if the key exists, otherwise the key itself (for server error codes). */
-  function te(key: string): string {
-    return lookup(tree, key) ?? key;
+  function te(key: string, vars?: Vars): string {
+    const s = lookup(tree, key);
+    return s === undefined ? key : interpolate(s, vars);
   }
   return { t, tp, te };
 }

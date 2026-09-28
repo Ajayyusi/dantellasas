@@ -4,7 +4,9 @@ import { FieldValue, type Transaction } from "firebase-admin/firestore";
 
 import { fail } from "@/lib/actions";
 import { orgCol } from "@/lib/db";
+import { ORG_WIDE_ROLES } from "@/lib/permissions";
 import { buildSearchTokens, normalizePhone } from "@/lib/search";
+import type { AppContext } from "@/lib/tenancy/context";
 
 /** Fields derived from the editable ones: full name, normalised phone, search tokens. */
 export function derivedClientFields(input: { firstName: string; lastName: string; phone: string; email: string }, countryCode: string) {
@@ -48,3 +50,8 @@ export const EMPTY_STATS = {
 };
 
 export const serverTime = () => FieldValue.serverTimestamp();
+
+/** Notes can be deleted by their author, or by an owner/admin. */
+export function canDeleteNote(ctx: AppContext, authorUid: string): boolean {
+  return (!!authorUid && authorUid === ctx.session.uid) || ORG_WIDE_ROLES.includes(ctx.member.roleKey);
+}

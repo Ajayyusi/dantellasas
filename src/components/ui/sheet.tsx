@@ -64,7 +64,7 @@ function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
 
 function SheetBody({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div data-slot="sheet-body" className={cn("flex-1 overflow-y-auto px-6 py-5 scrollbar-thin", className)} {...props} />
+    <div data-slot="sheet-body" className={cn("flex-1 content-start overflow-y-auto px-6 py-5 scrollbar-thin", className)} {...props} />
   );
 }
 

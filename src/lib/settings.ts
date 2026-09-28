@@ -40,6 +40,7 @@ export interface OrgSettings {
     address: string;
     trn: string;
     logoPath: string;
+    logoUrl: string;
   };
   locale: {
     defaultLocale: Locale;
@@ -99,6 +100,7 @@ export const DEFAULT_SETTINGS: OrgSettings = {
     address: "",
     trn: "",
     logoPath: "",
+    logoUrl: "",
   },
   locale: {
     defaultLocale: "en",

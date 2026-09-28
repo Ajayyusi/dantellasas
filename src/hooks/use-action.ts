@@ -30,7 +30,7 @@ export function useAction<I, R>(
           onSuccess?.(res.data);
         } else {
           setFieldErrors(res.fieldErrors ?? {});
-          toast.error(te(res.error));
+          toast.error(te(res.error, res.vars));
         }
         return res;
       } catch (err) {

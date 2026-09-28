@@ -16,20 +16,25 @@ import { can, resolveContext, type AppContext } from "@/lib/tenancy/context";
 
 export type ActionResult<T = null> =
   | { ok: true; data: T }
-  | { ok: false; error: string; fieldErrors?: Record<string, string> };
+  | { ok: false; error: string; fieldErrors?: Record<string, string>; vars?: Record<string, string | number> };
 
 export class ActionError extends Error {
   constructor(
     public readonly code: string,
     public readonly fieldErrors?: Record<string, string>,
+    public readonly vars?: Record<string, string | number>,
   ) {
     super(code);
     this.name = "ActionError";
   }
 }
 
-export function fail(code: string, fieldErrors?: Record<string, string>): never {
-  throw new ActionError(code, fieldErrors);
+export function fail(
+  code: string,
+  fieldErrors?: Record<string, string>,
+  vars?: Record<string, string | number>,
+): never {
+  throw new ActionError(code, fieldErrors, vars);
 }
 
 function fieldErrorsOf(error: z.ZodError): Record<string, string> {
@@ -71,7 +76,7 @@ export function action<S extends z.ZodType, R>(
     } catch (err) {
       unstable_rethrow(err);
       if (err instanceof ActionError) {
-        return { ok: false, error: err.code, fieldErrors: err.fieldErrors };
+        return { ok: false, error: err.code, fieldErrors: err.fieldErrors, vars: err.vars };
       }
       console.error("[action] unexpected error", err);
       return { ok: false, error: "errors.generic" };

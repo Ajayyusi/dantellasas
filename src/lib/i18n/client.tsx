@@ -12,7 +12,7 @@ interface I18nValue {
   t: (key: TKey, vars?: Vars) => string;
   tp: (key: string, count: number, vars?: Vars) => string;
   /** Translate a dynamic key (e.g. an error code from the server). */
-  te: (key: string) => string;
+  te: (key: string, vars?: Vars) => string;
 }
 
 const I18nContext = createContext<I18nValue | null>(null);

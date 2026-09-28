@@ -19,10 +19,24 @@ page.on("console", (m) => { if (["error", "warning"].includes(m.type())) logs.pu
 page.on("pageerror", (e) => logs.push(`[pageerror] ${e.message}`));
 for (const s of steps.actions) {
   try {
-    if (s.goto) await page.goto(s.goto, { waitUntil: "networkidle", timeout: 60000 });
+    if (s.setCookie) await context.addCookies([{ url: "http://localhost:3000", ...s.setCookie }]);
+    if (s.goto) {
+      await page.goto(s.goto, { waitUntil: "load", timeout: 60000 });
+      await page.waitForLoadState("networkidle", { timeout: 4000 }).catch(() => {});
+    }
     if (s.fill) await page.fill(s.fill, s.value);
     if (s.click) await page.click(s.click, { timeout: 15000 });
     if (s.press) await page.keyboard.press(s.press);
+    if (s.clickAt) await page.mouse.click(s.clickAt[0], s.clickAt[1]);
+    if (s.type) await page.keyboard.type(s.type, { delay: 30 });
+    if (s.drag) {
+      const [x1, y1, x2, y2] = s.drag;
+      await page.mouse.move(x1, y1);
+      await page.mouse.down();
+      await page.mouse.move(x1 + 5, y1 + 5, { steps: 3 });
+      await page.mouse.move(x2, y2, { steps: 12 });
+      await page.mouse.up();
+    }
     if (s.waitFor) await page.waitForSelector(s.waitFor, { timeout: 30000 });
     if (s.waitUrl) await page.waitForURL(s.waitUrl, { timeout: 60000 });
     if (s.wait) await page.waitForTimeout(s.wait);

@@ -12,7 +12,7 @@
     "test": "vitest run --project unit",
     "test:rules": "firebase emulators:exec --only firestore,storage --project demo-dantella \"vitest run --project rules\"",
     "emulators": "firebase emulators:start --project demo-dantella --import=.emulator-data --export-on-exit=.emulator-data",
-    "seed": "tsx scripts/seed.ts",
+    "seed": "FIRESTORE_EMULATOR_HOST=${FIRESTORE_EMULATOR_HOST:-127.0.0.1:8080} FIREBASE_AUTH_EMULATOR_HOST=${FIREBASE_AUTH_EMULATOR_HOST:-127.0.0.1:9099} GCLOUD_PROJECT=${GCLOUD_PROJECT:-demo-dantella} METADATA_SERVER_DETECTION=none tsx --conditions=react-server scripts/seed.ts",
     "deploy:rules": "firebase deploy --only firestore:rules,firestore:indexes,storage"
   },
   "engines": {
