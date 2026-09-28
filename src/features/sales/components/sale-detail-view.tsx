@@ -96,8 +96,8 @@ export function SaleDetailView({ tx }: { tx: TransactionDTO }) {
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <div className="grid content-start gap-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="grid min-w-0 grid-cols-1 content-start gap-4">
           <Card>
             <CardHeader>
               <CardTitle>{t("sales.items")}</CardTitle>
@@ -176,7 +176,7 @@ export function SaleDetailView({ tx }: { tx: TransactionDTO }) {
           ) : null}
         </div>
 
-        <div className="grid content-start gap-4">
+        <div className="grid min-w-0 grid-cols-1 content-start gap-4">
           <Card>
             <CardHeader>
               <CardTitle>{t("sales.columns.client")}</CardTitle>

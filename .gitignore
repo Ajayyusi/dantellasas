@@ -41,3 +41,4 @@ docs/research-captures/
 test-results/
 playwright-report/
 .tmp-*
+scripts/.crawl.mjs

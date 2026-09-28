@@ -91,7 +91,7 @@ export function TodayBoard({ scheduled, others, now }: { scheduled: BoardEntry[]
           <EmptyState compact icon={UsersIcon} title={t("attendance.board.empty")} description={t("attendance.board.emptyHint")} />
         </div>
       ) : (
-        <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {scheduled.map((e) => (
             <BoardCard key={e.staff.id} entry={e} now={now} canClock={canClock} />
           ))}
@@ -100,7 +100,7 @@ export function TodayBoard({ scheduled, others, now }: { scheduled: BoardEntry[]
       {others.length > 0 ? (
         <section className="grid gap-3">
           <h2 className="text-sm font-semibold">{t("attendance.board.othersTitle")}</h2>
-          <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {others.map((e) => (
               <BoardCard key={e.staff.id} entry={e} now={now} canClock={canClock} />
             ))}
