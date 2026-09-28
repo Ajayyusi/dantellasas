@@ -110,7 +110,7 @@ panel. The notification center has tabs: all / surveys / complaints / system upd
 | Other views (week/month) | `NOT YET VERIFIED` | |
 | Add-appointment flow | `OBSERVED` | A dedicated page with three panels. **(1) Slot builder:** date (prev/today/next), service (searchable; each option shows duration and price), staff (**only staff linked to that service**), time (**15-minute available slots**), end time (auto-calculated). **(2) Selected appointments:** a list of service+staff+time lines with an **editable price** and a remove button. **Several services can be booked in one visit.** Plus booking notes. **(3) Customer:** search by mobile (+971 default). Tested adding a line and removing it; nothing was saved. |
 | Blocked times | `OBSERVED` | Actions menu: add appointment, add blocked time, list blocked times. |
-| Statuses & transitions | `NOT YET VERIFIED` | A "cancellation reasons" report exists, and there are no-show rescheduling messages. |
+| Statuses & transitions | `OBSERVED` | Scheduled → arrived → paid (closed into an invoice) / cancelled. Confirm and reminder actions exist. A credit note on the invoice cancels the appointment. See "Live end-to-end test". |
 | Overbooking | `OBSERVED` (settings) | Toggles: allow staff overbooking, allow customer overbooking. |
 | Online booking | `OBSERVED` (settings) | Public page with EN/AR slugs, background image, show menu, allow online bookings, a max limit, payment method, customer email required, social links, marquee text, gallery, online working hours, complaints. |
 | Reminders / messaging | `OBSERVED` (settings) | WhatsApp templates: no-show rescheduling, cancellation, salon rating request, birthday greetings, WhatsApp offers. Manual vs WhatsApp settings. |
@@ -194,13 +194,51 @@ All live under `organizations/{orgId}/…`. `branchId` applies if we keep multi-
 | ratings, surveys, complaints | branch | §5 | candidate |
 | accounting (accounts, journal entries, purchases, suppliers, expenses, payroll) | org | §8 | candidate — likely post-MVP |
 
+## Live end-to-end test (2026-09-28, with owner's approval)
+
+A 1 AED test on the owner's own test customer (an existing record named "Test"),
+paid in cash, then reversed. Everything below is `OBSERVED (2026-09-28)`.
+
+**Appointment lifecycle**
+1. Add appointment → pick service/staff/time → edit the line price (set to 1) → notes → pick the customer.
+2. **Review step**: customer card (history tabs: appointments / activities / invoices, loyalty, sales) and a summary (total + duration), with buttons **Save**, **Pay now** (book and check out immediately), or **Cancel**.
+3. After saving: a bilingual **appointment slip** (number `APP<n>`, seller, dates, customer, lines), with **Print**, **Send confirmation** (WhatsApp, triggered manually) and **Pay**.
+4. Click a calendar block → **Appointment monitor** drawer: source badge (**system vs online**), status badge, remove-line, history, and an actions menu:
+   - Before arrival: *confirm, add more, edit, add/edit note, reminder, arrived, pay, cancel all*.
+   - After *arrived*: *edit* disappears and *cancel arrived* appears.
+   - Observed statuses: **scheduled ("on time") → arrived → (paid) / cancelled**. "Confirmed" exists as an action but wasn't triggered (it may message the customer).
+5. **Pay** opens the POS with the appointment lines, staff and customer pre-filled.
+6. Once paid, the appointment **leaves the calendar and the monitor**.
+
+**Checkout → invoice**
+- Payment screen → method *cash*, amount 1.00 → **Issue invoice** → `INV<n>`.
+- Receipt: **"simplified tax invoice"**, logo, address, TRN, bilingual line items with staff name, subtotal 0.95 / VAT 5% 0.05 / total 1.00, payment line, **loyalty block (previous / gained / current)**, "issued by".
+- Post-issue actions: print, print service tickets, email, **send invoice via WhatsApp**, **send rating request via WhatsApp**, open rating screen.
+- Loyalty accrual = 2% of the amount paid (0.02 points on 1 AED).
+- Payments list shows the invoice payment as its own row (+1.00 cash).
+
+**Reversal (credit note)**
+- Sales row actions: **create credit note** or **create debit note**. No "delete" exists, and invoices are immutable.
+- Rule shown: returns aren't allowed after **30 days** from issue.
+- Credit note: **whole invoice** or **part of it** (pick lines). Summary (subtotal / VAT / refund). **Refund type**: to the customer's **wallet**, or by the **same payment method**. Cancellation reason (free text). Confirm dialog.
+- Result: `CRD<n>` credit note (bilingual printable). The sales row links to it but keeps status "paid". Payments list gets a **−1.00 cash** row. The appointment's status becomes **cancelled** (visible on the customer profile's appointments tab).
+- **Loyalty points earned on the invoice are NOT reversed by the credit note** (a possible bug or gap — worth doing better).
+- **The audit log recorded none of this** (no invoice, no credit note). It seems to cover settings/record edits only, not financial documents.
+
+**Leftovers in the live account:** `APP12` (cancelled), `INV8478` (1.00, paid) plus `CRD01` (−1.00): net 0 AED, net 0 VAT. The test customer kept +0.02 loyalty points. No new customer was created, and no WhatsApp messages were sent.
+
+**Implications for our design**
+- Invoices and credit notes must be immutable, sequentially numbered documents (`INV`, `CRD`, and presumably `DBT`). "Delete" is never offered.
+- Credit notes should also reverse loyalty and any other side effects in the same transaction.
+- The audit trail should cover financial documents too.
+- Appointment → invoice is a hand-off: the paid appointment is closed and linked to its invoice. A credit note reopens/cancels the link.
+
 ## Still to inspect
 
-1. Appointment **statuses** and what happens after booking (confirm, check-in, turn into an invoice, no-show). Needs an existing appointment to look at.
-2. Online booking page as a customer sees it.
-3. Package/subscription redemption at checkout.
-4. The customer row action that wasn't legible, and the wallet actions.
-5. Mobile layout.
+1. Online booking page as a customer sees it.
+2. Package/subscription redemption at checkout.
+3. Wallet actions and the customer row action that wasn't legible.
+4. Mobile layout.
 
 ---
 
@@ -228,9 +266,14 @@ reference platform.
   (date, searchable service, only staff linked to that service, 15-minute
   available slots, auto end time), a list of selected lines with editable
   price (several services per visit), and customer lookup by mobile.
-- **Statuses and post-booking lifecycle:** `DESIGNED (not observed)`. We
-  model *booked → confirmed → checked-in → in service → completed*, with
-  *cancelled* and *no-show* as terminal exits.
+- **Lifecycle (observed):** scheduled → arrived → paid (closed into an
+  invoice) or cancelled; confirm and reminder actions; *Pay* opens checkout
+  pre-filled; a paid appointment leaves the calendar; a credit note cancels
+  it.
+- **Ours:** *booked → confirmed → checked-in → in service → completed*, with
+  *cancelled* and *no-show* as exits. Paid appointments stay visible on the
+  calendar (marked completed and linked to the invoice) — hiding them loses
+  the day's picture for the front desk.
 - **Diverge:** week view and a list view alongside the staff day view;
   drag-and-drop rescheduling; a single booking drawer that never leaves the
   calendar.
@@ -279,9 +322,15 @@ reference platform.
 - **Does:** invoice list (current/archived), payments list, full
   double-entry accounting (chart of accounts, journal entries, purchases,
   payroll, suppliers, expenses).
-- **Diverge:** launch with sales, payments, refunds, expenses and suppliers;
-  double-entry accounting is out of scope for v1 (exports cover the
-  accountant).
+- **Observed in the live test:** invoices are immutable; reversal is a
+  numbered credit note (whole or partial, refund to wallet or same method,
+  30-day window, reason); the reference does *not* reverse loyalty earned on
+  the invoice and its audit log records no financial documents.
+- **Diverge:** launch with sales, payments, refunds, expenses and suppliers.
+  Refunds are numbered credit notes that reverse every side effect (stock,
+  client stats, gift-card and package balances, commission) in the same
+  transaction, and every financial document is audited. Double-entry
+  accounting is out of scope for v1 (exports cover the accountant).
 
 ### Inventory
 - **Does:** products with barcode, retail/internal usage, average cost,
@@ -321,5 +370,6 @@ reference platform.
 | --- | --- | --- | --- |
 | 2026-09-28 | Claude | Access | Confirmed the merchant area loads. The session was already signed in. |
 | 2026-09-28 | Claude | All sections | Read-only first pass: full nav map; list-page columns for customers, staff, services, offers, subscriptions, home services, products, stock, sales, payments, purchases; customer profile layout; role permission list; all report names; general/invoice/notification/online settings; audit log. No forms opened, nothing submitted, no personal data recorded. |
-| 2026-09-28 | Claude (build session) | Synthesis | Added §11–§12 (module summaries, UX assessment) from passes 1–2. Build container cannot reach the reference site; nothing new observed from there. |
-| 2026-09-28 | Claude | Create flows | With the user's OK: opened add-appointment (added and removed a line), POS walk-in up to the payment screen (then cancelled and cleared the cart), add-customer, add-service, define-product search, staff profile tabs, attendance. Nothing saved; today's audit log is empty. |
+| 2026-09-28 | Claude | Create flows | With the user's OK: opened add-appointment (added and removed a line), POS walk-in up to the payment screen (then cancelled and cleared the cart), add-customer, add-service, define-product search, staff profile tabs, attendance. Nothing saved. (Later found that the audit log doesn't record sales, so the stronger check was that today's sales list showed no invoices besides the approved test.) |
+| 2026-09-28 | Claude (build session) | Synthesis | §11–§12 updated with the live test (lifecycle, credit notes). |
+| 2026-09-28 | Claude | Live test | With the owner's approval: APP12 booked at 1 AED for the owner's test customer → arrived → paid cash (INV8478) → credit note CRD01 (whole invoice, same method). Net 0. Loyalty +0.02 not reversed. |
