@@ -59,7 +59,7 @@ export const NAV: NavSection[] = [
     label: "nav.sections.growth",
     items: [
       { href: "/reports", label: "nav.reports", icon: BarChart3Icon, anyOf: ["view_reports"] },
-      { href: "/marketing", label: "nav.marketing", icon: MegaphoneIcon, anyOf: ["manage_catalog", "view_customers"] },
+      { href: "/marketing", label: "nav.marketing", icon: MegaphoneIcon, anyOf: ["manage_catalog", "view_reports"] },
     ],
   },
   {

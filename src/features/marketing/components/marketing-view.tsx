@@ -211,7 +211,9 @@ export function MarketingView({
                   <span className="sm:hidden">{t("marketing.consentShort")}</span>
                 </label>
               }
-              csv={{
+              csv={
+                org.can("export_data")
+                  ? {
                 filename: `audience-${selected}-${today}`,
                 columns: [
                   { header: t("common.firstName"), value: (c) => c.fullName.split(" ")[0] ?? "" },
@@ -233,7 +235,9 @@ export function MarketingView({
                     value: (c) => (c.marketingConsent ? t("common.yes") : t("common.no")),
                   },
                 ],
-              }}
+                    }
+                  : undefined
+              }
               mobileCard={(c) => (
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
