@@ -8,6 +8,7 @@ import { common } from "./common";
 import { dashboard } from "./dashboard";
 import { expenses } from "./expenses";
 import { inventory } from "./inventory";
+import { reports } from "./reports";
 import { sales } from "./sales";
 import { services } from "./services";
 import { settings } from "./settings";
@@ -18,8 +19,8 @@ import { staff } from "./staff";
  * `defineMessages` in this folder.
  */
 export const messages = {
-  en: { ...sales.en, ...appointments.en, ...common.en, ...auth.en, ...services.en, ...clients.en, ...settings.en, ...expenses.en, ...inventory.en, ...catalog.en, ...staff.en, ...dashboard.en },
-  ar: { ...sales.ar, ...appointments.ar, ...common.ar, ...auth.ar, ...services.ar, ...clients.ar, ...settings.ar, ...expenses.ar, ...inventory.ar, ...catalog.ar, ...staff.ar, ...dashboard.ar },
+  en: { ...sales.en, ...appointments.en, ...common.en, ...auth.en, ...services.en, ...clients.en, ...settings.en, ...expenses.en, ...inventory.en, ...catalog.en, ...staff.en, ...dashboard.en, ...reports.en },
+  ar: { ...sales.ar, ...appointments.ar, ...common.ar, ...auth.ar, ...services.ar, ...clients.ar, ...settings.ar, ...expenses.ar, ...inventory.ar, ...catalog.ar, ...staff.ar, ...dashboard.ar, ...reports.ar },
 };
 
 export type Messages = typeof messages.en;

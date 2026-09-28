@@ -107,6 +107,24 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
+          "fieldPath": "branchId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dateKey",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "transactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
           "fieldPath": "staffIds",
           "arrayConfig": "CONTAINS"
         },
