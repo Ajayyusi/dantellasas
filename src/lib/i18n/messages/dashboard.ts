@@ -31,7 +31,7 @@ export const dashboard = defineMessages({
       },
       topServices: "Top services",
       topStaff: "Top team members",
-      servicesCount: "{count} services",
+      servicesCount: { zero: "No services", one: "{count} service", two: "{count} services", few: "{count} services", many: "{count} services", other: "{count} services" },
       noData: "Nothing to show yet",
       today: {
         title: "Today",
@@ -77,7 +77,7 @@ export const dashboard = defineMessages({
       },
       topServices: "الخدمات الأعلى مبيعًا",
       topStaff: "أفضل أعضاء الفريق",
-      servicesCount: "{count} خدمة",
+      servicesCount: { zero: "لا خدمات", one: "خدمة واحدة", two: "خدمتان", few: "{count} خدمات", many: "{count} خدمة", other: "{count} خدمة" },
       noData: "لا توجد بيانات بعد",
       today: {
         title: "اليوم",

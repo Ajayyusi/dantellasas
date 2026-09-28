@@ -12,8 +12,15 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const orgs = orgIndex.docs.map((d) => ({ id: d.id, name: String(d.get("orgName") ?? d.id) }));
   if (!orgs.some((o) => o.id === ctx.org.id)) orgs.unshift({ id: ctx.org.id, name: ctx.org.name });
 
+  // Tenant accent from Settings → Appearance; validated so it can be inlined safely.
+  const accent = /^#[0-9a-f]{6}$/i.test(ctx.settings.appearance.accentColor) ? ctx.settings.appearance.accentColor : null;
+
   return (
-    <AppShell
+    <>
+      {accent ? (
+        <style>{`html:root{--primary:${accent}}html.dark{--primary:color-mix(in oklch,${accent} 55%,white)}`}</style>
+      ) : null}
+      <AppShell
       initialCollapsed={jar.get(SIDEBAR_COOKIE)?.value === "1"}
       orgs={orgs}
       org={{
@@ -29,10 +36,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           name: ctx.member.displayName || ctx.session.name,
           email: ctx.session.email,
           roleName: ctx.member.roleName,
+          roleKey: ctx.member.roleKey,
         },
       }}
     >
-      {children}
-    </AppShell>
+        {children}
+      </AppShell>
+    </>
   );
 }

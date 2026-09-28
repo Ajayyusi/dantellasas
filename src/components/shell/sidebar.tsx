@@ -18,10 +18,15 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useI18n } from "@/lib/i18n/client";
 import { setOrganizationAction } from "@/lib/tenancy/actions";
+import { SYSTEM_ROLE_KEYS, type SystemRoleKey } from "@/lib/permissions";
 import { cn, initials } from "@/lib/utils";
 
 import type { ShellOrgRef } from "./app-shell";
 import { visibleNav } from "./nav-config";
+
+function isSystemRole(key: string): key is SystemRoleKey {
+  return (SYSTEM_ROLE_KEYS as readonly string[]).includes(key);
+}
 
 export function Sidebar({
   collapsed,
@@ -41,6 +46,8 @@ export function Sidebar({
   const [, startTransition] = useTransition();
   const sections = visibleNav(org.permissions);
   const displayName = org.settings.business.displayName || org.orgName;
+  const roleKey = org.user.roleKey;
+  const roleLabel = isSystemRole(roleKey) ? t(`settings.roleNames.${roleKey}.name`) : org.user.roleName;
 
   return (
     <div className="flex h-full flex-col">
@@ -54,14 +61,19 @@ export function Sidebar({
                 collapsed && "flex-none",
               )}
             >
-              <span className="grid size-7 shrink-0 place-items-center rounded-md bg-primary text-[12px] font-semibold text-primary-foreground">
-                {initials(displayName)}
-              </span>
+              {org.settings.business.logoUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element -- tenant logo served from Storage
+                <img src={org.settings.business.logoUrl} alt="" className="size-7 shrink-0 rounded-md object-cover" />
+              ) : (
+                <span className="grid size-7 shrink-0 place-items-center rounded-md bg-primary text-[12px] font-semibold text-primary-foreground">
+                  {initials(displayName)}
+                </span>
+              )}
               {!collapsed && (
                 <>
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-semibold leading-tight">{displayName}</span>
-                    <span className="block truncate text-xs text-muted-foreground">{org.user.roleName}</span>
+                    <span className="block truncate text-xs text-muted-foreground">{roleLabel}</span>
                   </span>
                   <ChevronsUpDownIcon className="size-4 shrink-0 text-muted-foreground" />
                 </>

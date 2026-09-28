@@ -52,7 +52,7 @@ export function StatusPanel({ statuses }: { statuses: Partial<Record<Appointment
 }
 
 export function RankedPanel({ title, rows }: { title: string; rows: RankedRow[] }) {
-  const { t } = useI18n();
+  const { t, tp } = useI18n();
   const org = useOrg();
   const max = Math.max(1, ...rows.map((r) => r.revenueMinor));
   return (
@@ -75,7 +75,7 @@ export function RankedPanel({ title, rows }: { title: string; rows: RankedRow[] 
                   <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
                     <div className="h-full rounded-full bg-primary/80" style={{ width: `${Math.max(2, (r.revenueMinor / max) * 100)}%` }} />
                   </div>
-                  <span className="w-20 text-end text-xs text-muted-foreground tabular">{t("dashboard.servicesCount", { count: r.count })}</span>
+                  <span className="w-20 text-end text-xs text-muted-foreground tabular">{tp("dashboard.servicesCount", r.count)}</span>
                 </div>
               </li>
             ))}
