@@ -16,16 +16,16 @@
 
 Mutating API routes reject cross-origin requests via an `Origin` check.
 
-## Sign-in methods — OPEN DECISION
+## Sign-in methods
 
-The login page currently uses **email/password as a dev placeholder** only.
-Which methods the product needs (phone/SMS OTP, email link, Google, Apple…)
-is undecided and should follow research. Relevant constraints to weigh:
+Email/password is implemented, covering sign-up, login, forgot password,
+reset password (through the app's own `/auth/action` page), change password and
+logout everywhere. Sessions are httpOnly cookies verified on every request.
 
-- Phone auth needs reCAPTCHA / App Check setup and SMS cost planning.
-- Staff on shared front-desk devices may need a different flow than owners.
-
-Status of what the reference platform uses: `NOT YET VERIFIED`.
+Adding Google or phone sign-in only needs a client-side sign-in call.
+Everything after the ID token (session cookie, membership lookup) is
+method-agnostic. Phone sign-in additionally needs reCAPTCHA / App Check and
+planning for SMS costs.
 
 ## Emulators
 

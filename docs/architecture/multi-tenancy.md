@@ -6,53 +6,67 @@
 users/{uid}                              profile (server-written, limited self-edit)
 users/{uid}/orgs/{orgId}                 denormalized "my orgs" index (server-only)
 
-organizations/{orgId}                    tenant root
+organizations/{orgId}                    tenant root: name, plan, settings
 organizations/{orgId}/members/{uid}      membership = access source of truth
+organizations/{orgId}/roles/{roleId}     built-in and custom roles
 organizations/{orgId}/branches/{id}      physical locations
-organizations/{orgId}/auditLog/{id}      append-only admin trail
-organizations/{orgId}/<domain>/{id}      FUTURE — pending verified research
+organizations/{orgId}/<domain>/{id}      clients, appointments, transactions, … (see firestore-schema.md)
+organizations/{orgId}/auditLogs/{id}     append-only trail, written in the same batch as the change
 ```
 
-**Tenant isolation is structural:** every tenant-owned document lives under
+**Tenant isolation is structural.** Every document a tenant owns lives under
 `organizations/{orgId}`. There are no top-level domain collections.
 
-**Branch scoping is by field:** future branch-scoped documents carry
-`orgId` and `branchId` fields (stay in org-level collections, not nested under
-branches). This keeps cross-branch queries (org reports) simple while rules
-enforce `branchId` access. Revisit per entity once research is verified.
+**Branch scoping is by field.** Branch-scoped documents (appointments,
+transactions, expenses, stock movements, attendance…) sit in org-level
+collections and carry a `branchId` field. This keeps cross-branch reports simple,
+while the server and the rules both enforce branch access.
 
-## Membership & roles
+## Membership, roles and permissions
 
 `organizations/{orgId}/members/{uid}`:
 
 | Field | Notes |
 | --- | --- |
-| `role` | `owner` > `admin` > `manager` > `staff` (generic; may change after research) |
-| `branchIds` | `[]` = all branches. Owners/admins are always org-wide. |
+| `roleId`, `roleKey`, `roleName` | `roleKey` is one of `owner`, `admin`, `branch_manager`, `receptionist`, `cashier`, `employee`, `accountant`, or `custom` |
+| `permissions[]` | Copied from the role. Updated on every member of a role when the role changes (Settings → Roles) |
+| `allBranches`, `branchIds[]` | Branch access; owners and admins are always org-wide |
+| `staffId` | Linked staff record (employees see only their own appointments) |
 | `status` | `active` \| `invited` \| `suspended` |
 
-Why membership docs rather than custom claims: claims are capped at 1000 bytes,
-need a token refresh to update, and a user can belong to many orgs. Rules pay
-one `get()` per request; acceptable at this stage. Re-evaluate if cost matters.
+Permissions live on membership documents, not in custom claims. Claims are
+capped at 1000 bytes, need a token refresh to update, and a user can belong to
+many organizations. The rules pay one `get()` per request.
+
+The owner role always has every permission, and the last owner cannot be
+demoted or removed.
 
 ## Enforcement layers
 
-1. **Firestore rules** (`firestore.rules`) — for any direct client SDK access.
-   Tenancy-structure writes are server-only.
-2. **Server guards** (`src/lib/tenancy/guards.ts`) — `requireOrg()` /
-   `requireBranch()`; mandatory before any Admin SDK tenant access, since the
-   Admin SDK bypasses rules.
-3. **Routing** — `/o/[orgId]/…` and `/o/[orgId]/b/[branchId]/…`; the org
-   layout runs `requireOrg()`, returning 404 (not 403) to avoid leaking
-   org existence.
+1. **Server context** (`src/lib/tenancy/context.ts`). `getAppContext()`
+   resolves the session, the active organization (cookie `dc_org`), the member,
+   the permissions and the branch scope (cookie `dc_branch`; `all` means every
+   branch the member can use).
+   - Pages call `requirePagePermission()`, which renders a 403 via `forbidden()` when the member lacks the permission.
+   - Server actions go through `action({ schema, permission })` in `src/lib/actions.ts`, which re-checks everything on every call.
+   - The Admin SDK bypasses rules, so this layer is mandatory.
+2. **Firestore rules** (`firestore.rules`). These cover any direct client SDK
+   access, which today is only the live calendar listener.
+   - Reads require an active membership, the relevant permission and branch access.
+   - Employees can only read appointments that include their own staff id.
+   - All client writes are denied.
+   - Tested in `tests/rules`.
+3. **UI**. The navigation and actions a member sees are filtered by permission.
+   This is a convenience only; it is never relied on for security.
 
-## Org creation
+## Organization creation
 
-`POST /api/organizations` → `createOrganization()` writes in one batch: org,
-owner membership, first branch, user→org index, audit entry.
+`createOrganizationAction` runs `provisionOrganization()`. In one batch it
+writes the organization, its settings defaults, the built-in roles, the owner
+membership, the first branch, the user→org index and an audit entry. It can
+optionally seed demo data.
 
 ## Open items
 
-- Invitations flow (`invited` status exists; no flow yet).
-- Org-level settings beyond timezone/currency/locale — `NOT YET VERIFIED` what's needed.
-- Whether staff who work across branches need per-branch roles — `NOT YET VERIFIED`.
+- Invitation emails: users added in Settings get a password-setup link to share. Sending the link automatically needs an email provider.
+- Per-branch roles for staff who work across branches (today one role applies to all branches the member can use).
