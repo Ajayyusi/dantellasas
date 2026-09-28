@@ -1,0 +1,99 @@
+rules_version = '2';
+
+// Multi-tenant rules. Source of truth for access:
+//   organizations/{orgId}/members/{uid}  → { role, branchIds[], status }
+// Tenancy-structure writes (orgs, members, branches, user→org index) are
+// SERVER-ONLY via the Admin SDK, which bypasses these rules.
+// Domain collections (appointments, clients, sales…) are NOT defined yet;
+// the catch-all below denies them until they are added deliberately.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+
+    function memberDoc(orgId) {
+      return get(/databases/$(database)/documents/organizations/$(orgId)/members/$(request.auth.uid));
+    }
+
+    function isActiveMember(orgId) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/organizations/$(orgId)/members/$(request.auth.uid))
+        && memberDoc(orgId).data.status == 'active';
+    }
+
+    function roleRank(role) {
+      return role == 'owner' ? 40
+        : role == 'admin' ? 30
+        : role == 'manager' ? 20
+        : role == 'staff' ? 10
+        : 0;
+    }
+
+    function hasRole(orgId, minRole) {
+      return isActiveMember(orgId) && roleRank(memberDoc(orgId).data.role) >= roleRank(minRole);
+    }
+
+    function canAccessBranch(orgId, branchId) {
+      let m = memberDoc(orgId).data;
+      return isActiveMember(orgId)
+        && (roleRank(m.role) >= roleRank('admin')
+            || m.branchIds.size() == 0
+            || branchId in m.branchIds);
+    }
+
+    // ── Users ────────────────────────────────────────────────────────────
+    match /users/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      // Users may edit only harmless profile fields.
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['displayName', 'lastActiveOrgId', 'updatedAt']);
+      allow create, delete: if false;
+
+      match /orgs/{orgId} {
+        allow read: if signedIn() && request.auth.uid == uid;
+        allow write: if false;
+      }
+    }
+
+    // ── Organizations ────────────────────────────────────────────────────
+    match /organizations/{orgId} {
+      allow read: if isActiveMember(orgId);
+      allow write: if false;
+
+      match /members/{memberUid} {
+        allow read: if (signedIn() && request.auth.uid == memberUid) || hasRole(orgId, 'manager');
+        allow write: if false;
+      }
+
+      match /branches/{branchId} {
+        allow read: if canAccessBranch(orgId, branchId);
+        allow write: if false;
+      }
+
+      match /auditLog/{entryId} {
+        allow read: if hasRole(orgId, 'admin');
+        allow write: if false;
+      }
+
+      // Template for future branch-scoped domain collections (keep commented
+      // until the entity is verified and modelled):
+      //
+      // match /<collection>/{docId} {
+      //   allow read: if canAccessBranch(orgId, resource.data.branchId);
+      //   allow create: if canAccessBranch(orgId, request.resource.data.branchId)
+      //     && request.resource.data.orgId == orgId;
+      //   allow update: if canAccessBranch(orgId, resource.data.branchId)
+      //     && request.resource.data.branchId == resource.data.branchId
+      //     && request.resource.data.orgId == orgId;
+      //   allow delete: if hasRole(orgId, 'manager');
+      // }
+    }
+
+    // Deny everything else by default.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
