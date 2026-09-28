@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Sans_Arabic, Inter } from "next/font/google";
+import Script from "next/script";
 
 import { AppProviders } from "@/components/providers/app-providers";
 import { brand } from "@/config/brand";
@@ -42,10 +43,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       className={`${inter.variable} ${arabic.variable}`}
       suppressHydrationWarning
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
       <body className="min-h-dvh font-sans">
+        <Script id="theme-init" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeScript }} />
         <AppProviders locale={locale} messages={messages}>
           {children}
         </AppProviders>

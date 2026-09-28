@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
     });
     return res;
   } catch (err) {
+    console.warn("[auth] session exchange failed:", err instanceof Error ? err.message : err);
     const code =
       err instanceof Error && err.message === "recent_login_required"
         ? "recent_login_required"

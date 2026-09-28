@@ -7,6 +7,7 @@ import {
   getApps,
   initializeApp,
   type App,
+  type AppOptions,
 } from "firebase-admin/app";
 import { getAuth, type Auth } from "firebase-admin/auth";
 import { getFirestore, type Firestore } from "firebase-admin/firestore";
@@ -67,19 +68,17 @@ export function getAdminApp(): App {
   const hasServiceAccount =
     env.FIREBASE_ADMIN_PROJECT_ID && env.FIREBASE_ADMIN_CLIENT_EMAIL && env.FIREBASE_ADMIN_PRIVATE_KEY;
 
-  adminApp = initializeApp({
-    credential: usingEmulators()
-      ? undefined
-      : hasServiceAccount
-        ? cert({
-            projectId: env.FIREBASE_ADMIN_PROJECT_ID,
-            clientEmail: env.FIREBASE_ADMIN_CLIENT_EMAIL,
-            privateKey: env.FIREBASE_ADMIN_PRIVATE_KEY!.replace(/\\n/g, "\n"),
-          })
-        : applicationDefault(),
-    projectId: projectId(),
-    storageBucket: storageBucket(),
-  });
+  const options: AppOptions = { projectId: projectId(), storageBucket: storageBucket() };
+  if (!usingEmulators()) {
+    options.credential = hasServiceAccount
+      ? cert({
+          projectId: env.FIREBASE_ADMIN_PROJECT_ID,
+          clientEmail: env.FIREBASE_ADMIN_CLIENT_EMAIL,
+          privateKey: env.FIREBASE_ADMIN_PRIVATE_KEY!.replace(/\\n/g, "\n"),
+        })
+      : applicationDefault();
+  }
+  adminApp = initializeApp(options);
   return adminApp;
 }
 
@@ -88,11 +87,22 @@ export function getAdminAuth(): Auth {
 }
 
 let adminDb: Firestore | undefined;
+const SETTINGS_FLAG = Symbol.for("dantella.firestoreSettingsApplied");
 
 export function getAdminDb(): Firestore {
   if (!adminDb) {
     adminDb = getFirestore(getAdminApp());
-    adminDb.settings({ ignoreUndefinedProperties: true });
+    // settings() may run only once per Firestore instance; dev hot reloads
+    // re-evaluate this module while the instance survives.
+    const g = globalThis as unknown as Record<symbol, boolean>;
+    if (!g[SETTINGS_FLAG]) {
+      try {
+        adminDb.settings({ ignoreUndefinedProperties: true });
+      } catch {
+        // Already configured by a previous module instance.
+      }
+      g[SETTINGS_FLAG] = true;
+    }
   }
   return adminDb;
 }

@@ -257,6 +257,8 @@ export interface PaymentDTO {
 
 export interface RefundDTO {
   id: string;
+  /** Credit note number, e.g. CRD-000001 */
+  number?: string;
   amountMinor: number;
   reason: string;
   methodId: string;

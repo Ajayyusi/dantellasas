@@ -212,6 +212,11 @@ export const common = defineMessages({
       errorTitle: "Something went wrong",
       errorBody: "An unexpected error occurred. Try again, and if it keeps happening, contact support.",
     },
+    alerts: {
+      lowStock: "{qty} left (min {min}) · {branch}",
+      passportExpiry: "Passport expires {date}",
+      visaExpiry: "Residence visa expires {date}",
+    },
     command: {
       placeholder: "Type a name, phone, invoice number or command…",
       navigation: "Go to",
@@ -484,6 +489,11 @@ export const common = defineMessages({
       notFoundBody: "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
       errorTitle: "حدث خطأ ما",
       errorBody: "حدث خطأ غير متوقع. حاول مرة أخرى، وإذا تكرر تواصل مع الدعم.",
+    },
+    alerts: {
+      lowStock: "متبقٍ {qty} (الحد الأدنى {min}) · {branch}",
+      passportExpiry: "ينتهي جواز السفر في {date}",
+      visaExpiry: "تنتهي الإقامة في {date}",
     },
     command: {
       placeholder: "اكتب اسمًا أو رقم هاتف أو رقم فاتورة أو أمرًا…",
