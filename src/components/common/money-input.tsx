@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Input } from "@/components/ui/input";
 import { minorToInput, toMinor } from "@/lib/money";
@@ -29,11 +29,12 @@ export function MoneyInput({
   "aria-label"?: string;
 }) {
   const [text, setText] = useState(minorToInput(value));
-  useEffect(() => {
-    // Keep in sync when the parent changes the value (unless the user is mid-edit on the same number).
+  const [lastValue, setLastValue] = useState(value);
+  // Follow changes made by the parent (adjusting state during render, not in an effect).
+  if (value !== lastValue) {
+    setLastValue(value);
     if (toMinor(text) !== value) setText(minorToInput(value));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  }
   return (
     <div className={cn("relative", className)}>
       <span className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">
@@ -51,6 +52,7 @@ export function MoneyInput({
         onChange={(e) => {
           const v = e.target.value.replace(/[^\d.]/g, "");
           setText(v);
+          setLastValue(toMinor(v || "0"));
           onChange(toMinor(v || "0"));
         }}
         onBlur={() => setText(minorToInput(toMinor(text || "0")))}

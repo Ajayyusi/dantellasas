@@ -56,27 +56,30 @@ export function CommandMenu({ open, onOpenChange }: { open: boolean; onOpenChang
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onOpenChange]);
 
-  useEffect(() => {
-    const q = term.trim();
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  function onTermChange(value: string) {
+    setTerm(value);
+    clearTimeout(timer.current);
+    const q = value.trim();
+    const id = ++requestId.current;
     if (q.length < 2) {
       setHits([]);
       setSearching(false);
       return;
     }
-    const id = ++requestId.current;
     setSearching(true);
-    const timer = setTimeout(async () => {
+    timer.current = setTimeout(async () => {
       const res = await globalSearchAction({ term: q });
       if (id !== requestId.current) return;
       setHits(res.ok ? res.data : []);
       setSearching(false);
     }, 180);
-    return () => clearTimeout(timer);
-  }, [term]);
+  }
 
   function go(href: string) {
     onOpenChange(false);
-    setTerm("");
+    onTermChange("");
     router.push(href);
   }
 
@@ -93,14 +96,14 @@ export function CommandMenu({ open, onOpenChange }: { open: boolean; onOpenChang
       open={open}
       onOpenChange={(o) => {
         onOpenChange(o);
-        if (!o) setTerm("");
+        if (!o) onTermChange("");
       }}
     >
       <DialogContent className="top-[12vh] max-w-xl translate-y-0 gap-0 overflow-hidden p-0" showClose={false}>
         <DialogTitle className="sr-only">{t("shell.search")}</DialogTitle>
         <DialogDescription className="sr-only">{t("command.hint")}</DialogDescription>
         <Command shouldFilter={false} loop>
-          <CommandInput value={term} onValueChange={setTerm} placeholder={t("command.placeholder")} autoFocus />
+          <CommandInput value={term} onValueChange={onTermChange} placeholder={t("command.placeholder")} autoFocus />
           <CommandList>
             {term.trim().length >= 2 ? (
               <>

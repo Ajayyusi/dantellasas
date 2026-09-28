@@ -1,7 +1,7 @@
 "use client";
 
 import { Loader2Icon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { MoneyInput } from "@/components/common/money-input";
 import { MultiSelect } from "@/components/common/multi-select";
@@ -78,8 +78,22 @@ function fromService(s: ServiceDTO): ServiceInput {
   };
 }
 
-export function ServiceFormSheet({
-  open,
+export function ServiceFormSheet(props: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  service: ServiceDTO | null;
+  defaultCategoryId: string;
+  categories: ServiceCategoryDTO[];
+  staff: StaffOption[];
+}) {
+  return (
+    <Sheet open={props.open} onOpenChange={props.onOpenChange}>
+      {props.open ? <ServiceForm key={props.service?.id ?? `new-${props.defaultCategoryId}`} {...props} /> : null}
+    </Sheet>
+  );
+}
+
+function ServiceForm({
   onOpenChange,
   service,
   defaultCategoryId,
@@ -95,15 +109,13 @@ export function ServiceFormSheet({
 }) {
   const { t, locale } = useI18n();
   const org = useOrg();
-  const [form, setForm] = useState<ServiceInput>(() => emptyForm(defaultCategoryId, org.settings.appointments.defaultDurationMinutes));
+  const [form, setForm] = useState<ServiceInput>(() =>
+    service ? fromService(service) : emptyForm(defaultCategoryId, org.settings.appointments.defaultDurationMinutes),
+  );
   const { run, pending, errorFor } = useAction(saveServiceAction, {
     success: service ? t("services.saved") : t("services.created"),
     onSuccess: () => onOpenChange(false),
   });
-
-  useEffect(() => {
-    if (open) setForm(service ? fromService(service) : emptyForm(defaultCategoryId, org.settings.appointments.defaultDurationMinutes));
-  }, [open, service, defaultCategoryId, org.settings.appointments.defaultDurationMinutes]);
 
   const set = <K extends keyof ServiceInput>(key: K, value: ServiceInput[K]) => setForm((f) => ({ ...f, [key]: value }));
   const tax = org.settings.tax;
@@ -111,7 +123,6 @@ export function ServiceFormSheet({
   const durations = DURATIONS.includes(form.durationMin) ? DURATIONS : [...DURATIONS, form.durationMin].sort((a, b) => a - b);
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="sm:max-w-xl">
         <SheetHeader>
           <SheetTitle>{service ? t("services.editService") : t("services.newService")}</SheetTitle>
@@ -285,6 +296,5 @@ export function ServiceFormSheet({
           </SheetFooter>
         </form>
       </SheetContent>
-    </Sheet>
   );
 }

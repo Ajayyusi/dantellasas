@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useTransition } from "react";
 
 import { useOrg } from "@/components/providers/org-provider";
 import { PersonAvatar } from "@/components/ui/avatar";
@@ -32,6 +32,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useIsMac, useTheme, type Theme } from "@/hooks/use-browser";
 import { signOutEverywhere } from "@/lib/auth/client";
 import { ALL_BRANCHES } from "@/lib/cookies";
 import { useI18n } from "@/lib/i18n/client";
@@ -40,40 +41,13 @@ import { setBranchAction } from "@/lib/tenancy/actions";
 import { LanguageSwitcher } from "./language-switcher";
 import { NotificationsBell } from "./notifications-bell";
 
-type Theme = "light" | "dark" | "system";
-
-function applyTheme(theme: Theme) {
-  const dark =
-    theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-  document.documentElement.classList.toggle("dark", dark);
-}
-
 export function Topbar({ leading, onOpenCommand }: { leading?: React.ReactNode; onOpenCommand: () => void }) {
   const { t } = useI18n();
   const org = useOrg();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
-  const [theme, setTheme] = useState<Theme>("system");
-  const [isMac, setIsMac] = useState(true);
-
-  useEffect(() => {
-    try {
-      setTheme((localStorage.getItem("dc-theme") as Theme) || "system");
-    } catch {
-      /* storage unavailable */
-    }
-    setIsMac(/Mac|iPhone|iPad/.test(navigator.platform));
-  }, []);
-
-  function changeTheme(next: Theme) {
-    setTheme(next);
-    try {
-      localStorage.setItem("dc-theme", next);
-    } catch {
-      /* storage unavailable */
-    }
-    applyTheme(next);
-  }
+  const [theme, changeTheme] = useTheme();
+  const isMac = useIsMac();
 
   function switchBranch(id: string) {
     startTransition(async () => {

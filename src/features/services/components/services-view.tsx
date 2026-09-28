@@ -11,7 +11,7 @@ import {
   SearchIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
@@ -73,8 +73,13 @@ export function ServicesView({
   });
   const [deleting, setDeleting] = useState<ServiceCategoryDTO | null>(null);
 
-  useEffect(() => setCategories(initialCategories), [initialCategories]);
-  useEffect(() => setServices(initialServices), [initialServices]);
+  const [synced, setSynced] = useState({ initialCategories, initialServices });
+  if (synced.initialCategories !== initialCategories || synced.initialServices !== initialServices) {
+    // Fresh server data after a mutation replaces the optimistic copy.
+    setSynced({ initialCategories, initialServices });
+    setCategories(initialCategories);
+    setServices(initialServices);
+  }
 
   const staffById = useMemo(() => new Map(staff.map((s) => [s.id, s])), [staff]);
   const q = normalizeText(query);

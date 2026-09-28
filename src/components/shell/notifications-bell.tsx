@@ -23,8 +23,14 @@ export function NotificationsBell() {
   }, []);
 
   useEffect(() => {
-    void load();
-  }, [load, org.branchId]);
+    let active = true;
+    getAlertsAction({}).then((res) => {
+      if (active) setAlerts(res.ok ? res.data : []);
+    });
+    return () => {
+      active = false;
+    };
+  }, [org.branchId]);
 
   const count = alerts?.length ?? 0;
 
