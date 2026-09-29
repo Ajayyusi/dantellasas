@@ -57,6 +57,8 @@ function tx(p: Partial<ReportTransaction>): ReportTransaction {
     items,
     subtotalMinor: total,
     discountMinor: 0,
+    memberDiscountMinor: 0,
+    orderDiscountMinor: 0,
     taxMinor: items.reduce((s, i) => s + i.taxMinor, 0),
     totalMinor: total,
     tipMinor: 0,

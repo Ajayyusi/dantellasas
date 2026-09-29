@@ -36,6 +36,7 @@ import type { TransactionDTO } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 import { voidTransactionAction } from "../actions";
+import { discountRows } from "../invoice-lines";
 import { AddPaymentDialog } from "./add-payment-dialog";
 import { RefundDialog } from "./refund-dialog";
 import { TransactionStatusBadge } from "./transaction-status";
@@ -84,9 +85,8 @@ export function SaleDetailView({ tx }: { tx: TransactionDTO }) {
   const [refundOpen, setRefundOpen] = useState(false);
   const [payOpen, setPayOpen] = useState(false);
   const [voidOpen, setVoidOpen] = useState(false);
-  const methodOf = (id: string) => org.settings.payments.methods.find((x) => x.id === id);
   const labelFor = (id: string, fallback: string) => {
-    const m = methodOf(id);
+    const m = org.settings.payments.methods.find((x) => x.id === id);
     return m ? methodLabel(m) : fallback;
   };
 
@@ -95,6 +95,7 @@ export function SaleDetailView({ tx }: { tx: TransactionDTO }) {
   const canPay = org.can("create_sales") && tx.balanceMinor > 0 && tx.status !== "void";
   const showCommission = org.can("view_commissions");
   const tipStaff = tx.tipStaffId ? tx.items.find((i) => i.staffId === tx.tipStaffId)?.staffName : null;
+  const discounts = discountRows(tx, { discount: t("pos.discount"), member: t("pos.memberDiscount") });
   const business = org.settings.business;
   const businessName = business.displayName || org.orgName;
   const clientName = tx.clientName || t("pos.walkInSale");
@@ -240,13 +241,9 @@ export function SaleDetailView({ tx }: { tx: TransactionDTO }) {
           <div className="flex justify-end border-t bg-[linear-gradient(180deg,color-mix(in_oklch,var(--champagne)_40%,var(--card)),var(--card))] px-5 py-5 sm:px-8">
             <dl className="grid w-full max-w-sm gap-2 text-[15px]">
               <Row label={t("pos.subtotal")} value={org.money(tx.subtotalMinor)} tone="muted" />
-              {tx.discountMinor > 0 ? (
-                <Row
-                  label={tx.discountCode ? `${t("pos.discount")} (${tx.discountCode})` : t("pos.discount")}
-                  value={`−${org.money(tx.discountMinor)}`}
-                  tone="accent"
-                />
-              ) : null}
+              {discounts.map((d) => (
+                <Row key={d.label} label={d.label} value={`−${org.money(d.amountMinor)}`} tone="accent" />
+              ))}
               <Row
                 label={org.settings.tax.pricesIncludeTax ? t("pos.vatIncluded", { amount: "" }).trim() : t("pos.vat")}
                 value={org.money(tx.taxMinor)}
@@ -268,7 +265,7 @@ export function SaleDetailView({ tx }: { tx: TransactionDTO }) {
           <SectionCard title={t("sales.payments")} contentClassName="grid gap-2.5">
             {tx.payments.length === 0 ? <p className="text-[15px] text-muted-foreground">{t("sales.noPayments")}</p> : null}
             {tx.payments.map((p) => {
-              const Icon = METHOD_ICONS[methodOf(p.methodId)?.type ?? "other"];
+              const Icon = METHOD_ICONS[p.methodType] ?? WalletIcon;
               return (
                 <div key={p.id} className="flex items-center gap-3 rounded-xl bg-muted/45 px-3 py-2.5">
                   <span aria-hidden className="grid size-9 shrink-0 place-items-center rounded-lg bg-card text-primary shadow-xs">

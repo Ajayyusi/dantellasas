@@ -289,7 +289,12 @@ export interface TransactionDTO {
   appointmentId: string | null;
   items: SaleItemDTO[];
   subtotalMinor: number;
+  /** All discounts on the invoice; the two parts below are included in it. */
   discountMinor: number;
+  /** Membership discount (0 on invoices saved before it was recorded). */
+  memberDiscountMinor: number;
+  /** Order-level discount: a code, or a manual percent / fixed amount. */
+  orderDiscountMinor: number;
   taxMinor: number;
   totalMinor: number;
   tipMinor: number;

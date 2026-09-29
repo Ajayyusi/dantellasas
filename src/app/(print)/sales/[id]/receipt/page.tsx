@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { forbidden, notFound } from "next/navigation";
 
 import { PrintButton } from "@/features/sales/components/print-button";
+import { discountRows } from "@/features/sales/invoice-lines";
 import { getTransaction } from "@/features/sales/queries";
 import { formatDate } from "@/lib/i18n/format";
 import { getI18n } from "@/lib/i18n/server";
@@ -106,12 +107,12 @@ export default async function ReceiptPage({ params }: PageProps<"/sales/[id]/rec
             <dt>{t("pos.subtotal")}</dt>
             <dd className="tabular">{money(tx.subtotalMinor)}</dd>
           </div>
-          {tx.discountMinor > 0 ? (
-            <div className="flex justify-between">
-              <dt>{t("pos.discount")}</dt>
-              <dd className="tabular">−{money(tx.discountMinor)}</dd>
+          {discountRows(tx, { discount: t("pos.discount"), member: t("pos.memberDiscount") }).map((d) => (
+            <div key={d.label} className="flex justify-between">
+              <dt>{d.label}</dt>
+              <dd className="tabular">−{money(d.amountMinor)}</dd>
             </div>
-          ) : null}
+          ))}
           {s.receipts.showTaxBreakdown
             ? [...byRate.entries()]
                 .filter(([, v]) => v.tax > 0)

@@ -33,6 +33,8 @@ export function toTransaction(id: string, d: Data): TransactionDTO {
     ),
     subtotalMinor: num(d.subtotalMinor),
     discountMinor: num(d.discountMinor),
+    memberDiscountMinor: num(d.memberDiscountMinor),
+    orderDiscountMinor: num(d.orderDiscountMinor),
     taxMinor: num(d.taxMinor),
     totalMinor: num(d.totalMinor),
     tipMinor: num(d.tipMinor),

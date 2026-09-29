@@ -27,6 +27,8 @@ function tx(p: Partial<TransactionDTO>): TransactionDTO {
     items: [],
     subtotalMinor: 0,
     discountMinor: 0,
+    memberDiscountMinor: 0,
+    orderDiscountMinor: 0,
     taxMinor: 0,
     totalMinor: 0,
     tipMinor: 0,
