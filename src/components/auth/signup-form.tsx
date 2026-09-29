@@ -41,12 +41,12 @@ export function SignupForm() {
   return (
     <div className="grid gap-6">
       <div className="grid gap-1.5">
-        <h1 className="text-2xl font-semibold tracking-tight">{t("auth.signUpTitle")}</h1>
-        <p className="text-[15px] text-muted-foreground">{t("auth.signUpSubtitle")}</p>
+        <h1 className="font-display text-[34px] font-semibold leading-tight">{t("auth.signUpTitle")}</h1>
+        <p className="text-[16px] text-muted-foreground">{t("auth.signUpSubtitle")}</p>
       </div>
       <form onSubmit={onSubmit} className="grid gap-4" noValidate>
         <Field label={t("auth.yourName")} htmlFor="name">
-          <Input id="name" autoComplete="name" required value={name} onChange={(e) => setName(e.target.value)} className="h-10" />
+          <Input id="name" autoComplete="name" required value={name} onChange={(e) => setName(e.target.value)} className="h-12" />
         </Field>
         <Field label={t("auth.email")} htmlFor="email">
           <Input
@@ -56,7 +56,7 @@ export function SignupForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="h-10"
+            className="h-12"
             dir="ltr"
           />
         </Field>
@@ -69,11 +69,11 @@ export function SignupForm() {
             minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="h-10"
+            className="h-12"
           />
         </Field>
         {error ? (
-          <p role="alert" className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          <p role="alert" className="animate-fade-up rounded-xl border border-destructive/20 bg-destructive/8 px-4 py-3 text-sm font-medium text-destructive">
             {error}
           </p>
         ) : null}

@@ -24,7 +24,7 @@ export function toStaff(id: string, d: Data, serviceIds: string[] = []): StaffDT
     position: str(d.position),
     branchIds: arr<string>(d.branchIds),
     status: (d.status as StaffDTO["status"]) ?? "active",
-    color: str(d.color, "#8b3a62"),
+    color: str(d.color, "#965660"),
     hireDate: strOrNull(d.hireDate),
     bookable: bool(d.bookable, true),
     schedule: { ...DEFAULT_SCHEDULE, ...((d.schedule ?? {}) as WeeklySchedule) },

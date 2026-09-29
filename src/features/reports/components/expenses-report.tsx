@@ -99,7 +99,7 @@ export function ExpensesReport({ data, range }: { data: ProfitReport; range: Dat
               <span className="truncate font-medium">{name(r)}</span>
               <span className="shrink-0 font-semibold tabular">{org.money(r.amountMinor)}</span>
             </div>
-            <p className="text-[13px] text-muted-foreground tabular">
+            <p className="text-[14px] text-muted-foreground tabular">
               {t("reports.expenses.countHint", { count: formatNumber(r.count, locale) })} · {pct(r.share)}
             </p>
           </div>

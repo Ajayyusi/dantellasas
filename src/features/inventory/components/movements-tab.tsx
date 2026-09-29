@@ -147,11 +147,11 @@ export function MovementsTab({ movements, preset, range }: { movements: Movement
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="truncate text-sm font-medium">{m.productName}</p>
-              <div className="mt-0.5 flex items-center gap-2 text-[13px] text-muted-foreground">
+              <div className="mt-0.5 flex items-center gap-2 text-[14px] text-muted-foreground">
                 <MovementTypeBadge type={m.type} />
                 <span className="truncate">{org.date(m.createdAt, "datetime")}</span>
               </div>
-              {m.note ? <p className="mt-0.5 line-clamp-1 text-[13px] text-muted-foreground">{m.note}</p> : null}
+              {m.note ? <p className="mt-0.5 line-clamp-1 text-[14px] text-muted-foreground">{m.note}</p> : null}
             </div>
             <div className="shrink-0 text-end tabular">
               <SignedQty value={m.quantity} />

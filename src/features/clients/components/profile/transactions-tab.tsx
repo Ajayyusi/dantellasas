@@ -1,6 +1,6 @@
 "use client";
 
-import { ReceiptIcon } from "lucide-react";
+import { ReceiptIcon, ReceiptTextIcon } from "lucide-react";
 import Link from "next/link";
 
 import { EmptyState } from "@/components/common/states";
@@ -17,29 +17,35 @@ export function TransactionsTab({ transactions }: { transactions: TransactionDTO
 
   if (transactions.length === 0) {
     return (
-      <div className="rounded-xl border bg-card shadow-sm">
+      <div className="rounded-2xl border bg-card shadow-sm">
         <EmptyState icon={ReceiptIcon} title={t("clients.transactions.empty")} description={t("clients.transactions.emptyHint")} />
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
+    <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
       <ul className="divide-y">
         {transactions.map((tx) => {
           const items = tx.items.map((i) => (i.quantity > 1 ? `${i.name} ×${i.quantity}` : i.name));
           return (
             <li key={tx.id}>
-              <Link href={`/sales/${tx.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-muted/40">
+              <Link
+                href={`/sales/${tx.id}`}
+                className="flex items-center gap-3.5 px-5 py-3.5 outline-none transition-colors hover:bg-primary-soft/55 focus-visible:bg-primary-soft/55"
+              >
+                <span aria-hidden className="grid size-11 shrink-0 place-items-center rounded-xl bg-gold-soft text-gold-foreground">
+                  <ReceiptTextIcon className="size-5" />
+                </span>
                 <div className="grid min-w-0 flex-1 gap-0.5">
-                  <div className="flex flex-wrap items-center gap-x-2 text-sm">
-                    <span className="font-medium tabular" dir="ltr">
+                  <div className="flex flex-wrap items-center gap-x-2 text-[15px]">
+                    <span className="font-semibold tabular" dir="ltr">
                       {tx.number || tx.id.slice(0, 8)}
                     </span>
                     <span className="text-muted-foreground">{org.date(tx.createdAt, "datetime")}</span>
-                    {multiBranch ? <span className="text-[13px] text-muted-foreground">· {org.branchName(tx.branchId)}</span> : null}
+                    {multiBranch ? <span className="text-[14px] text-muted-foreground">· {org.branchName(tx.branchId)}</span> : null}
                   </div>
-                  <div className="truncate text-[13px] text-muted-foreground">
+                  <div className="truncate text-[14px] text-muted-foreground">
                     {items.length === 0
                       ? "—"
                       : items.map((name, i) => (
@@ -51,10 +57,10 @@ export function TransactionsTab({ transactions }: { transactions: TransactionDTO
                   </div>
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-1">
-                  <span className="text-sm font-semibold tabular">{org.money(tx.totalMinor)}</span>
+                  <span className="text-[15px] font-semibold tabular">{org.money(tx.totalMinor)}</span>
                   <TransactionStatusBadge status={tx.status} />
                   {tx.balanceMinor > 0 ? (
-                    <span className="text-xs text-destructive">{t("clients.transactions.balance", { amount: org.money(tx.balanceMinor) })}</span>
+                    <span className="text-[13px] font-medium text-destructive">{t("clients.transactions.balance", { amount: org.money(tx.balanceMinor) })}</span>
                   ) : null}
                 </div>
               </Link>

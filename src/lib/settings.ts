@@ -151,7 +151,7 @@ export const DEFAULT_SETTINGS: OrgSettings = {
     documentExpiryAlerts: true,
   },
   appearance: {
-    accentColor: "#8b3a62",
+    accentColor: "#965660",
     calendarDensity: "comfortable",
   },
   clients: {

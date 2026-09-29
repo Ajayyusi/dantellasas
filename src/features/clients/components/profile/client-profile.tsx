@@ -44,7 +44,7 @@ export interface ClientProfileData {
 
 function Count({ n }: { n: number }) {
   if (n === 0) return null;
-  return <span className="rounded-full bg-muted px-1.5 text-[11px] font-medium tabular text-muted-foreground">{n}</span>;
+  return <span className="rounded-full bg-primary-soft px-2 py-px text-[12px] font-semibold tabular text-primary">{n}</span>;
 }
 
 export function ClientProfile({ client, notes, appointments, transactions, packages, memberships, activity, staff, now }: ClientProfileData) {
@@ -59,7 +59,7 @@ export function ClientProfile({ client, notes, appointments, transactions, packa
 
   return (
     <PageContainer>
-      <ProfileHeader client={client} staff={staff} />
+      <ProfileHeader client={client} staff={staff} membership={memberships.find((m) => m.status === "active") ?? null} now={now} />
       <ProfileStats client={client} nextAt={nextAt} now={now} />
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as ProfileTab)}>

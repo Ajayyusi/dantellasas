@@ -96,8 +96,16 @@ export function AppointmentDetailsSheet({
   if (a.status === "in_service" && allowed("checked_in")) secondary.push({ to: "checked_in", label: t("appointments.actions.backToCheckedIn"), icon: <RotateCcwIcon /> });
   if ((a.status === "cancelled" || a.status === "no_show") && allowed("booked")) secondary.push({ to: "booked", label: t("appointments.actions.restore"), icon: <RotateCcwIcon /> });
 
-  const staffList = [...new Map(a.items.map((i) => [i.staffId, i.staffName])).values()];
+  const staffList = [...new Map(a.items.map((i) => [i.staffId, i.staffName])).values()].filter(Boolean);
   const canCheckout = org.can("create_sales") && !a.transactionId && (a.status === "checked_in" || a.status === "in_service" || a.status === "completed" || a.status === "confirmed" || a.status === "booked");
+  // A completed, invoiced appointment has nothing left to do: no empty footer bar.
+  const hasFooter =
+    forward.length > 0 ||
+    canCheckout ||
+    (canEdit && isEditableStatus(a.status)) ||
+    secondary.length > 0 ||
+    allowed("no_show") ||
+    allowed("cancelled");
 
   return (
     <>
@@ -115,16 +123,22 @@ export function AppointmentDetailsSheet({
           </SheetHeader>
           <SheetBody className="grid gap-5">
             <section className="flex items-start gap-3">
-              <PersonAvatar name={a.clientName} className="size-11" />
+              <PersonAvatar name={a.clientName} className="size-12 text-[16px]" />
               <div className="min-w-0 flex-1">
-                <div className="font-semibold">{a.clientName}</div>
+                <div className="truncate text-base font-semibold">{a.clientName}</div>
                 {a.clientPhone ? (
-                  <a href={`tel:${a.clientPhone}`} className="flex items-center gap-1 text-[13px] text-muted-foreground hover:text-foreground" dir="ltr">
-                    <PhoneIcon className="size-3" />
+                  <a
+                    href={`tel:${a.clientPhone}`}
+                    className="flex w-fit items-center gap-1.5 text-[14px] text-muted-foreground hover:text-primary"
+                    dir="ltr"
+                  >
+                    <PhoneIcon className="size-3.5" />
                     {a.clientPhone}
                   </a>
                 ) : null}
-                <div className="mt-0.5 text-xs text-muted-foreground">{t(`appointments.source.${a.source}`)}</div>
+                <span className="mt-1.5 inline-flex rounded-full bg-muted px-2.5 py-0.5 text-[12px] font-semibold text-muted-foreground">
+                  {t(`appointments.source.${a.source}`)}
+                </span>
               </div>
               {a.clientId && org.can("view_customers") ? (
                 <Button asChild variant="outline" size="sm">
@@ -134,41 +148,52 @@ export function AppointmentDetailsSheet({
             </section>
 
             {a.cancellation && a.status === "cancelled" ? (
-              <p className="rounded-md bg-muted px-3 py-2 text-sm">
+              <p className="rounded-xl border border-destructive/20 bg-destructive/5 px-4 py-3 text-[15px]">
                 {t("appointments.details.cancelledBecause", { reason: a.cancellation.reason || "—" })}
                 {a.cancellation.note ? <span className="block text-muted-foreground">{a.cancellation.note}</span> : null}
               </p>
             ) : null}
 
             <section className="grid gap-2">
-              <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t("appointments.details.services")}</h3>
-              <ul className="divide-y rounded-lg border">
+              <h3 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{t("appointments.details.services")}</h3>
+              <ul className="divide-y overflow-hidden rounded-xl border bg-card">
                 {a.items.map((i) => (
-                  <li key={i.id} className="flex items-center gap-3 px-3 py-2.5">
+                  <li key={i.id} className="flex items-center gap-3 px-4 py-3">
                     <div className="min-w-0 flex-1">
-                      <div className="truncate text-sm font-medium">{i.serviceName}</div>
-                      <div className="text-xs tabular text-muted-foreground">
+                      <div className="truncate text-[15px] font-semibold">{i.serviceName}</div>
+                      <div className="text-[13px] tabular text-muted-foreground">
                         {org.date(i.startAt, "time")} · {formatDuration(i.durationMin, locale)} · {i.staffName}
                       </div>
                     </div>
-                    <div className="text-end text-sm tabular">
+                    <div className="text-end text-[15px] font-medium tabular">
                       {org.money(i.priceMinor - i.discountMinor)}
-                      {i.discountMinor > 0 ? <div className="text-xs text-muted-foreground line-through">{org.money(i.priceMinor)}</div> : null}
+                      {i.discountMinor > 0 ? <div className="text-[13px] text-muted-foreground line-through">{org.money(i.priceMinor)}</div> : null}
                     </div>
                   </li>
                 ))}
-                <li className="flex items-center justify-between px-3 py-2.5 text-sm font-semibold">
-                  <span>{t("appointments.details.total")}</span>
-                  <span className="tabular">{org.money(a.totalMinor)}</span>
+                <li className="flex items-baseline justify-between bg-muted/40 px-4 py-3">
+                  <span className="text-[15px] font-semibold">{t("appointments.details.total")}</span>
+                  <span className="font-display text-[24px] font-semibold leading-none tabular">{org.money(a.totalMinor)}</span>
                 </li>
               </ul>
-              <p className="text-xs text-muted-foreground">{staffList.join(" · ")}</p>
+              {staffList.length > 0 ? (
+                <ul className="flex flex-wrap gap-1.5">
+                  {staffList.map((name) => (
+                    <li key={name} className="inline-flex items-center gap-1.5 rounded-full border bg-card py-1 pe-3 ps-1 text-[13px] font-medium">
+                      <PersonAvatar name={name} className="size-6 text-[10px] ring-0" />
+                      {name}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
             </section>
 
             {a.notes ? (
               <section className="grid gap-1">
-                <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t("appointments.details.notes")}</h3>
-                <p className="whitespace-pre-wrap text-sm">{a.notes}</p>
+                <h3 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{t("appointments.details.notes")}</h3>
+                <p className="whitespace-pre-wrap rounded-xl bg-[color-mix(in_oklch,var(--gold)_9%,var(--card))] px-4 py-3 text-[15px] leading-relaxed" dir="auto">
+                  {a.notes}
+                </p>
               </section>
             ) : null}
 
@@ -181,65 +206,67 @@ export function AppointmentDetailsSheet({
               </Button>
             ) : null}
 
-            {a.createdAt ? <p className="text-xs text-muted-foreground">{t("appointments.details.createdAt", { date: org.date(a.createdAt, "datetime") })}</p> : null}
+            {a.createdAt ? <p className="text-[13px] text-muted-foreground">{t("appointments.details.createdAt", { date: org.date(a.createdAt, "datetime") })}</p> : null}
           </SheetBody>
-          <SheetFooter className="flex-col items-stretch gap-2 sm:flex-col">
-            {forward.length > 0 || canCheckout ? (
-              <div className="grid grid-cols-2 gap-2">
-                {forward.map((x) => (
-                  <Button key={x.to} variant={x.primary ? "default" : "outline"} disabled={pending} onClick={() => change(x.to)}>
-                    {runningTo === x.to ? <Loader2Icon className="animate-spin" /> : x.icon}
+          {hasFooter ? (
+            <SheetFooter className="flex-col items-stretch gap-2 sm:flex-col">
+              {forward.length > 0 || canCheckout ? (
+                <div className="grid grid-cols-2 gap-2">
+                  {forward.map((x) => (
+                    <Button key={x.to} variant={x.primary ? "default" : "outline"} disabled={pending} onClick={() => change(x.to)}>
+                      {runningTo === x.to ? <Loader2Icon className="animate-spin" /> : x.icon}
+                      {x.label}
+                    </Button>
+                  ))}
+                  {canCheckout ? (
+                    <Button asChild variant={forward.length === 0 ? "default" : "secondary"} className={forward.length % 2 === 0 ? "col-span-2" : ""}>
+                      <Link href={`/pos?appointment=${a.id}`}>
+                        <ShoppingBagIcon />
+                        {t("appointments.actions.checkout")}
+                      </Link>
+                    </Button>
+                  ) : null}
+                </div>
+              ) : null}
+              <div className="flex items-center gap-2">
+                {canEdit && isEditableStatus(a.status) ? (
+                  <Button variant="ghost" size="sm" onClick={() => onEdit(a)}>
+                    <PencilIcon />
+                    {t("appointments.actions.edit")}
+                  </Button>
+                ) : null}
+                {secondary.map((x) => (
+                  <Button key={x.to} variant="ghost" size="sm" disabled={pending} onClick={() => change(x.to)}>
+                    {x.icon}
                     {x.label}
                   </Button>
                 ))}
-                {canCheckout ? (
-                  <Button asChild variant={forward.length === 0 ? "default" : "secondary"} className={forward.length % 2 === 0 ? "col-span-2" : ""}>
-                    <Link href={`/pos?appointment=${a.id}`}>
-                      <ShoppingBagIcon />
-                      {t("appointments.actions.checkout")}
-                    </Link>
-                  </Button>
+                {allowed("no_show") || allowed("cancelled") ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm" className="ms-auto text-destructive hover:text-destructive">
+                        {t("appointments.moreActions")}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      {allowed("no_show") ? (
+                        <DropdownMenuItem onSelect={() => setNoShowOpen(true)}>
+                          <UserXIcon />
+                          {t("appointments.actions.noShow")}
+                        </DropdownMenuItem>
+                      ) : null}
+                      {allowed("cancelled") ? (
+                        <DropdownMenuItem destructive onSelect={() => setCancelOpen(true)}>
+                          <XCircleIcon />
+                          {t("appointments.actions.cancel")}
+                        </DropdownMenuItem>
+                      ) : null}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 ) : null}
               </div>
-            ) : null}
-            <div className="flex items-center gap-2">
-              {canEdit && isEditableStatus(a.status) ? (
-                <Button variant="ghost" size="sm" onClick={() => onEdit(a)}>
-                  <PencilIcon />
-                  {t("appointments.actions.edit")}
-                </Button>
-              ) : null}
-              {secondary.map((x) => (
-                <Button key={x.to} variant="ghost" size="sm" disabled={pending} onClick={() => change(x.to)}>
-                  {x.icon}
-                  {x.label}
-                </Button>
-              ))}
-              {allowed("no_show") || allowed("cancelled") ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="ms-auto text-destructive hover:text-destructive">
-                      {t("appointments.moreActions")}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    {allowed("no_show") ? (
-                      <DropdownMenuItem onSelect={() => setNoShowOpen(true)}>
-                        <UserXIcon />
-                        {t("appointments.actions.noShow")}
-                      </DropdownMenuItem>
-                    ) : null}
-                    {allowed("cancelled") ? (
-                      <DropdownMenuItem destructive onSelect={() => setCancelOpen(true)}>
-                        <XCircleIcon />
-                        {t("appointments.actions.cancel")}
-                      </DropdownMenuItem>
-                    ) : null}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : null}
-            </div>
-          </SheetFooter>
+            </SheetFooter>
+          ) : null}
         </SheetContent>
       </Sheet>
 

@@ -43,7 +43,7 @@ export function StaffReorderList({ staff }: { staff: StaffDTO[] }) {
 
   return (
     <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
-      <p className="border-b bg-muted/30 px-4 py-2.5 text-[13px] text-muted-foreground">{t("staff.reorderHint")}</p>
+      <p className="border-b bg-muted/30 px-4 py-2.5 text-[14px] text-muted-foreground">{t("staff.reorderHint")}</p>
       <SortableList
         items={items}
         onReorder={save}
@@ -57,7 +57,7 @@ export function StaffReorderList({ staff }: { staff: StaffDTO[] }) {
               <PersonAvatar name={s.displayName} src={s.photoUrl} color={s.color} className="size-8" />
               <div className="min-w-0 flex-1">
                 <div className="truncate text-sm font-medium">{s.displayName}</div>
-                <div className="truncate text-[13px] text-muted-foreground">{s.position}</div>
+                <div className="truncate text-[14px] text-muted-foreground">{s.position}</div>
               </div>
               <Button variant="ghost" size="icon-sm" disabled={i === 0} onClick={() => move(i, -1)} aria-label={t("common.moveUp")}>
                 <ArrowUpIcon />

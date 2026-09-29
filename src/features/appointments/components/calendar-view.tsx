@@ -163,11 +163,11 @@ export function CalendarView({
   const staffHeader = (s: (typeof catalog.staff)[number], dayKey: string) => {
     const count = visible.filter((a) => a.dateKey === dayKey && a.items.some((i) => i.staffId === s.id)).length;
     return (
-      <div className="flex items-center gap-2">
-        <PersonAvatar name={s.displayName} src={s.photoUrl} color={s.color} className="size-7 text-[11px]" />
+      <div className="flex items-center gap-2.5">
+        <PersonAvatar name={s.displayName} src={s.photoUrl} color={s.color} className="size-9 text-[13px]" />
         <div className="min-w-0">
-          <div className="truncate text-sm font-medium">{s.displayName}</div>
-          <div className="text-[11px] text-muted-foreground">{t("appointments.appointmentsCount", { count })}</div>
+          <div className="truncate text-[15px] font-semibold leading-tight">{s.displayName}</div>
+          <div className="mt-0.5 text-xs font-medium text-muted-foreground">{t("appointments.appointmentsCount", { count })}</div>
         </div>
       </div>
     );
@@ -175,8 +175,8 @@ export function CalendarView({
 
   const dayHeader = (key: string) => (
     <div className={cn("text-center", key === today && "text-primary")}>
-      <div className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{org.dateKey(key, "weekday")}</div>
-      <div className="text-lg font-semibold tabular leading-tight">{org.dateKey(key, "dayNumber")}</div>
+      <div className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">{org.dateKey(key, "weekday")}</div>
+      <div className="font-display text-[26px] font-semibold leading-tight tabular">{org.dateKey(key, "dayNumber")}</div>
     </div>
   );
 
@@ -285,11 +285,11 @@ export function CalendarView({
                 type="button"
                 onClick={() => setMobileStaffId(s.id)}
                 className={cn(
-                  "flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 text-sm",
-                  active ? "border-primary bg-primary/10 font-medium text-primary" : "bg-card",
+                  "flex shrink-0 items-center gap-2 rounded-full border py-1.5 ps-1.5 pe-3.5 text-sm font-medium shadow-xs transition-colors",
+                  active ? "border-primary/40 bg-primary-soft text-primary" : "bg-card text-foreground",
                 )}
               >
-                <PersonAvatar name={s.displayName} src={s.photoUrl} color={s.color} className="size-5 text-[9px]" />
+                <PersonAvatar name={s.displayName} src={s.photoUrl} color={s.color} className="size-7 text-[11px]" />
                 {s.displayName}
               </button>
             );

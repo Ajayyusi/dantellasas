@@ -45,8 +45,8 @@ export function LoginForm() {
   return (
     <div className="grid gap-6">
       <div className="grid gap-1.5">
-        <h1 className="text-2xl font-semibold tracking-tight">{t("auth.signInTitle")}</h1>
-        <p className="text-[15px] text-muted-foreground">{t("auth.signInSubtitle")}</p>
+        <h1 className="font-display text-[34px] font-semibold leading-tight">{t("auth.signInTitle")}</h1>
+        <p className="text-[16px] text-muted-foreground">{t("auth.signInSubtitle")}</p>
       </div>
       <form onSubmit={onSubmit} className="grid gap-4" noValidate>
         <Field label={t("auth.email")} htmlFor="email">
@@ -58,7 +58,7 @@ export function LoginForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="h-10"
+            className="h-12"
             dir="ltr"
           />
         </Field>
@@ -66,7 +66,7 @@ export function LoginForm() {
           label={t("auth.password")}
           htmlFor="password"
           labelAction={
-            <Link href="/forgot-password" className="text-[13px] font-medium text-primary hover:underline">
+            <Link href="/forgot-password" className="text-[14px] font-medium text-primary hover:underline">
               {t("auth.forgotPassword")}
             </Link>
           }
@@ -78,11 +78,11 @@ export function LoginForm() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="h-10"
+            className="h-12"
           />
         </Field>
         {error ? (
-          <p role="alert" className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          <p role="alert" className="animate-fade-up rounded-xl border border-destructive/20 bg-destructive/8 px-4 py-3 text-sm font-medium text-destructive">
             {error}
           </p>
         ) : null}

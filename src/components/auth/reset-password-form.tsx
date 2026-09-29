@@ -56,17 +56,17 @@ export function ResetPasswordForm({ code }: { code: string | null }) {
   return (
     <div className="grid gap-6">
       <div className="grid gap-1.5">
-        <h1 className="text-2xl font-semibold tracking-tight">{t("auth.resetTitle")}</h1>
-        <p className="text-[15px] text-muted-foreground">{email || t("auth.resetSubtitle")}</p>
+        <h1 className="font-display text-[34px] font-semibold leading-tight">{t("auth.resetTitle")}</h1>
+        <p className="text-[16px] text-muted-foreground">{email || t("auth.resetSubtitle")}</p>
       </div>
       {phase === "checking" ? (
         <div className="grid gap-3">
-          <Skeleton className="h-10" />
-          <Skeleton className="h-10" />
+          <Skeleton className="h-12" />
+          <Skeleton className="h-12" />
         </div>
       ) : phase === "invalid" ? (
         <div className="grid gap-4">
-          <p role="alert" className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          <p role="alert" className="animate-fade-up rounded-xl border border-destructive/20 bg-destructive/8 px-4 py-3 text-sm font-medium text-destructive">
             {t("auth.invalidLink")}
           </p>
           <Button asChild variant="outline">
@@ -86,10 +86,10 @@ export function ResetPasswordForm({ code }: { code: string | null }) {
       ) : (
         <form onSubmit={onSubmit} className="grid gap-4" noValidate>
           <Field label={t("auth.newPassword")} htmlFor="password">
-            <Input id="password" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} className="h-10" />
+            <Input id="password" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} className="h-12" />
           </Field>
           <Field label={t("auth.confirmPassword")} htmlFor="confirm">
-            <Input id="confirm" type="password" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} className="h-10" />
+            <Input id="confirm" type="password" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} className="h-12" />
           </Field>
           {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
           <Button type="submit" size="lg" disabled={pending}>

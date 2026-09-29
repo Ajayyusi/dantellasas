@@ -186,7 +186,7 @@ function IssueForm({ onOpenChange, onIssued }: { onOpenChange: (open: boolean) =
             </Field>
           </FormSection>
 
-          <p className="flex items-start gap-2 rounded-lg bg-muted/60 p-3 text-[13px] text-muted-foreground">
+          <p className="flex items-start gap-2 rounded-lg bg-muted/60 p-3 text-[14px] text-muted-foreground">
             <InfoIcon className="mt-0.5 size-4 shrink-0" />
             {t("catalog.giftCards.soldAtCheckout")}
           </p>

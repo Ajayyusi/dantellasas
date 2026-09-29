@@ -13,17 +13,20 @@ export function DaySummary({ appointments }: { appointments: AppointmentDTO[] })
   const done = active.filter((a) => a.status === "completed").length;
   const value = active.reduce((s, a) => s + a.totalMinor, 0);
   const items = [
-    { label: t("appointments.summaryBar.booked"), value: String(active.length) },
-    { label: t("appointments.summaryBar.arrived"), value: String(arrived) },
-    { label: t("appointments.summaryBar.done"), value: String(done) },
-    { label: t("appointments.summaryBar.value"), value: org.money(value) },
+    { label: t("appointments.summaryBar.booked"), value: String(active.length), color: "var(--status-booked)" },
+    { label: t("appointments.summaryBar.arrived"), value: String(arrived), color: "var(--status-checked_in)" },
+    { label: t("appointments.summaryBar.done"), value: String(done), color: "var(--status-completed)" },
+    { label: t("appointments.summaryBar.value"), value: org.money(value), color: "var(--gold)" },
   ];
   return (
-    <dl className="mb-3 flex flex-wrap gap-x-6 gap-y-1 text-sm">
+    <dl className="mb-4 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap">
       {items.map((i) => (
-        <div key={i.label} className="flex items-baseline gap-1.5">
-          <dt className="text-muted-foreground">{i.label}</dt>
-          <dd className="font-semibold tabular">{i.value}</dd>
+        <div key={i.label} className="flex items-center gap-3 rounded-xl border bg-card px-4 py-2.5 shadow-xs">
+          <span aria-hidden className="h-8 w-1 shrink-0 rounded-full" style={{ backgroundColor: i.color }} />
+          <div className="min-w-0">
+            <dt className="truncate text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">{i.label}</dt>
+            <dd className="font-display text-[22px] font-semibold leading-tight tabular">{i.value}</dd>
+          </div>
         </div>
       ))}
     </dl>

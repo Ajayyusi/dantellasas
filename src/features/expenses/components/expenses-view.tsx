@@ -233,11 +233,11 @@ export function ExpensesView({
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium">{categoryLabel(e)}</p>
-                <p className="truncate text-[13px] text-muted-foreground">
+                <p className="truncate text-[14px] text-muted-foreground">
                   {org.dateKey(e.dateKey)}
                   {e.vendor ? ` · ${e.vendor}` : ""}
                 </p>
-                {e.description ? <p className="line-clamp-1 text-[13px] text-muted-foreground">{e.description}</p> : null}
+                {e.description ? <p className="line-clamp-1 text-[14px] text-muted-foreground">{e.description}</p> : null}
               </div>
               <div className="shrink-0 text-end">
                 <p className="text-sm font-semibold tabular">{org.money(e.amountMinor)}</p>

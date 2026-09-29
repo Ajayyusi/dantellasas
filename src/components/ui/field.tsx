@@ -30,10 +30,10 @@ function Field({
 }) {
   const describedBy = htmlFor ? `${htmlFor}-desc` : undefined;
   return (
-    <div className={cn("grid gap-1.5", className)}>
+    <div className={cn("grid gap-2", className)}>
       {label ? (
         <div className="flex items-center justify-between gap-2">
-          <Label htmlFor={htmlFor} className="text-[13px] font-medium">
+          <Label htmlFor={htmlFor} className="text-[14px] font-semibold text-foreground/90">
             {label}
             {required ? <span className="text-destructive" aria-hidden>*</span> : null}
             {optionalLabel ? <span className="font-normal text-muted-foreground">({optionalLabel})</span> : null}
@@ -43,11 +43,11 @@ function Field({
       ) : null}
       {children}
       {error ? (
-        <p id={describedBy} role="alert" className="text-[13px] text-destructive">
+        <p id={describedBy} role="alert" className="flex items-center gap-1.5 text-[14px] font-medium text-destructive animate-fade-up">
           {error}
         </p>
       ) : hint ? (
-        <p id={describedBy} className="text-[13px] text-muted-foreground">
+        <p id={describedBy} className="text-[14px] text-muted-foreground">
           {hint}
         </p>
       ) : null}
@@ -56,7 +56,7 @@ function Field({
 }
 
 function FieldGroup({ className, ...props }: React.ComponentProps<"div">) {
-  return <div className={cn("grid gap-4 sm:grid-cols-2", className)} {...props} />;
+  return <div className={cn("grid gap-5 sm:grid-cols-2", className)} {...props} />;
 }
 
 function FormSection({
@@ -71,10 +71,10 @@ function FormSection({
   className?: string;
 }) {
   return (
-    <section className={cn("grid gap-4", className)}>
+    <section className={cn("grid gap-5", className)}>
       <div>
-        <h3 className="text-sm font-semibold">{title}</h3>
-        {description ? <p className="mt-0.5 text-[13px] text-muted-foreground">{description}</p> : null}
+        <h3 className="text-base font-semibold tracking-tight">{title}</h3>
+        {description ? <p className="mt-1 text-[14px] text-muted-foreground">{description}</p> : null}
       </div>
       {children}
     </section>

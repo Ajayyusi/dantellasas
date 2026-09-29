@@ -92,7 +92,7 @@ export function ClientPicker({ value, onChange }: { value: ClientSelection; onCh
         <div className="min-w-0 flex-1">
           <div className="truncate font-medium">{c.fullName}</div>
           {c.phone ? (
-            <div className="flex items-center gap-1 text-[13px] text-muted-foreground" dir="ltr">
+            <div className="flex items-center gap-1 text-[14px] text-muted-foreground" dir="ltr">
               <PhoneIcon className="size-3" />
               {c.phone}
             </div>

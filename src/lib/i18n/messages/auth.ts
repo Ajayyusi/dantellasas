@@ -3,9 +3,15 @@ import { defineMessages } from "../define";
 export const auth = defineMessages({
   en: {
     auth: {
-      tagline: "Run your salon beautifully.",
+      eyebrow: "Salon & spa management",
+      tagline: "Beauty, beautifully managed.",
       taglineBody:
-        "Appointments, clients, checkout and reporting — in one calm, fast workspace your whole team will enjoy using.",
+        "Appointments, clients, checkout and insights — one calm, elegant workspace your whole team will enjoy using.",
+      highlights: {
+        calendar: "A calendar that flows with your day",
+        checkout: "Checkout, split payments and receipts in seconds",
+        insights: "Revenue, team and client insights at a glance",
+      },
       signInTitle: "Welcome back",
       signInSubtitle: "Sign in to your workspace",
       email: "Email",
@@ -67,9 +73,15 @@ export const auth = defineMessages({
   },
   ar: {
     auth: {
-      tagline: "أدِر صالونك بأناقة.",
+      eyebrow: "إدارة الصالونات والسبا",
+      tagline: "إدارة الجمال بأناقة.",
       taglineBody:
-        "المواعيد والعملاء والدفع والتقارير — في مساحة عمل هادئة وسريعة يستمتع فريقك بالكامل باستخدامها.",
+        "المواعيد والعملاء والدفع والتقارير — مساحة عمل هادئة وأنيقة يستمتع فريقك بالكامل باستخدامها.",
+      highlights: {
+        calendar: "تقويم يواكب يومك بسلاسة",
+        checkout: "دفع وتقسيم للمبالغ وإيصالات في ثوانٍ",
+        insights: "رؤى الإيرادات والفريق والعملاء بلمحة",
+      },
       signInTitle: "مرحبًا بعودتك",
       signInSubtitle: "سجّل الدخول إلى مساحة عملك",
       email: "البريد الإلكتروني",

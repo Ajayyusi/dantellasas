@@ -97,7 +97,7 @@ export function ClientPicker({
                         setOpen(false);
                       }}
                     >
-                      <PersonAvatar name={c.fullName} className="size-6 text-[10px]" />
+                      <PersonAvatar name={c.fullName} className="size-6 text-[11px]" />
                       <span className="min-w-0 flex-1 truncate">{c.fullName}</span>
                       <span className="text-xs text-muted-foreground tabular" dir="ltr">
                         {c.phone}

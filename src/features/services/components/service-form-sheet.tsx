@@ -275,7 +275,7 @@ function ServiceForm({
               <label className="flex items-center justify-between gap-4">
                 <span className="grid gap-0.5">
                   <span className="text-sm font-medium">{t("services.active")}</span>
-                  <span className="text-[13px] text-muted-foreground">{t("services.activeHint")}</span>
+                  <span className="text-[14px] text-muted-foreground">{t("services.activeHint")}</span>
                 </span>
                 <Switch checked={form.active} onCheckedChange={(v) => set("active", v)} />
               </label>

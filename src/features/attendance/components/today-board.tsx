@@ -33,16 +33,16 @@ function BoardCard({ entry, now, canClock }: { entry: BoardEntry; now: number; c
   return (
     <li
       className={cn(
-        "flex flex-col gap-3 rounded-xl border bg-card p-4 shadow-sm",
-        state === "in" && "border-success/40",
-        state === "on_break" && "border-warning/50",
+        "hover-lift relative flex flex-col gap-3 overflow-hidden rounded-2xl border bg-card p-5 shadow-xs",
+        state === "in" && "border-success/40 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--success)_7%,var(--card)),var(--card)_45%)]",
+        state === "on_break" && "border-warning/50 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--warning)_9%,var(--card)),var(--card)_45%)]",
       )}
     >
       <div className="flex items-start gap-3">
-        <PersonAvatar name={staff.displayName} src={staff.photoUrl} color={staff.color} className="size-10" />
+        <PersonAvatar name={staff.displayName} src={staff.photoUrl} color={staff.color} className="size-11 text-[15px]" />
         <div className="min-w-0 flex-1">
-          <div className="truncate font-medium">{staff.displayName}</div>
-          <div className="truncate text-[13px] text-muted-foreground">
+          <div className="truncate text-[15px] font-semibold">{staff.displayName}</div>
+          <div className="truncate text-[14px] text-muted-foreground">
             {shift ? (
               <span dir="ltr" className="tabular">
                 {shift.start}–{shift.end}
@@ -61,7 +61,7 @@ function BoardCard({ entry, now, canClock }: { entry: BoardEntry; now: number; c
           {t("attendance.board.onLeave", { type: t(`attendance.leaveType.${leaveType}`) })}
         </Badge>
       ) : null}
-      <div className="text-[13px]">
+      <div className="text-[14px]">
         <ClockSummary record={record} now={now} earlierMinutes={entry.earlierMinutes} />
       </div>
       {canClock ? <ClockControls staffId={staff.id} record={record} branchId={org.branchId} className="mt-auto" /> : null}
@@ -79,15 +79,20 @@ export function TodayBoard({ scheduled, others, now }: { scheduled: BoardEntry[]
   };
   return (
     <div className="grid gap-6">
-      <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-        <span>{t("attendance.board.scheduledCount", { count: scheduled.length })}</span>
-        <span aria-hidden>·</span>
-        <span>{t("attendance.board.inCount", { count: counts.in })}</span>
-        <span aria-hidden>·</span>
-        <span>{t("attendance.board.breakCount", { count: counts.on_break })}</span>
-      </div>
+      <ul className="flex flex-wrap items-center gap-2 text-[14px] font-medium">
+        {[
+          { label: t("attendance.board.scheduledCount", { count: scheduled.length }), color: "var(--primary)" },
+          { label: t("attendance.board.inCount", { count: counts.in }), color: "var(--success)" },
+          { label: t("attendance.board.breakCount", { count: counts.on_break }), color: "var(--warning)" },
+        ].map((p) => (
+          <li key={p.label} className="inline-flex h-9 items-center gap-2 rounded-full border bg-card px-3.5 shadow-xs">
+            <span aria-hidden className="size-2 rounded-full" style={{ backgroundColor: p.color }} />
+            {p.label}
+          </li>
+        ))}
+      </ul>
       {scheduled.length === 0 ? (
-        <div className="rounded-xl border bg-card">
+        <div className="rounded-2xl border bg-card shadow-sm">
           <EmptyState compact icon={UsersIcon} title={t("attendance.board.empty")} description={t("attendance.board.emptyHint")} />
         </div>
       ) : (
@@ -99,7 +104,7 @@ export function TodayBoard({ scheduled, others, now }: { scheduled: BoardEntry[]
       )}
       {others.length > 0 ? (
         <section className="grid gap-3">
-          <h2 className="text-sm font-semibold">{t("attendance.board.othersTitle")}</h2>
+          <h2 className="text-lg font-semibold">{t("attendance.board.othersTitle")}</h2>
           <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {others.map((e) => (
               <BoardCard key={e.staff.id} entry={e} now={now} canClock={canClock} />

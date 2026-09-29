@@ -80,7 +80,7 @@ export function ToggleRow({
     <div className="flex items-center justify-between gap-4 py-1">
       <label htmlFor={id} className="grid min-w-0 cursor-pointer gap-0.5">
         <span className="text-sm font-medium">{label}</span>
-        {hint ? <span className="text-[13px] text-muted-foreground">{hint}</span> : null}
+        {hint ? <span className="text-[14px] text-muted-foreground">{hint}</span> : null}
       </label>
       <Switch id={id} checked={checked} onCheckedChange={onCheckedChange} disabled={disabled} />
     </div>
@@ -105,10 +105,10 @@ export function SaveBar({
       className={cn(
         "flex items-center justify-end gap-2 py-3",
         // Only pinned to the viewport while there is something to save.
-        dirty && "sticky bottom-0 z-10 -mx-4 border-t bg-background/90 px-4 backdrop-blur sm:mx-0 sm:px-0",
+        dirty && "sticky bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-10 -mx-4 border-t bg-background/90 px-4 backdrop-blur sm:mx-0 sm:px-0 lg:bottom-0",
       )}
     >
-      {dirty ? <span className="me-auto text-[13px] text-muted-foreground">{t("settings.unsaved")}</span> : null}
+      {dirty ? <span className="me-auto text-[14px] text-muted-foreground">{t("settings.unsaved")}</span> : null}
       {dirty ? (
         <Button type="button" variant="ghost" onClick={onReset} disabled={pending}>
           {t("settings.discard")}

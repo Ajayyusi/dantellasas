@@ -111,6 +111,7 @@ export const staff = defineMessages({
       profile: {
         joined: "Joined {date}",
         notBookable: "Not bookable",
+        viewCalendar: "View calendar",
         weeklySchedule: "Weekly schedule",
         noToday: "No appointments today",
         noUpcoming: "No upcoming appointments",
@@ -408,6 +409,7 @@ export const staff = defineMessages({
       profile: {
         joined: "التحق في {date}",
         notBookable: "غير متاح للحجز",
+        viewCalendar: "عرض التقويم",
         weeklySchedule: "الجدول الأسبوعي",
         noToday: "لا توجد مواعيد اليوم",
         noUpcoming: "لا توجد مواعيد قادمة",

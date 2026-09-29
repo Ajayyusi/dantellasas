@@ -80,3 +80,24 @@ export function visibleNav(permissions: string[]): NavSection[] {
     (s) => s.items.length > 0,
   );
 }
+
+export function isActiveHref(pathname: string, href: string): boolean {
+  return pathname === href || pathname.startsWith(href + "/");
+}
+
+/** The section and item for the current path (for the top bar's page context). */
+export function activeNav(sections: NavSection[], pathname: string): { section: NavSection; item: NavItem } | null {
+  for (const section of sections) {
+    const item = section.items.find((i) => isActiveHref(pathname, i.href));
+    if (item) return { section, item };
+  }
+  return null;
+}
+
+/** Destinations for the phone tab bar, in order; the rest live behind "More". */
+export const MOBILE_TABS: { href: string; short: TKey }[] = [
+  { href: "/dashboard", short: "nav.short.dashboard" },
+  { href: "/appointments", short: "nav.short.appointments" },
+  { href: "/pos", short: "nav.short.checkout" },
+  { href: "/clients", short: "nav.short.clients" },
+];

@@ -15,7 +15,7 @@ function Progress({ used, total }: { used: number; total: number }) {
   const pct = total > 0 ? Math.min(100, Math.round((used / total) * 100)) : 0;
   return (
     <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted" role="progressbar" aria-valuenow={used} aria-valuemin={0} aria-valuemax={total}>
-      <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
+      <div className="h-full rounded-full bg-gradient-to-r from-primary to-[color-mix(in_oklch,var(--primary)_55%,var(--gold))] rtl:bg-gradient-to-l" style={{ width: `${pct}%` }} />
     </div>
   );
 }
@@ -26,15 +26,15 @@ export function PackageCard({ pkg, className }: { pkg: ClientPackageDTO; classNa
   const org = useOrg();
   const inactive = pkg.status !== "active";
   return (
-    <div className={cn("grid grid-cols-1 gap-3 rounded-xl border bg-card p-4", inactive && "opacity-75", className)}>
+    <div className={cn("grid grid-cols-1 gap-3 rounded-2xl border bg-card p-5 shadow-xs", inactive && "opacity-75", className)}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-3">
-          <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
-            <PackageIcon className="size-4" />
+          <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary-soft text-primary">
+            <PackageIcon className="size-[18px]" />
           </div>
           <div className="min-w-0">
-            <div className="truncate font-medium">{pkg.name}</div>
-            <div className="text-[13px] text-muted-foreground">
+            <div className="truncate text-base font-semibold">{pkg.name}</div>
+            <div className="text-[14px] text-muted-foreground">
               {[
                 pkg.purchasedAt ? t("clients.packages.purchased", { date: org.date(pkg.purchasedAt, "date") }) : null,
                 pkg.expiresAt ? t("clients.packages.expires", { date: org.date(pkg.expiresAt, "date") }) : t("clients.packages.noExpiry"),
@@ -65,7 +65,7 @@ export function PackageCard({ pkg, className }: { pkg: ClientPackageDTO; classNa
             <li key={i.serviceId || i.serviceName} className="grid gap-1.5">
               <div className="flex items-center justify-between gap-3 text-sm">
                 <span className="min-w-0 truncate">{i.serviceName}</span>
-                <span className="shrink-0 text-[13px] text-muted-foreground tabular">
+                <span className="shrink-0 text-[14px] text-muted-foreground tabular">
                   {t("clients.packages.used", { used: i.used, total: i.total })}
                   {" · "}
                   <span className="font-medium text-foreground">{t("clients.packages.remaining", { count: Math.max(0, i.total - i.used) })}</span>
@@ -88,15 +88,22 @@ export function MembershipCard({ membership: m, className }: { membership: Clien
     m.productDiscountBps > 0 ? t("clients.memberships.productDiscount", { value: formatPercent(m.productDiscountBps / 10000, locale) }) : null,
   ].filter(Boolean);
   return (
-    <div className={cn("grid grid-cols-1 gap-2 rounded-xl border bg-card p-4", m.status !== "active" && "opacity-75", className)}>
+    <div
+      className={cn(
+        "grid grid-cols-1 gap-2.5 rounded-2xl border bg-card p-5 shadow-xs",
+        m.status === "active" && "border-[color-mix(in_oklch,var(--gold)_40%,var(--border))] bg-[linear-gradient(135deg,color-mix(in_oklch,var(--gold)_10%,var(--card)),var(--card)_60%)]",
+        m.status !== "active" && "opacity-75",
+        className,
+      )}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-3">
-          <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-warning/15 text-[color-mix(in_oklch,var(--warning)_70%,var(--foreground))]">
-            <CrownIcon className="size-4" />
+          <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-gold-soft text-gold-foreground ring-1 ring-gold/40">
+            <CrownIcon className="size-[18px]" />
           </div>
           <div className="min-w-0">
-            <div className="truncate font-medium">{m.planName}</div>
-            <div className="text-[13px] text-muted-foreground">
+            <div className="truncate text-base font-semibold">{m.planName}</div>
+            <div className="text-[14px] text-muted-foreground">
               {t("clients.memberships.period", { start: org.date(m.startAt, "date"), end: org.date(m.endAt, "date") })}
             </div>
           </div>
@@ -104,7 +111,7 @@ export function MembershipCard({ membership: m, className }: { membership: Clien
         <MembershipStatusBadge status={m.status} />
       </div>
       {perks.length > 0 || m.autoRenew ? (
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted-foreground">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[14px] text-muted-foreground">
           {perks.map((p) => (
             <span key={p}>{p}</span>
           ))}
@@ -124,7 +131,7 @@ export function PackagesTab({ packages }: { packages: ClientPackageDTO[] }) {
   const { t } = useI18n();
   if (packages.length === 0) {
     return (
-      <div className="rounded-xl border bg-card shadow-sm">
+      <div className="rounded-2xl border bg-card shadow-sm">
         <EmptyState icon={PackageIcon} title={t("clients.packages.empty")} description={t("clients.packages.emptyHint")} />
       </div>
     );
@@ -142,7 +149,7 @@ export function MembershipsTab({ memberships }: { memberships: ClientMembershipD
   const { t } = useI18n();
   if (memberships.length === 0) {
     return (
-      <div className="rounded-xl border bg-card shadow-sm">
+      <div className="rounded-2xl border bg-card shadow-sm">
         <EmptyState icon={CrownIcon} title={t("clients.memberships.empty")} description={t("clients.memberships.emptyHint")} />
       </div>
     );

@@ -269,7 +269,7 @@ function ProductForm({ onOpenChange, product, categories, suppliers, onManageCat
             <label className="flex items-center justify-between gap-4">
               <span className="grid gap-0.5">
                 <span className="text-sm font-medium">{t("inventory.trackStock")}</span>
-                <span className="text-[13px] text-muted-foreground">{t("inventory.trackStockHint")}</span>
+                <span className="text-[14px] text-muted-foreground">{t("inventory.trackStockHint")}</span>
               </span>
               <Switch checked={form.trackStock} onCheckedChange={(v) => set("trackStock", v)} />
             </label>
@@ -290,7 +290,7 @@ function ProductForm({ onOpenChange, product, categories, suppliers, onManageCat
             <label className="flex items-center justify-between gap-4">
               <span className="grid gap-0.5">
                 <span className="text-sm font-medium">{t("common.active")}</span>
-                <span className="text-[13px] text-muted-foreground">{t("inventory.activeHint")}</span>
+                <span className="text-[14px] text-muted-foreground">{t("inventory.activeHint")}</span>
               </span>
               <Switch checked={form.active} onCheckedChange={(v) => set("active", v)} />
             </label>

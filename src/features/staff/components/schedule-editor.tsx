@@ -63,7 +63,7 @@ export function ScheduleEditor({
   return (
     <div className="grid gap-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-[13px] text-muted-foreground">
+        <p className="text-[14px] text-muted-foreground">
           {t("staff.schedule.weeklyTotal", { hours: formatDuration(total, locale) })}
         </p>
         {first ? (
@@ -132,7 +132,7 @@ export function ScheduleEditor({
               </div>
               {d.working && hasBreak ? (
                 <div className="flex flex-wrap items-center gap-2 ps-[8.75rem] max-sm:ps-0">
-                  <span className="flex items-center gap-1.5 text-[13px] text-muted-foreground">
+                  <span className="flex items-center gap-1.5 text-[14px] text-muted-foreground">
                     <CoffeeIcon className="size-3.5" />
                     {t("staff.schedule.break")}
                   </span>
@@ -161,7 +161,7 @@ export function ScheduleEditor({
                 </div>
               ) : null}
               {d.working && err ? (
-                <p role="alert" className="text-[13px] text-destructive">
+                <p role="alert" className="text-[14px] text-destructive">
                   {err}
                 </p>
               ) : null}

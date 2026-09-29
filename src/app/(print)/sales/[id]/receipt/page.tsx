@@ -41,23 +41,27 @@ export default async function ReceiptPage({ params }: PageProps<"/sales/[id]/rec
   }
 
   return (
-    <main className="min-h-dvh bg-muted/40 py-8 print:bg-white print:py-0">
+    <main className="min-h-dvh bg-brand-wash py-8 print:bg-none print:bg-white print:py-0">
       <div className="no-print mx-auto mb-4 flex max-w-[380px] justify-end px-4">
         <PrintButton label={t("pos.printReceipt")} />
       </div>
-      <article className="mx-auto max-w-[380px] bg-white px-6 py-7 text-[13px] leading-relaxed text-neutral-900 shadow-sm print:max-w-none print:px-0 print:py-0 print:shadow-none">
+      <article className="mx-auto max-w-[380px] rounded-2xl border border-neutral-200 bg-white px-6 py-7 text-[14px] leading-relaxed text-neutral-900 shadow-md print:max-w-none print:rounded-none print:border-0 print:px-0 print:py-0 print:shadow-none">
         <header className="text-center">
           {s.business.logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element -- tenant logo from Storage, printed as-is
             <img src={s.business.logoUrl} alt="" className="mx-auto mb-2 h-12 w-auto object-contain" />
           ) : null}
-          <h1 className="text-base font-semibold">{s.business.displayName || ctx.org.name}</h1>
+          <h1 className="font-display text-[24px] font-semibold leading-tight">{s.business.displayName || ctx.org.name}</h1>
           {s.business.legalName ? <p>{s.business.legalName}</p> : null}
           {branch?.address || s.business.address ? <p className="text-neutral-600">{branch?.address || s.business.address}</p> : null}
           {branch?.phone || s.business.phone ? <p className="text-neutral-600" dir="ltr">{branch?.phone || s.business.phone}</p> : null}
           {s.business.trn ? <p className="mt-1 font-medium">{t("sales.receipt.trn", { trn: s.business.trn })}</p> : null}
           {s.receipts.header ? <p className="mt-2 whitespace-pre-wrap">{s.receipts.header}</p> : null}
-          <p className="mt-3 text-sm font-semibold uppercase tracking-wide">{t("sales.receipt.title")}</p>
+          <p className="mt-3 flex items-center justify-center gap-2.5 text-[13px] font-semibold uppercase tracking-[0.14em]">
+            <span aria-hidden className="h-px w-8 bg-neutral-300" />
+            {t("sales.receipt.title")}
+            <span aria-hidden className="h-px w-8 bg-neutral-300" />
+          </p>
         </header>
 
         <dl className="mt-4 grid grid-cols-[auto_1fr] gap-x-3 border-y border-dashed border-neutral-300 py-2">
@@ -88,7 +92,7 @@ export default async function ReceiptPage({ params }: PageProps<"/sales/[id]/rec
               <tr key={i.id} className="align-top">
                 <td className="py-1 pe-2">
                   {i.name}
-                  {s.receipts.showStaffOnReceipt && i.staffName ? <div className="text-[11px] text-neutral-500">{t("sales.receipt.servedBy", { name: i.staffName })}</div> : null}
+                  {s.receipts.showStaffOnReceipt && i.staffName ? <div className="text-[12px] text-neutral-500">{t("sales.receipt.servedBy", { name: i.staffName })}</div> : null}
                 </td>
                 <td className="py-1 text-end tabular">{i.quantity}</td>
                 <td className="py-1 text-end tabular">{money(i.totalMinor)}</td>
@@ -124,12 +128,12 @@ export default async function ReceiptPage({ params }: PageProps<"/sales/[id]/rec
               <dd className="tabular">{money(tx.tipMinor)}</dd>
             </div>
           ) : null}
-          <div className="mt-1 flex justify-between border-t border-neutral-300 pt-1 text-base font-semibold">
+          <div className="mt-1.5 flex items-baseline justify-between border-t border-neutral-300 pt-1.5 text-lg font-semibold">
             <dt>{t("pos.total")}</dt>
             <dd className="tabular">{money(tx.totalMinor + tx.tipMinor)}</dd>
           </div>
           {s.tax.pricesIncludeTax && tx.taxMinor > 0 ? (
-            <p className="text-end text-[11px] text-neutral-500">{t("pos.vatIncluded", { amount: money(tx.taxMinor) })}</p>
+            <p className="text-end text-[12px] text-neutral-500">{t("pos.vatIncluded", { amount: money(tx.taxMinor) })}</p>
           ) : null}
         </dl>
 
@@ -157,7 +161,7 @@ export default async function ReceiptPage({ params }: PageProps<"/sales/[id]/rec
         </dl>
 
         <footer className="mt-5 text-center text-neutral-600">
-          <p className="whitespace-pre-wrap">{s.receipts.footer || t("sales.receipt.thanks")}</p>
+          <p className="whitespace-pre-wrap font-display text-[18px] font-semibold text-neutral-700">{s.receipts.footer || t("sales.receipt.thanks")}</p>
           {s.business.website ? <p dir="ltr">{s.business.website}</p> : null}
         </footer>
       </article>

@@ -6,6 +6,8 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+import { fieldControl } from "./input";
+
 const Select = SelectPrimitive.Root;
 const SelectGroup = SelectPrimitive.Group;
 const SelectValue = SelectPrimitive.Value;
@@ -20,17 +22,16 @@ function SelectTrigger({
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       className={cn(
-        "flex w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-card px-3 text-sm shadow-sm outline-none transition-[color,box-shadow,border-color]",
-        "data-[placeholder]:text-muted-foreground focus-visible:border-primary/60 focus-visible:ring-[3px] focus-visible:ring-ring/40",
-        "aria-invalid:border-destructive disabled:cursor-not-allowed disabled:opacity-50 [&>span]:truncate",
-        size === "sm" ? "h-8 text-[13px]" : "h-9",
+        fieldControl,
+        "flex items-center justify-between gap-2 whitespace-nowrap px-3.5 data-[placeholder]:text-muted-foreground data-[state=open]:border-[color-mix(in_oklch,var(--primary)_55%,var(--input))] data-[state=open]:ring-4 data-[state=open]:ring-ring/25 [&>span]:truncate",
+        size === "sm" ? "h-9 px-3 text-[14px]" : "h-11",
         className,
       )}
       {...props}
     >
       {children}
       <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon className="size-4 shrink-0 opacity-60" />
+        <ChevronDownIcon className="size-4 shrink-0 text-muted-foreground transition-transform duration-200 [[data-state=open]>&]:rotate-180" />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   );
@@ -47,9 +48,9 @@ function SelectContent({
       <SelectPrimitive.Content
         position={position}
         className={cn(
-          "relative z-50 max-h-(--radix-select-content-available-height) min-w-[8rem] overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-md",
-          "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
-          position === "popper" && "w-full min-w-(--radix-select-trigger-width) data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
+          "relative z-50 max-h-(--radix-select-content-available-height) min-w-[8rem] overflow-hidden rounded-xl border bg-popover text-popover-foreground shadow-md",
+          "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-[0.97] data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-[0.97] duration-150",
+          position === "popper" && "w-full min-w-(--radix-select-trigger-width) data-[side=bottom]:translate-y-1.5 data-[side=top]:-translate-y-1.5",
           className,
         )}
         {...props}
@@ -57,7 +58,7 @@ function SelectContent({
         <SelectPrimitive.ScrollUpButton className="flex h-6 items-center justify-center">
           <ChevronUpIcon className="size-4" />
         </SelectPrimitive.ScrollUpButton>
-        <SelectPrimitive.Viewport className="p-1">{children}</SelectPrimitive.Viewport>
+        <SelectPrimitive.Viewport className="p-1.5">{children}</SelectPrimitive.Viewport>
         <SelectPrimitive.ScrollDownButton className="flex h-6 items-center justify-center">
           <ChevronDownIcon className="size-4" />
         </SelectPrimitive.ScrollDownButton>
@@ -70,7 +71,7 @@ function SelectItem({ className, children, ...props }: React.ComponentProps<type
   return (
     <SelectPrimitive.Item
       className={cn(
-        "relative flex w-full cursor-default select-none items-center gap-2 rounded-md py-1.5 pe-8 ps-2 text-sm outline-none focus:bg-accent data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "relative flex w-full cursor-default select-none items-center gap-2 rounded-lg py-2 pe-9 ps-2.5 text-sm outline-none transition-colors focus:bg-accent data-[state=checked]:font-medium data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className,
       )}
       {...props}

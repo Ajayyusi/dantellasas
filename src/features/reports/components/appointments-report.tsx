@@ -134,7 +134,7 @@ export function AppointmentsReport({ data, range }: { data: Data; range: DateRan
               <span className="truncate font-medium">{r.clientName || t("common.walkIn")}</span>
               <AppointmentStatusBadge status={r.status} />
             </div>
-            <p className="truncate text-[13px] text-muted-foreground">
+            <p className="truncate text-[14px] text-muted-foreground">
               {org.date(r.startAt, "datetime")} · {r.services}
             </p>
           </div>

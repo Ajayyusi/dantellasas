@@ -53,12 +53,12 @@ export function AppointmentLines({
         return (
           <li key={l.id} className={cn("flex items-center gap-4 px-4 py-3", muted && "opacity-60")}>
             <div className="w-24 shrink-0">
-              {showDate ? <div className="text-[13px] text-muted-foreground">{org.dateKey(l.dateKey, "weekdayDate")}</div> : null}
+              {showDate ? <div className="text-[14px] text-muted-foreground">{org.dateKey(l.dateKey, "weekdayDate")}</div> : null}
               <div className="text-sm font-medium tabular">{org.date(l.startAt, "time")}</div>
             </div>
             <div className="min-w-0 flex-1">
               <div className={cn("truncate text-sm font-medium", muted && "line-through")}>{l.serviceName}</div>
-              <div className="truncate text-[13px] text-muted-foreground">
+              <div className="truncate text-[14px] text-muted-foreground">
                 {l.clientName || t("common.walkIn")} · {formatDuration(l.durationMin, locale)}
                 {org.branches.length > 1 ? ` · ${org.branchName(l.branchId)}` : ""}
               </div>

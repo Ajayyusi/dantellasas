@@ -234,7 +234,7 @@ export function PosView({ catalog, initial, branchId }: { catalog: PosCatalog; i
 
       {/* Mobile: jump to the ticket after adding items. */}
       {mobileTab === "catalog" && lines.length > 0 ? (
-        <Button className="sticky bottom-3 lg:hidden" size="lg" onClick={() => setMobileTab("ticket")}>
+        <Button className="sticky bottom-[calc(5.75rem+env(safe-area-inset-bottom))] z-30 shadow-lg lg:hidden" size="lg" onClick={() => setMobileTab("ticket")}>
           {t("pos.mobileTicket", { count: lines.length })} · {org.money(pricing.dueMinor)}
         </Button>
       ) : null}

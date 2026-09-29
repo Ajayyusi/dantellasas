@@ -178,7 +178,7 @@ function PlanForm({
               </Field>
             </FieldGroup>
             <div className="grid gap-2">
-              <div className="text-[13px] font-medium">
+              <div className="text-[14px] font-medium">
                 {t("catalog.memberships.includedPerPeriod", { period: t(`catalog.memberships.periodNouns.${form.period}`) })}
               </div>
               <ServiceLinesEditor
@@ -196,7 +196,7 @@ function PlanForm({
           <label className="flex items-center justify-between gap-4">
             <span className="grid gap-0.5">
               <span className="text-sm font-medium">{t("common.active")}</span>
-              <span className="text-[13px] text-muted-foreground">{t("catalog.memberships.activeHint")}</span>
+              <span className="text-[14px] text-muted-foreground">{t("catalog.memberships.activeHint")}</span>
             </span>
             <Switch checked={form.active} onCheckedChange={(v) => set("active", v)} />
           </label>

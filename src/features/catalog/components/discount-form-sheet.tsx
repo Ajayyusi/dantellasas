@@ -223,7 +223,7 @@ function DiscountForm({ onOpenChange, discount }: { onOpenChange: (open: boolean
           <label className="flex items-center justify-between gap-4">
             <span className="grid gap-0.5">
               <span className="text-sm font-medium">{t("common.active")}</span>
-              <span className="text-[13px] text-muted-foreground">{t("catalog.discounts.activeHint")}</span>
+              <span className="text-[14px] text-muted-foreground">{t("catalog.discounts.activeHint")}</span>
             </span>
             <Switch checked={form.active} onCheckedChange={(v) => set("active", v)} />
           </label>

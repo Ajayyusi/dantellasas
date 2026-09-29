@@ -53,14 +53,14 @@ export function ActivityTab({ activity }: { activity: ClientActivityView[] }) {
 
   if (activity.length === 0) {
     return (
-      <div className="rounded-xl border bg-card shadow-sm">
+      <div className="rounded-2xl border bg-card shadow-sm">
         <EmptyState icon={HistoryIcon} title={t("clients.activity.empty")} />
       </div>
     );
   }
 
   return (
-    <ol className="relative grid max-w-3xl grid-cols-1 gap-0 rounded-xl border bg-card p-4 shadow-sm sm:p-5">
+    <ol className="relative grid max-w-3xl grid-cols-1 gap-0 rounded-2xl border bg-card p-5 shadow-sm sm:p-6">
       {activity.map((a, i) => {
         const verb = a.action.startsWith("client.") ? a.action.slice(7) : a.action;
         const Icon = ICONS[verb] ?? HistoryIcon;
@@ -70,19 +70,19 @@ export function ActivityTab({ activity }: { activity: ClientActivityView[] }) {
         return (
           <li key={a.id} className="relative flex gap-3 pb-5 last:pb-0">
             {i < activity.length - 1 ? <span className="absolute start-[15px] top-8 bottom-0 w-px bg-border" aria-hidden /> : null}
-            <span className="grid size-8 shrink-0 place-items-center rounded-full border bg-background text-muted-foreground">
+            <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary-soft text-primary ring-4 ring-card">
               <Icon className="size-4" />
             </span>
             <div className="grid min-w-0 gap-0.5 pt-1">
-              <p className="text-sm">
-                <span className="font-medium">{label}</span>
+              <p className="text-[15px]">
+                <span className="font-semibold">{label}</span>
                 <span className="text-muted-foreground"> · {a.actorName || "—"}</span>
               </p>
               {fields.length > 0 ? (
-                <p className="text-[13px] text-muted-foreground">{t("clients.activity.changed", { fields: fields.join(", ") })}</p>
+                <p className="text-[14px] text-muted-foreground">{t("clients.activity.changed", { fields: fields.join(", ") })}</p>
               ) : null}
               {showSummary ? (
-                <p className="line-clamp-2 text-[13px] text-muted-foreground" dir="auto">
+                <p className="line-clamp-2 text-[14px] text-muted-foreground" dir="auto">
                   {a.summary.slice(a.summary.indexOf(": ") + 2)}
                 </p>
               ) : null}

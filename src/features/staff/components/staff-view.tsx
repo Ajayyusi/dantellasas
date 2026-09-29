@@ -43,6 +43,9 @@ import { StaffFormSheet } from "./staff-form-sheet";
 import { StaffReorderList } from "./staff-reorder-list";
 import type { CategoryOption, ServiceOption } from "./services-picker";
 
+/** Phone numbers live on the profile; the column can be turned on from the table menu. */
+const STAFF_HIDDEN_COLUMNS = { phone: false };
+
 export function StaffView({
   staff,
   services,
@@ -86,13 +89,13 @@ export function StaffView({
         enableHiding: false,
         cell: ({ row: { original: s } }) => (
           <div className="flex min-w-0 items-center gap-3">
-            <PersonAvatar name={s.displayName} src={s.photoUrl} color={s.color} className="size-9" />
+            <PersonAvatar name={s.displayName} src={s.photoUrl} color={s.color} className="size-10 text-[14px]" />
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <span className="truncate font-medium">{s.displayName}</span>
+                <span className="truncate font-semibold">{s.displayName}</span>
                 <span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: s.color }} aria-hidden />
               </div>
-              {s.email ? <div className="truncate text-[13px] text-muted-foreground">{s.email}</div> : null}
+              {s.email ? <div className="truncate text-[14px] text-muted-foreground">{s.email}</div> : null}
             </div>
           </div>
         ),
@@ -106,7 +109,7 @@ export function StaffView({
         enableSorting: false,
         accessorFn: (s) => s.branchIds.map((b) => org.branchName(b)).join(", "),
         cell: ({ row: { original: s } }) => (
-          <span className="text-[13px]">
+          <span className="text-[14px]">
             {s.branchIds.length === 0 ? t("common.allBranches") : s.branchIds.map((b) => org.branchName(b)).join(", ")}
           </span>
         ),
@@ -144,7 +147,7 @@ export function StaffView({
         enableSorting: false,
         accessorFn: (s) => s.phone,
         cell: ({ getValue }) => (
-          <span dir="ltr" className="tabular text-[13px]">
+          <span dir="ltr" className="tabular text-[14px]">
             {(getValue() as string) || "—"}
           </span>
         ),
@@ -226,7 +229,7 @@ export function StaffView({
         }
       >
         {expiring > 0 ? (
-          <p className="mt-2 text-[13px] text-[color-mix(in_oklch,var(--warning)_70%,var(--foreground))]">
+          <p className="mt-2 text-[14px] text-[color-mix(in_oklch,var(--warning)_70%,var(--foreground))]">
             {t("staff.docs.summary", { count: expiring })}
           </p>
         ) : null}
@@ -248,6 +251,7 @@ export function StaffView({
           data={rows}
           columns={columns}
           getRowId={(s) => s.id}
+          initialVisibility={STAFF_HIDDEN_COLUMNS}
           searchText={(s) => `${s.displayName} ${s.firstName} ${s.lastName} ${s.position} ${s.phone} ${s.email}`}
           searchPlaceholder={t("staff.searchPlaceholder")}
           onRowClick={(s) => router.push(`/staff/${s.id}`)}
@@ -268,10 +272,10 @@ export function StaffView({
           }
           mobileCard={(s) => (
             <div className="flex items-center gap-3">
-              <PersonAvatar name={s.displayName} src={s.photoUrl} color={s.color} className="size-10" />
+              <PersonAvatar name={s.displayName} src={s.photoUrl} color={s.color} className="size-11 text-[15px]" />
               <div className="min-w-0 flex-1">
-                <div className="truncate font-medium">{s.displayName}</div>
-                <div className="truncate text-[13px] text-muted-foreground">{s.position || "—"}</div>
+                <div className="truncate text-[15px] font-semibold">{s.displayName}</div>
+                <div className="truncate text-[14px] text-muted-foreground">{s.position || "—"}</div>
               </div>
               <div className="flex flex-col items-end gap-1">
                 <StaffStatusBadge status={s.status} />

@@ -105,7 +105,7 @@ export function PackagesReport({ data, range }: { data: Data; range: DateRange }
               <span className="truncate font-medium">{name(r)}</span>
               <span className="shrink-0 font-semibold tabular">{org.money(r.valueMinor)}</span>
             </div>
-            <p className="text-[13px] text-muted-foreground">
+            <p className="text-[14px] text-muted-foreground">
               {t(`reports.packages.types.${r.type}`)} · {t("reports.times", { count: formatNumber(r.count, locale) })}
             </p>
           </div>

@@ -168,7 +168,7 @@ export function SuppliersTab({
           <div className={cn("flex items-center justify-between gap-3", !s.active && "opacity-60")}>
             <div className="min-w-0">
               <p className="truncate text-sm font-medium">{s.name}</p>
-              <p className="truncate text-[13px] text-muted-foreground">{[s.contactName, s.phone].filter(Boolean).join(" · ") || s.email || "—"}</p>
+              <p className="truncate text-[14px] text-muted-foreground">{[s.contactName, s.phone].filter(Boolean).join(" · ") || s.email || "—"}</p>
             </div>
             {!s.active ? <Badge variant="neutral">{t("common.inactive")}</Badge> : null}
           </div>

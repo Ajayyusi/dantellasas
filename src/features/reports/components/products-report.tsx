@@ -115,7 +115,7 @@ export function ProductsReport({ data, range }: { data: Data; range: DateRange }
               <span className="truncate font-medium">{localName(r, locale)}</span>
               <span className="shrink-0 font-semibold tabular">{org.money(r.revenueMinor)}</span>
             </div>
-            <div className="flex items-center justify-between gap-2 text-[13px] text-muted-foreground">
+            <div className="flex items-center justify-between gap-2 text-[14px] text-muted-foreground">
               <span className="tabular">
                 {t("reports.products.unitsCount", { count: formatNumber(r.units, locale) })}
                 {r.status !== "untracked" ? ` · ${t("reports.products.inStock", { count: formatNumber(r.stock, locale) })}` : ""}

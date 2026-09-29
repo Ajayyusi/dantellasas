@@ -155,7 +155,7 @@ function LogoCard({ url, name }: { url: string; name: string }) {
         </Avatar>
         <div className="grid min-w-0 flex-1 gap-1">
           <p className="text-sm font-medium">{t("settings.business.logo")}</p>
-          <p className="text-[13px] text-muted-foreground">{url ? t("settings.business.logoHint") : `${t("settings.business.noLogo")} · ${t("settings.business.logoHint")}`}</p>
+          <p className="text-[14px] text-muted-foreground">{url ? t("settings.business.logoHint") : `${t("settings.business.noLogo")} · ${t("settings.business.logoHint")}`}</p>
         </div>
         <div className="flex gap-2">
           <input

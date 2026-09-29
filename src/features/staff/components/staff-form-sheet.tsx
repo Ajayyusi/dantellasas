@@ -120,7 +120,7 @@ function StaffForm({ onOpenChange, staff, services, categories, staffCount, onSa
               <ProfileSection form={form} setForm={setForm} staff={staff} onPickPhoto={setPhoto} errorFor={errorFor} />
             </TabsContent>
             <TabsContent value="services" className="grid gap-3">
-              <p className="text-[13px] text-muted-foreground">{t("staff.form.servicesHint")}</p>
+              <p className="text-[14px] text-muted-foreground">{t("staff.form.servicesHint")}</p>
               <ServicesPicker
                 services={services}
                 categories={categories}

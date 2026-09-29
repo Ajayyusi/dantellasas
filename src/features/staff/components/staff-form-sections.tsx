@@ -103,7 +103,7 @@ export function ProfileSection({
               />
             </Field>
           ) : errorFor("branchIds") ? (
-            <p role="alert" className="text-[13px] text-destructive sm:col-span-2">
+            <p role="alert" className="text-[14px] text-destructive sm:col-span-2">
               {errorFor("branchIds")}
             </p>
           ) : null}
@@ -147,7 +147,7 @@ export function ProfileSection({
         <label className="flex items-center justify-between gap-4 rounded-lg border px-3 py-2.5">
           <span className="grid gap-0.5">
             <span className="text-sm font-medium">{t("staff.form.bookable")}</span>
-            <span className="text-[13px] text-muted-foreground">{t("staff.form.bookableHint")}</span>
+            <span className="text-[14px] text-muted-foreground">{t("staff.form.bookableHint")}</span>
           </span>
           <Switch checked={form.bookable} onCheckedChange={(v) => set("bookable", v)} />
         </label>

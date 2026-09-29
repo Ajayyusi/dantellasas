@@ -80,7 +80,7 @@ export function PaymentsView({ initial }: { initial: SectionValues<"payments"> }
           )}
         />
         {f.errorFor("values.methods") ? (
-          <p role="alert" className="mt-2 text-[13px] text-destructive">
+          <p role="alert" className="mt-2 text-[14px] text-destructive">
             {f.errorFor("values.methods")}
           </p>
         ) : null}

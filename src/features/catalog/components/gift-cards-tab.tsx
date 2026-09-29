@@ -37,7 +37,7 @@ export function GiftCardsTab({ cards, limit }: { cards: GiftCardDTO[]; limit: nu
         accessorKey: "code",
         header: t("catalog.giftCards.code"),
         cell: ({ row }) => (
-          <span className="font-mono text-[13px] font-medium tracking-wide" dir="ltr">
+          <span className="font-mono text-[14px] font-medium tracking-wide" dir="ltr">
             {row.original.code}
           </span>
         ),
@@ -165,10 +165,10 @@ export function GiftCardsTab({ cards, limit }: { cards: GiftCardDTO[]; limit: nu
         mobileCard={(r) => (
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <div className="font-mono text-[13px] font-medium" dir="ltr">
+              <div className="font-mono text-[14px] font-medium" dir="ltr">
                 {r.code}
               </div>
-              <div className="truncate text-[13px] text-muted-foreground">
+              <div className="truncate text-[14px] text-muted-foreground">
                 {r.recipientName || r.purchaserName || t("catalog.giftCards.complimentary")}
               </div>
             </div>
@@ -188,7 +188,7 @@ export function GiftCardsTab({ cards, limit }: { cards: GiftCardDTO[]; limit: nu
         }
         footer={
           cards.length >= limit ? (
-            <p className="border-t px-4 py-2 text-[13px] text-muted-foreground">{t("catalog.giftCards.limitNote", { limit })}</p>
+            <p className="border-t px-4 py-2 text-[14px] text-muted-foreground">{t("catalog.giftCards.limitNote", { limit })}</p>
           ) : null
         }
       />

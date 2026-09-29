@@ -114,7 +114,7 @@ export function StaffReport({ data, range }: { data: Data; range: DateRange }) {
               <span className="truncate font-medium">{r.name}</span>
               <span className="shrink-0 font-semibold tabular">{org.money(r.revenueMinor)}</span>
             </div>
-            <p className="text-[13px] text-muted-foreground tabular">
+            <p className="text-[14px] text-muted-foreground tabular">
               {t("reports.staff.servicesCount", { count: formatNumber(r.services, locale) })}
               {showCommission ? ` · ${t("reports.staff.commission")} ${org.money(money(r.commissionMinor))}` : ""}
               {` · ${t("reports.staff.noShows")} ${r.noShows}`}

@@ -84,7 +84,7 @@ export function ClientServerSearch() {
                       onClick={() => setOpen(false)}
                       className="flex items-center gap-3 rounded-md px-2 py-1.5 hover:bg-accent"
                     >
-                      <PersonAvatar name={c.fullName} color={avatarColor(c.id)} className="size-7 text-[10px]" />
+                      <PersonAvatar name={c.fullName} color={avatarColor(c.id)} className="size-7 text-[11px]" />
                       <span className="min-w-0">
                         <span className="block truncate text-sm font-medium">{c.fullName}</span>
                         <span className="block truncate text-xs text-muted-foreground" dir="ltr">

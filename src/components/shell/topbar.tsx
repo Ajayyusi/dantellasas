@@ -4,19 +4,14 @@ import {
   CalendarPlusIcon,
   CheckIcon,
   ChevronDownIcon,
-  LogOutIcon,
   MapPinIcon,
-  MonitorIcon,
-  MoonIcon,
   PlusIcon,
   SearchIcon,
   ShoppingBagIcon,
-  SunIcon,
-  UserIcon,
   UserPlusIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTransition } from "react";
 
 import { useOrg } from "@/components/providers/org-provider";
@@ -27,27 +22,28 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useIsMac, useTheme, type Theme } from "@/hooks/use-browser";
-import { signOutEverywhere } from "@/lib/auth/client";
+import { useIsMac } from "@/hooks/use-browser";
 import { ALL_BRANCHES } from "@/lib/cookies";
+import { todayKey } from "@/lib/dates";
 import { useI18n } from "@/lib/i18n/client";
 import { setBranchAction } from "@/lib/tenancy/actions";
 
+import { AccountMenu } from "./account-menu";
 import { LanguageSwitcher } from "./language-switcher";
+import { activeNav, visibleNav } from "./nav-config";
 import { NotificationsBell } from "./notifications-bell";
 
 export function Topbar({ leading, onOpenCommand }: { leading?: React.ReactNode; onOpenCommand: () => void }) {
   const { t } = useI18n();
   const org = useOrg();
   const router = useRouter();
+  const pathname = usePathname();
   const [pending, startTransition] = useTransition();
-  const [theme, changeTheme] = useTheme();
   const isMac = useIsMac();
+  const current = activeNav(visibleNav(org.permissions), pathname);
 
   function switchBranch(id: string) {
     startTransition(async () => {
@@ -57,37 +53,57 @@ export function Topbar({ leading, onOpenCommand }: { leading?: React.ReactNode; 
   }
 
   const branchLabel = org.branchId ? org.branchName(org.branchId) : t("common.allBranches");
+  const canAppointment = org.can("create_appointments");
+  const canSale = org.can("create_sales");
+  const canClient = org.can("create_customers");
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b bg-background/85 px-3 backdrop-blur supports-[backdrop-filter]:bg-background/70 sm:px-5 no-print">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-background/80 px-3 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 sm:px-6 no-print">
       {leading}
+
+      {current ? (
+        <div className="hidden min-w-0 shrink-0 flex-col 2xl:flex">
+          <span className="text-[12px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{t(current.section.label)}</span>
+          <span className="truncate text-[15px] font-semibold leading-tight">
+            {t(current.item.label)}
+            <span className="ms-2 font-normal text-muted-foreground">· {org.dateKey(todayKey(org.timezone), "weekdayDate")}</span>
+          </span>
+        </div>
+      ) : null}
+
       <button
         type="button"
         onClick={onOpenCommand}
-        className="flex h-9 min-w-0 flex-1 items-center gap-2 rounded-md border border-input bg-card px-3 text-sm text-muted-foreground shadow-sm outline-none transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:outline-ring sm:max-w-sm"
+        className="flex h-11 min-w-0 flex-1 items-center gap-2.5 rounded-xl border border-input bg-card px-3.5 text-sm text-muted-foreground shadow-xs outline-none transition-[border-color,box-shadow] hover:border-[color-mix(in_oklch,var(--primary)_25%,var(--input))] focus-visible:outline-2 focus-visible:outline-ring sm:max-w-md 2xl:ms-6"
       >
-        <SearchIcon className="size-4 shrink-0" />
+        <SearchIcon className="size-[18px] shrink-0" />
         <span className="truncate">
           <span className="hidden sm:inline">{t("shell.search")}</span>
           <span className="sm:hidden">{t("shell.searchShort")}</span>
         </span>
-        <kbd className="ms-auto hidden rounded border bg-muted px-1.5 font-sans text-[11px] font-medium text-muted-foreground sm:inline">
+        <kbd className="ms-auto hidden shrink-0 whitespace-nowrap rounded-md border bg-muted px-1.5 py-0.5 font-sans text-[12px] font-semibold text-muted-foreground lg:inline">
           {isMac ? "⌘K" : "Ctrl K"}
         </kbd>
       </button>
 
-      <div className="ms-auto flex items-center gap-1">
+      <div className="ms-auto flex items-center gap-1.5">
         {org.branches.length > 0 ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" disabled={pending} className="max-w-48" aria-label={t("shell.switchBranch")}>
-                <MapPinIcon className="text-muted-foreground" />
-                <span className="hidden truncate md:inline">{branchLabel}</span>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={pending}
+                className="hidden max-w-52 rounded-full md:inline-flex"
+                aria-label={t("shell.switchBranch")}
+              >
+                <MapPinIcon className="text-primary" />
+                <span className="truncate">{branchLabel}</span>
                 {org.branches.length > 1 ? <ChevronDownIcon className="size-3.5 text-muted-foreground" /> : null}
               </Button>
             </DropdownMenuTrigger>
             {org.branches.length > 1 ? (
-              <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuContent align="end" className="w-60">
                 <DropdownMenuLabel>{t("shell.branch")}</DropdownMenuLabel>
                 <DropdownMenuItem onSelect={() => switchBranch(ALL_BRANCHES)}>
                   <span className="flex-1">{t("common.allBranches")}</span>
@@ -105,16 +121,25 @@ export function Topbar({ leading, onOpenCommand }: { leading?: React.ReactNode; 
           </DropdownMenu>
         ) : null}
 
-        {org.can("create_appointments") || org.can("create_sales") || org.can("create_customers") ? (
+        {canAppointment ? (
+          <Button asChild size="sm" className="hidden sm:inline-flex">
+            <Link href="/appointments?new=1">
+              <CalendarPlusIcon />
+              <span className="hidden lg:inline">{t("shell.newAppointment")}</span>
+            </Link>
+          </Button>
+        ) : null}
+
+        {canAppointment || canSale || canClient ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button size="sm" className="gap-1.5">
+              <Button variant="soft" size="icon-sm" aria-label={t("shell.quickActions")}>
                 <PlusIcon />
-                <span className="hidden sm:inline">{t("common.new")}</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-52">
-              {org.can("create_appointments") ? (
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>{t("shell.quickActions")}</DropdownMenuLabel>
+              {canAppointment ? (
                 <DropdownMenuItem asChild>
                   <Link href="/appointments?new=1">
                     <CalendarPlusIcon />
@@ -122,7 +147,7 @@ export function Topbar({ leading, onOpenCommand }: { leading?: React.ReactNode; 
                   </Link>
                 </DropdownMenuItem>
               ) : null}
-              {org.can("create_sales") ? (
+              {canSale ? (
                 <DropdownMenuItem asChild>
                   <Link href="/pos">
                     <ShoppingBagIcon />
@@ -130,7 +155,7 @@ export function Topbar({ leading, onOpenCommand }: { leading?: React.ReactNode; 
                   </Link>
                 </DropdownMenuItem>
               ) : null}
-              {org.can("create_customers") ? (
+              {canClient ? (
                 <DropdownMenuItem asChild>
                   <Link href="/clients?new=1">
                     <UserPlusIcon />
@@ -145,57 +170,15 @@ export function Topbar({ leading, onOpenCommand }: { leading?: React.ReactNode; 
         <LanguageSwitcher showLabel={false} />
         <NotificationsBell />
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              className="ms-1 rounded-full outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-              aria-label={t("shell.account")}
-            >
-              <PersonAvatar name={org.user.name || org.user.email} className="size-8" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-64">
-            <div className="px-2 py-2">
-              <div className="truncate text-sm font-medium">{org.user.name || org.user.email}</div>
-              <div className="truncate text-xs text-muted-foreground">{org.user.email}</div>
-            </div>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href="/account">
-                <UserIcon />
-                {t("shell.profile")}
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuLabel>{t("shell.theme")}</DropdownMenuLabel>
-            <DropdownMenuRadioGroup value={theme} onValueChange={(v) => changeTheme(v as Theme)}>
-              <DropdownMenuRadioItem value="light">
-                <SunIcon />
-                {t("shell.themeLight")}
-              </DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="dark">
-                <MoonIcon />
-                {t("shell.themeDark")}
-              </DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="system">
-                <MonitorIcon />
-                {t("shell.themeSystem")}
-              </DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onSelect={async () => {
-                await signOutEverywhere();
-                router.replace("/login");
-                router.refresh();
-              }}
-            >
-              <LogOutIcon />
-              {t("shell.signOut")}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <AccountMenu>
+          <button
+            type="button"
+            className="ms-1 rounded-full outline-none transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            aria-label={t("shell.account")}
+          >
+            <PersonAvatar name={org.user.name || org.user.email} className="size-9" />
+          </button>
+        </AccountMenu>
       </div>
     </header>
   );

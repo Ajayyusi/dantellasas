@@ -264,7 +264,7 @@ function ClientForm({
             <label className="flex items-center justify-between gap-4 rounded-lg border p-3">
               <span className="grid gap-0.5">
                 <span className="text-sm font-medium">{t("clients.form.consent")}</span>
-                <span className="text-[13px] text-muted-foreground">{t("clients.form.consentHint")}</span>
+                <span className="text-[14px] text-muted-foreground">{t("clients.form.consentHint")}</span>
               </span>
               <Switch checked={form.marketingConsent} onCheckedChange={(v) => set("marketingConsent", v)} />
             </label>

@@ -95,7 +95,7 @@ export function TaxesView({ initial }: { initial: SectionValues<"tax"> }) {
                 aria-invalid={!!f.errorFor(`values.rates.${i}.name`)}
               />
               <RateInput value={r.rateBps} onChange={(bps) => update(r.id, { rateBps: bps })} label={t("settings.taxes.rate")} />
-              <label className="flex items-center gap-2 text-[13px]">
+              <label className="flex items-center gap-2 text-[14px]">
                 <RadioGroupItem value={r.id} aria-label={`${t("settings.taxes.makeDefault")}: ${r.name}`} />
                 <span className="sm:sr-only">{t("settings.taxes.default")}</span>
               </label>
@@ -114,7 +114,7 @@ export function TaxesView({ initial }: { initial: SectionValues<"tax"> }) {
           ))}
         </RadioGroup>
         {f.errorFor("values.rates") ? (
-          <p role="alert" className="mt-2 text-[13px] text-destructive">
+          <p role="alert" className="mt-2 text-[14px] text-destructive">
             {f.errorFor("values.rates")}
           </p>
         ) : null}

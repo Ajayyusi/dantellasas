@@ -95,11 +95,11 @@ export function PackagesTab({
                     onClick={() => setSheet({ open: true, pkg: p })}
                   >
                     <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="truncate text-[15px] font-semibold">{localName(p, locale)}</h3>
+                      <h3 className="truncate text-[16px] font-semibold">{localName(p, locale)}</h3>
                       <Badge variant={p.kind === "credit" ? "info" : "primary"}>{t(`catalog.packages.kinds.${p.kind}`)}</Badge>
                       {!p.active ? <Badge variant="neutral">{t("common.inactive")}</Badge> : null}
                     </div>
-                    <p className="mt-1 line-clamp-2 text-[13px] text-muted-foreground">
+                    <p className="mt-1 line-clamp-2 text-[14px] text-muted-foreground">
                       {p.kind === "credit"
                         ? t("catalog.packages.creditSummary", { value: org.money(p.creditMinor) })
                         : linesSummary(p.items, services, locale)}
@@ -136,18 +136,18 @@ export function PackagesTab({
                   <div>
                     <div className="text-xl font-semibold tabular">{org.money(p.priceMinor)}</div>
                     {saving ? (
-                      <div className="flex flex-wrap items-center gap-2 text-[13px]">
+                      <div className="flex flex-wrap items-center gap-2 text-[14px]">
                         <span className="text-muted-foreground line-through tabular">{org.money(value)}</span>
                         <Badge variant="success">{t("catalog.packages.save", { percent: formatPercent(saving, locale) })}</Badge>
                       </div>
                     ) : value > 0 ? (
-                      <div className="text-[13px] text-muted-foreground tabular">
+                      <div className="text-[14px] text-muted-foreground tabular">
                         {t("catalog.packages.valueOf", { value: org.money(value) })}
                       </div>
                     ) : null}
                   </div>
                 </div>
-                <div className="flex items-center gap-3 border-t px-4 py-2.5 text-[13px] text-muted-foreground">
+                <div className="flex items-center gap-3 border-t px-4 py-2.5 text-[14px] text-muted-foreground">
                   <span>
                     {p.validityDays > 0
                       ? t("catalog.packages.validFor", { days: p.validityDays })

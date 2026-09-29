@@ -74,7 +74,7 @@ export function PaymentsReport({ data, range }: { data: Data; range: DateRange }
               <span className="truncate font-medium">{labelOf(r)}</span>
               <span className="shrink-0 font-semibold tabular">{org.money(r.netMinor)}</span>
             </div>
-            <p className="text-[13px] text-muted-foreground tabular">
+            <p className="text-[14px] text-muted-foreground tabular">
               {t("reports.payments.countHint", { count: formatNumber(r.count, locale) })}
               {r.refundedMinor ? ` · ${t("reports.payments.refunded")} ${org.money(r.refundedMinor)}` : ""}
             </p>

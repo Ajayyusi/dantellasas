@@ -64,6 +64,13 @@ export const inventory = defineMessages({
       stock: "Stock",
       stockStatus: "Stock status",
       inStockCount: "{qty} in stock",
+      restock: {
+        title: "{count} products need restocking",
+        titleOne: "1 product needs restocking",
+        low: "{count} low",
+        out: "{count} out of stock",
+        andMore: "+{count} more",
+      },
       status: {
         in_stock: "In stock",
         low: "Low stock",
@@ -253,6 +260,13 @@ export const inventory = defineMessages({
       stock: "المخزون",
       stockStatus: "حالة المخزون",
       inStockCount: "{qty} متوفر",
+      restock: {
+        title: "{count} منتجات تحتاج إلى إعادة تخزين",
+        titleOne: "منتج واحد يحتاج إلى إعادة تخزين",
+        low: "{count} منخفض",
+        out: "{count} نفد",
+        andMore: "+{count} أخرى",
+      },
       status: {
         in_stock: "متوفر",
         low: "مخزون منخفض",

@@ -68,7 +68,7 @@ export function SetupLinkDialog({ result, onOpenChange }: { result: SetupLinkRes
             </Button>
           </div>
         ) : null}
-        <p className="flex items-start gap-2 rounded-lg bg-muted/50 px-3 py-2.5 text-[13px] text-muted-foreground">
+        <p className="flex items-start gap-2 rounded-lg bg-muted/50 px-3 py-2.5 text-[14px] text-muted-foreground">
           <InfoIcon className="mt-0.5 size-4 shrink-0" />
           {t("settings.users.linkNoEmail")}
         </p>

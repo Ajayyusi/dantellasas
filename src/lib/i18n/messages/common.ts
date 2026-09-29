@@ -181,8 +181,16 @@ export const common = defineMessages({
       expand: "Expand sidebar",
       openMenu: "Open menu",
       skipToContent: "Skip to content",
+      short: {
+        dashboard: "Home",
+        appointments: "Calendar",
+        checkout: "Checkout",
+        clients: "Clients",
+        more: "More",
+      },
     },
     shell: {
+      brandTagline: "Beauty Center",
       search: "Search clients, appointments, invoices…",
       searchShort: "Search",
       newAppointment: "New appointment",
@@ -460,8 +468,16 @@ export const common = defineMessages({
       expand: "توسيع القائمة",
       openMenu: "فتح القائمة",
       skipToContent: "انتقل إلى المحتوى",
+      short: {
+        dashboard: "الرئيسية",
+        appointments: "التقويم",
+        checkout: "الدفع",
+        clients: "العملاء",
+        more: "المزيد",
+      },
     },
     shell: {
+      brandTagline: "مركز التجميل",
       search: "ابحث عن عملاء أو مواعيد أو فواتير…",
       searchShort: "بحث",
       newAppointment: "موعد جديد",

@@ -79,7 +79,7 @@ export function ServicesPicker({
             aria-label={t("common.search")}
           />
         </div>
-        <span className="text-[13px] tabular text-muted-foreground">
+        <span className="text-[14px] tabular text-muted-foreground">
           {t("staff.form.servicesSelected", { count: services.filter((s) => selected.has(s.id)).length, total: services.length })}
         </span>
       </div>

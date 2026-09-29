@@ -109,7 +109,7 @@ export function CommissionsTab({
       if (!s) return <span className="text-muted-foreground">{t("common.unknown")}</span>;
       return (
         <span className="flex items-center gap-2">
-          <PersonAvatar name={s.displayName} src={s.photoUrl} color={s.color} className="size-6 text-[10px]" />
+          <PersonAvatar name={s.displayName} src={s.photoUrl} color={s.color} className="size-6 text-[11px]" />
           {s.displayName}
         </span>
       );
@@ -125,7 +125,7 @@ export function CommissionsTab({
               {row.original.name}
               {!row.original.active ? <Badge variant="neutral">{t("common.inactive")}</Badge> : null}
             </span>
-            <span className="flex flex-wrap items-center gap-2 text-[13px] text-muted-foreground">
+            <span className="flex flex-wrap items-center gap-2 text-[14px] text-muted-foreground">
               <Badge variant="outline">{t(`catalog.commissions.levels.${LEVEL_KEYS[ruleSpecificity(row.original)]}`)}</Badge>
               {t(`catalog.commissions.itemTypes.${row.original.itemType}`)}
             </span>
@@ -188,7 +188,7 @@ export function CommissionsTab({
     <>
       <TabToolbar description={t("catalog.commissions.description")} actions={add} />
       {!canEdit ? (
-        <p className="mb-4 flex items-center gap-2 rounded-lg border bg-muted/40 px-3 py-2 text-[13px] text-muted-foreground">
+        <p className="mb-4 flex items-center gap-2 rounded-lg border bg-muted/40 px-3 py-2 text-[14px] text-muted-foreground">
           <LockIcon className="size-4 shrink-0" />
           {t("catalog.commissions.readOnly")}
         </p>
@@ -216,7 +216,7 @@ export function CommissionsTab({
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="truncate text-sm font-medium">{r.name}</div>
-                    <div className="mt-0.5 text-[13px] text-muted-foreground">
+                    <div className="mt-0.5 text-[14px] text-muted-foreground">
                       {t(`catalog.commissions.levels.${LEVEL_KEYS[ruleSpecificity(r)]}`)} ·{" "}
                       {t(`catalog.commissions.itemTypes.${r.itemType}`)}
                     </div>
@@ -246,7 +246,7 @@ export function CommissionsTab({
                   </li>
                 ))}
               </ol>
-              <p className="mt-3 text-[13px] text-muted-foreground">{t("catalog.commissions.tieBreak")}</p>
+              <p className="mt-3 text-[14px] text-muted-foreground">{t("catalog.commissions.tieBreak")}</p>
             </CardContent>
           </Card>
           <Card>
@@ -262,7 +262,7 @@ export function CommissionsTab({
               ) : (
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-[12px] uppercase text-muted-foreground">
+                    <tr className="text-[13px] uppercase text-muted-foreground">
                       <th className="pb-2 text-start font-medium">{t("common.staff")}</th>
                       <th className="pb-2 text-end font-medium">{t("common.services")}</th>
                       <th className="pb-2 text-end font-medium">{t("catalog.commissions.products")}</th>
@@ -273,7 +273,7 @@ export function CommissionsTab({
                       <tr key={s.id}>
                         <td className="py-2">
                           <span className="flex items-center gap-2">
-                            <PersonAvatar name={s.displayName} src={s.photoUrl} color={s.color} className="size-6 text-[10px]" />
+                            <PersonAvatar name={s.displayName} src={s.photoUrl} color={s.color} className="size-6 text-[11px]" />
                             <span className="truncate">{s.displayName}</span>
                           </span>
                         </td>

@@ -257,7 +257,7 @@ function StockOperationForm({ onOpenChange, products, productId: initialProductI
               <RadioGroupItem value={d} className="mt-0.5" />
               <span className="grid gap-0.5">
                 <span className="text-sm font-medium">{t(`inventory.returnDirection.${d}`)}</span>
-                <span className="text-[13px] font-normal text-muted-foreground">{t(`inventory.returnDirection.${d}Hint`)}</span>
+                <span className="text-[14px] font-normal text-muted-foreground">{t(`inventory.returnDirection.${d}Hint`)}</span>
               </span>
             </Label>
           ))}
@@ -313,8 +313,8 @@ function StockOperationForm({ onOpenChange, products, productId: initialProductI
               · {branchLabel(toBranchId)}: <span dir="ltr" className="font-medium tabular text-foreground">{(product.stock[toBranchId] ?? 0) + (validQty ? qty : 0)}</span>
             </span>
           ) : null}
-          {negative ? <span className="w-full text-[13px] text-destructive">{t("inventory.errors.negativeStock")}</span> : null}
-          {!product.trackStock ? <span className="w-full text-[13px] text-muted-foreground">{t("inventory.untrackedHint")}</span> : null}
+          {negative ? <span className="w-full text-[14px] text-destructive">{t("inventory.errors.negativeStock")}</span> : null}
+          {!product.trackStock ? <span className="w-full text-[14px] text-muted-foreground">{t("inventory.untrackedHint")}</span> : null}
         </div>
       ) : null}
 

@@ -200,7 +200,7 @@ function BranchForm({ branch, onDone }: { branch: BranchDTO | null; onDone: () =
                         <span className="text-sm text-muted-foreground">{t("settings.branches.closed")}</span>
                       )}
                     </div>
-                    {error ? <p className="text-[13px] text-destructive">{error}</p> : null}
+                    {error ? <p className="text-[14px] text-destructive">{error}</p> : null}
                   </li>
                 );
               })}

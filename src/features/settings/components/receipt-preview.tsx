@@ -26,9 +26,9 @@ export function ReceiptPreview({ receipts }: { receipts: OrgSettings["receipts"]
   const showTax = tax.enabled && rateBps > 0;
 
   return (
-    <div className="mx-auto w-full max-w-[320px] rounded-lg border bg-white p-5 font-mono text-[12px] leading-relaxed text-neutral-900 shadow-sm dark:bg-neutral-50">
+    <div className="mx-auto w-full max-w-[320px] rounded-lg border bg-white p-5 font-mono text-[13px] leading-relaxed text-neutral-900 shadow-sm dark:bg-neutral-50">
       <div className="text-center">
-        <div className="text-[14px] font-bold">{business.displayName || org.orgName}</div>
+        <div className="text-[15px] font-bold">{business.displayName || org.orgName}</div>
         {business.address ? <div className="whitespace-pre-line text-neutral-600">{business.address}</div> : null}
         {business.phone ? <div className="text-neutral-600" dir="ltr">{business.phone}</div> : null}
         {showTax && business.trn ? (
@@ -79,7 +79,7 @@ export function ReceiptPreview({ receipts }: { receipts: OrgSettings["receipts"]
           </div>
         </>
       ) : null}
-      <div className="flex justify-between gap-2 text-[13px] font-bold">
+      <div className="flex justify-between gap-2 text-[14px] font-bold">
         <span>{t("common.total")}</span>
         <span className="tabular">{org.money(split.gross)}</span>
       </div>

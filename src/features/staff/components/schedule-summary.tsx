@@ -16,7 +16,7 @@ export function ScheduleSummary({ schedule, todayWeekday }: { schedule: WeeklySc
     <Card>
       <CardHeader>
         <CardTitle>{t("staff.profile.weeklySchedule")}</CardTitle>
-        <span className="text-[13px] tabular text-muted-foreground">{formatDuration(weeklyMinutes(schedule), locale)}</span>
+        <span className="text-[14px] tabular text-muted-foreground">{formatDuration(weeklyMinutes(schedule), locale)}</span>
       </CardHeader>
       <CardContent>
         <ul className="grid gap-1.5 text-sm">

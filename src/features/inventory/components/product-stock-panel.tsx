@@ -78,11 +78,11 @@ export function ProductStockPanel({ product, onOperation }: { product: ProductRo
             <Skeleton className="h-10" />
           </div>
         ) : history.length === 0 ? (
-          <p className="rounded-lg border border-dashed px-3 py-4 text-center text-[13px] text-muted-foreground">{t("inventory.noMovementsYet")}</p>
+          <p className="rounded-lg border border-dashed px-3 py-4 text-center text-[14px] text-muted-foreground">{t("inventory.noMovementsYet")}</p>
         ) : (
           <ul className="divide-y rounded-lg border">
             {history.slice(0, 10).map((m) => (
-              <li key={m.id} className="flex items-center gap-3 px-3 py-2 text-[13px]">
+              <li key={m.id} className="flex items-center gap-3 px-3 py-2 text-[14px]">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <MovementTypeBadge type={m.type} />

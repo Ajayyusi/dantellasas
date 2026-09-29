@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 function Command({ className, ...props }: React.ComponentProps<typeof CommandPrimitive>) {
   return (
     <CommandPrimitive
-      className={cn("flex h-full w-full flex-col overflow-hidden rounded-lg bg-popover text-popover-foreground", className)}
+      className={cn("flex h-full w-full flex-col overflow-hidden rounded-2xl bg-popover text-popover-foreground", className)}
       {...props}
     />
   );
@@ -17,11 +17,11 @@ function Command({ className, ...props }: React.ComponentProps<typeof CommandPri
 
 function CommandInput({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Input>) {
   return (
-    <div className="flex h-12 items-center gap-2 border-b px-3" cmdk-input-wrapper="">
-      <SearchIcon className="size-4 shrink-0 text-muted-foreground" />
+    <div className="flex h-14 items-center gap-2.5 border-b px-4" cmdk-input-wrapper="">
+      <SearchIcon className="size-[18px] shrink-0 text-muted-foreground" />
       <CommandPrimitive.Input
         className={cn(
-          "flex h-10 w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground disabled:opacity-50",
+          "flex h-11 w-full bg-transparent text-base outline-none placeholder:text-muted-foreground disabled:opacity-50",
           className,
         )}
         {...props}
@@ -33,7 +33,7 @@ function CommandInput({ className, ...props }: React.ComponentProps<typeof Comma
 function CommandList({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.List>) {
   return (
     <CommandPrimitive.List
-      className={cn("max-h-[min(60vh,420px)] scroll-py-1 overflow-y-auto overflow-x-hidden p-1 scrollbar-thin", className)}
+      className={cn("max-h-[min(60vh,420px)] scroll-py-1.5 overflow-y-auto overflow-x-hidden p-1.5 scrollbar-thin", className)}
       {...props}
     />
   );
@@ -47,7 +47,7 @@ function CommandGroup({ className, ...props }: React.ComponentProps<typeof Comma
   return (
     <CommandPrimitive.Group
       className={cn(
-        "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground",
+        "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2.5 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-[0.06em] [&_[cmdk-group-heading]]:text-muted-foreground",
         className,
       )}
       {...props}
@@ -59,7 +59,7 @@ function CommandItem({ className, ...props }: React.ComponentProps<typeof Comman
   return (
     <CommandPrimitive.Item
       className={cn(
-        "relative flex cursor-default select-none items-center gap-2.5 rounded-md px-2 py-2 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-accent data-[disabled=true]:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-muted-foreground",
+        "relative flex cursor-default select-none items-center gap-3 rounded-lg px-2.5 py-2.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-primary-soft data-[disabled=true]:opacity-50 [&_svg]:size-[18px] [&_svg]:shrink-0 [&_svg]:text-muted-foreground",
         className,
       )}
       {...props}

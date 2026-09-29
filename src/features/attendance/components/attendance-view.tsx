@@ -75,7 +75,7 @@ export function AttendanceView({
         max={range.to}
         onChange={(e) => e.target.value && navigate({ tab: "records", from: e.target.value })}
         aria-label={t("common.from")}
-        className="h-8 w-auto text-[13px]"
+        className="h-8 w-auto text-[14px]"
       />
       <span className="text-muted-foreground">–</span>
       <Input
@@ -84,7 +84,7 @@ export function AttendanceView({
         min={range.from}
         onChange={(e) => e.target.value && navigate({ tab: "records", to: e.target.value })}
         aria-label={t("common.to")}
-        className="h-8 w-auto text-[13px]"
+        className="h-8 w-auto text-[14px]"
       />
       {org.branches.length > 1 ? (
         <Select value={branchFilter} onValueChange={(v) => navigate({ tab: "records", branch: v === "all" ? null : v })}>
@@ -129,7 +129,7 @@ export function AttendanceView({
           </TabsTrigger>
         </TabsList>
         <TabsContent value="board">
-          <p className="mb-4 text-sm font-medium">{org.dateKey(today, "dateLong")}</p>
+          <p className="mb-4 font-display text-[26px] font-semibold leading-tight">{org.dateKey(today, "dateLong")}</p>
           <TodayBoard scheduled={board.scheduled} others={board.others} now={now} />
         </TabsContent>
         <TabsContent value="records">

@@ -49,7 +49,7 @@ export function BirthdayField({
       error={error}
       labelAction={
         hasValue ? (
-          <Button type="button" variant="link" size="sm" className="h-auto p-0 text-[13px]" onClick={() => onChange({ day: "", month: "", year: "" })}>
+          <Button type="button" variant="link" size="sm" className="h-auto p-0 text-[14px]" onClick={() => onChange({ day: "", month: "", year: "" })}>
             {t("clients.form.clearBirthday")}
           </Button>
         ) : null

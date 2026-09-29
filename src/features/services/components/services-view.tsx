@@ -1,8 +1,12 @@
 "use client";
 
 import {
+  ClockIcon,
   CopyIcon,
   FolderPlusIcon,
+  GlobeIcon,
+  LayoutGridIcon,
+  ListIcon,
   MoreHorizontalIcon,
   PencilIcon,
   PlusIcon,
@@ -30,7 +34,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Segmented, SegmentedItem } from "@/components/ui/segmented";
 import { Switch } from "@/components/ui/switch";
+import { useLocalPreference } from "@/hooks/use-browser";
 import { useI18n } from "@/lib/i18n/client";
 import { formatDuration } from "@/lib/i18n/format";
 import { localName } from "@/lib/localize";
@@ -49,6 +55,7 @@ import { CategoryDialog } from "./category-dialog";
 import { ServiceFormSheet, type StaffOption } from "./service-form-sheet";
 
 const UNCATEGORIZED = "__none";
+const VIEWS = ["list", "cards"] as const;
 
 export function ServicesView({
   categories: initialCategories,
@@ -72,6 +79,8 @@ export function ServicesView({
     category: null,
   });
   const [deleting, setDeleting] = useState<ServiceCategoryDTO | null>(null);
+  const [view, setView] = useLocalPreference("dc-services-view", VIEWS, "list");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
 
   const [synced, setSynced] = useState({ initialCategories, initialServices });
   if (synced.initialCategories !== initialCategories || synced.initialServices !== initialServices) {
@@ -93,7 +102,9 @@ export function ServicesView({
       category: null as ServiceCategoryDTO | null,
       items: visible.filter((s) => !s.categoryId || !categories.some((c) => c.id === s.categoryId)),
     },
-  ].filter((g) => g.category !== null || g.items.length > 0);
+  ]
+    .filter((g) => g.category !== null || g.items.length > 0)
+    .filter((g) => categoryFilter === "all" || (g.category?.id ?? UNCATEGORIZED) === categoryFilter);
 
   function openNew(categoryId = "") {
     setEditing(null);
@@ -144,7 +155,7 @@ export function ServicesView({
       <span className="flex items-center gap-2">
         <span className="flex -space-x-1.5 rtl:space-x-reverse">
           {people.slice(0, 4).map((p) => (
-            <PersonAvatar key={p.id} name={p.displayName} src={p.photoUrl} color={p.color} className="size-6 text-[10px] ring-2 ring-card" />
+            <PersonAvatar key={p.id} name={p.displayName} src={p.photoUrl} color={p.color} className="size-6 text-[11px] ring-2 ring-card" />
           ))}
         </span>
         <span className="text-muted-foreground">{t("services.staffCount", { count: people.length })}</span>
@@ -152,41 +163,92 @@ export function ServicesView({
     );
   };
 
+  const edit = (s: ServiceDTO) => {
+    setEditing(s);
+    setSheetOpen(true);
+  };
+
+  const menu = (s: ServiceDTO) => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon-sm" aria-label={t("common.actions")}>
+          <MoreHorizontalIcon />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onSelect={() => edit(s)}>
+          <PencilIcon />
+          {t("common.edit")}
+        </DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => duplicate(s)}>
+          <CopyIcon />
+          {t("services.duplicate")}
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onSelect={() => toggleActive(s, !s.active)}>
+          <PowerIcon />
+          {s.active ? t("services.archiveService") : t("services.activateService")}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+
+  const card = (s: ServiceDTO, color: string) => (
+    <article
+      key={s.id}
+      className={cn(
+        "group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border bg-card shadow-xs transition-[box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:shadow-md",
+        !s.active && "opacity-60",
+      )}
+    >
+      <span aria-hidden className="h-1" style={{ backgroundColor: color }} />
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -end-10 -top-10 size-28 rounded-full opacity-[0.09] transition-opacity group-hover:opacity-[0.16]"
+        style={{ backgroundColor: color }}
+      />
+      <button
+        type="button"
+        onClick={() => edit(s)}
+        className="relative flex flex-1 flex-col gap-1.5 p-5 text-start outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+      >
+        <span className="line-clamp-2 text-base font-semibold leading-snug">{localName(s, locale)}</span>
+        {s.description ? <span className="line-clamp-2 text-[14px] text-muted-foreground">{s.description}</span> : null}
+        <span className="mt-auto flex items-end justify-between gap-3 pt-3">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/70 px-2.5 py-1 text-[13px] font-medium text-muted-foreground">
+            <ClockIcon className="size-3.5" />
+            {formatDuration(s.durationMin, locale)}
+          </span>
+          <span className="font-display text-[24px] font-semibold leading-none tabular">{org.money(s.priceMinor)}</span>
+        </span>
+      </button>
+      <div className="relative flex items-center gap-2 border-t bg-muted/25 px-4 py-2.5 text-[13px]">
+        <span className="min-w-0 flex-1 truncate">{staffSummary(s)}</span>
+        {s.onlineBookable ? (
+          <span className="text-primary" title={t("services.onlineBookable")}>
+            <GlobeIcon className="size-4" aria-label={t("services.onlineBookable")} />
+          </span>
+        ) : null}
+        <Switch checked={s.active} onCheckedChange={(v) => toggleActive(s, v)} aria-label={t("services.active")} />
+        {menu(s)}
+      </div>
+    </article>
+  );
+
   const row = (s: ServiceDTO, handle: React.ReactNode) => (
-    <div className={cn("group flex items-center gap-3 px-3 py-3 sm:px-4", !s.active && "opacity-60")}>
+    <div className={cn("group flex items-center gap-3 px-3 py-3.5 transition-colors hover:bg-primary-soft/40 sm:px-5", !s.active && "opacity-60")}>
       {handle}
-      <button type="button" onClick={() => { setEditing(s); setSheetOpen(true); }} className="min-w-0 flex-1 text-start outline-none focus-visible:underline">
-        <span className="block truncate text-sm font-medium">{localName(s, locale)}</span>
-        <span className="mt-0.5 flex items-center gap-2 text-[13px] text-muted-foreground sm:hidden">
+      <button type="button" onClick={() => edit(s)} className="min-w-0 flex-1 text-start outline-none focus-visible:underline">
+        <span className="block truncate text-[15px] font-semibold">{localName(s, locale)}</span>
+        <span className="mt-0.5 flex items-center gap-2 text-[14px] text-muted-foreground sm:hidden">
           {formatDuration(s.durationMin, locale)} · {org.money(s.priceMinor)}
         </span>
       </button>
-      <div className="hidden w-52 text-[13px] lg:block">{staffSummary(s)}</div>
-      <div className="hidden w-20 text-end text-sm tabular text-muted-foreground sm:block">{formatDuration(s.durationMin, locale)}</div>
-      <div className="hidden w-28 text-end text-sm font-medium tabular sm:block">{org.money(s.priceMinor)}</div>
+      <div className="hidden w-52 text-[14px] lg:block">{staffSummary(s)}</div>
+      <div className="hidden w-20 text-end text-[15px] tabular text-muted-foreground sm:block">{formatDuration(s.durationMin, locale)}</div>
+      <div className="hidden w-28 text-end text-[15px] font-semibold tabular sm:block">{org.money(s.priceMinor)}</div>
       <Switch checked={s.active} onCheckedChange={(v) => toggleActive(s, v)} aria-label={t("services.active")} />
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon-sm" aria-label={t("common.actions")}>
-            <MoreHorizontalIcon />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onSelect={() => { setEditing(s); setSheetOpen(true); }}>
-            <PencilIcon />
-            {t("common.edit")}
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => duplicate(s)}>
-            <CopyIcon />
-            {t("services.duplicate")}
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={() => toggleActive(s, !s.active)}>
-            <PowerIcon />
-            {s.active ? t("services.archiveService") : t("services.activateService")}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      {menu(s)}
     </div>
   );
 
@@ -210,7 +272,7 @@ export function ServicesView({
       />
 
       {services.length === 0 && categories.length === 0 ? (
-        <div className="rounded-xl border bg-card">
+        <div className="rounded-2xl border bg-card shadow-sm">
           <EmptyState
             icon={ScissorsIcon}
             title={t("services.empty")}
@@ -229,18 +291,22 @@ export function ServicesView({
         <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
           <aside className="hidden lg:block">
             <div className="sticky top-20 grid gap-1">
-              <div className="px-2 pb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">{t("services.categories")}</div>
+              <div className="px-2 pb-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{t("services.categories")}</div>
               <SortableList
                 items={categories}
                 onReorder={reorderCategories}
                 className="grid gap-0.5"
                 render={(c, handle) => (
-                  <div className="group flex items-center gap-1 rounded-md pe-1 hover:bg-accent">
+                  <div className="group flex items-center gap-1 rounded-xl pe-2 transition-colors hover:bg-primary-soft/60">
                     {handle}
-                    <a href={`#cat-${c.id}`} className="flex min-w-0 flex-1 items-center gap-2 py-1.5 text-sm">
-                      <span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: c.color }} />
+                    <a
+                      href={`#cat-${c.id}`}
+                      onClick={() => setCategoryFilter("all")}
+                      className="flex min-w-0 flex-1 items-center gap-2.5 py-2 text-[15px] font-medium"
+                    >
+                      <span className="size-2.5 shrink-0 rounded-full" style={{ backgroundColor: c.color }} />
                       <span className="truncate">{localName(c, locale)}</span>
-                      <span className="ms-auto text-xs tabular text-muted-foreground">
+                      <span className="ms-auto text-[13px] tabular text-muted-foreground">
                         {services.filter((s) => s.categoryId === c.id).length}
                       </span>
                     </a>
@@ -251,24 +317,66 @@ export function ServicesView({
           </aside>
 
           <div className="grid min-w-0 gap-4">
-            <div className="relative">
-              <SearchIcon className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={t("services.searchPlaceholder")}
-                className="ps-9 sm:max-w-sm"
-                aria-label={t("common.search")}
-              />
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="relative min-w-0 flex-1 sm:max-w-sm">
+                <SearchIcon className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder={t("services.searchPlaceholder")}
+                  className="ps-9"
+                  aria-label={t("common.search")}
+                />
+              </div>
+              <Segmented value={view} onValueChange={(v) => setView(v as (typeof VIEWS)[number])} aria-label={t("services.view.label")} className="ms-auto">
+                <SegmentedItem value="list" aria-label={t("services.view.list")}>
+                  <ListIcon className="size-4" />
+                  <span className="hidden sm:inline">{t("services.view.list")}</span>
+                </SegmentedItem>
+                <SegmentedItem value="cards" aria-label={t("services.view.cards")}>
+                  <LayoutGridIcon className="size-4" />
+                  <span className="hidden sm:inline">{t("services.view.cards")}</span>
+                </SegmentedItem>
+              </Segmented>
             </div>
+
+            {categories.length > 0 ? (
+              <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 scrollbar-thin lg:hidden">
+                {[{ id: "all", name: t("services.allCategories"), nameAr: t("services.allCategories"), color: "" }, ...categories].map((c) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => setCategoryFilter(c.id)}
+                    aria-pressed={categoryFilter === c.id}
+                    className={cn(
+                      "flex h-9 shrink-0 items-center gap-2 rounded-full border px-3.5 text-[14px] font-semibold transition-colors",
+                      categoryFilter === c.id
+                        ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                        : "bg-card text-foreground/80 hover:border-primary/30 hover:bg-primary-soft",
+                    )}
+                  >
+                    {c.color ? <span className="size-2.5 rounded-full ring-2 ring-card/70" style={{ backgroundColor: c.color }} /> : null}
+                    {c.id === "all" ? c.name : localName(c, locale)}
+                  </button>
+                ))}
+              </div>
+            ) : null}
 
             {groups.map(({ category, items }) => {
               const key = category?.id ?? UNCATEGORIZED;
+              const color = category?.color ?? "var(--muted-foreground)";
+              const cards = view === "cards";
               return (
-                <section key={key} id={`cat-${key}`} className="scroll-mt-20 overflow-hidden rounded-xl border bg-card shadow-sm">
-                  <header className="flex items-center gap-3 border-b bg-muted/30 px-4 py-2.5">
-                    <span className="size-2.5 rounded-full" style={{ backgroundColor: category?.color ?? "var(--muted-foreground)" }} />
-                    <h2 className="text-sm font-semibold">{category ? localName(category, locale) : t("services.uncategorized")}</h2>
+                <section
+                  key={key}
+                  id={`cat-${key}`}
+                  className={cn("scroll-mt-20", !cards && "overflow-hidden rounded-2xl border bg-card shadow-sm")}
+                >
+                  <header className={cn("flex items-center gap-3", cards ? "mb-3 px-1" : "border-b bg-muted/30 px-4 py-3 sm:px-5")}>
+                    <span className="size-3 rounded-full ring-4 ring-card" style={{ backgroundColor: color }} />
+                    <h2 className={cn("font-semibold", cards ? "font-display text-[24px]" : "text-base")}>
+                      {category ? localName(category, locale) : t("services.uncategorized")}
+                    </h2>
                     <Badge variant="neutral">{items.length}</Badge>
                     <div className="ms-auto flex items-center gap-1">
                       <Button variant="ghost" size="sm" onClick={() => openNew(category?.id ?? "")}>
@@ -297,9 +405,11 @@ export function ServicesView({
                     </div>
                   </header>
                   {items.length === 0 ? (
-                    <p className="px-4 py-6 text-center text-sm text-muted-foreground">
+                    <p className={cn("px-4 py-6 text-center text-[15px] text-muted-foreground", cards && "rounded-2xl border border-dashed bg-card/60")}>
                       {q ? t("common.noResults") : t("services.emptyCategory")}
                     </p>
+                  ) : cards ? (
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">{items.map((s) => card(s, color))}</div>
                   ) : (
                     <SortableList
                       items={items}

@@ -14,7 +14,7 @@ import type { SectionValues } from "../schema";
 import { SaveBar, SectionHeader, SettingsCard } from "./form-parts";
 import { useSettingsForm } from "./use-settings-form";
 
-export const ACCENT_PRESETS = ["#8b3a62", "#b4536e", "#c2410c", "#b7791f", "#3f7f6d", "#0f766e", "#3e6fa8", "#6b5bb5", "#1f2937"];
+export const ACCENT_PRESETS = ["#965660", "#7d5279", "#7a323b", "#a25c43", "#90693b", "#507357", "#715f53", "#4b6d8a", "#553b32"];
 const HEX = /^#[0-9a-fA-F]{6}$/;
 
 export function AppearanceView({ initial }: { initial: SectionValues<"appearance"> }) {
@@ -80,7 +80,7 @@ export function AppearanceView({ initial }: { initial: SectionValues<"appearance
               </div>
             </Field>
             <div className="flex items-center gap-3 rounded-lg border bg-muted/30 px-4 py-2.5" aria-hidden>
-              <span className="inline-flex h-8 items-center rounded-md px-3 text-[13px] font-medium text-white shadow-sm" style={{ backgroundColor: accent }}>
+              <span className="inline-flex h-8 items-center rounded-md px-3 text-[14px] font-medium text-white shadow-sm" style={{ backgroundColor: accent }}>
                 {t("settings.appearance.previewButton")}
               </span>
               <Badge style={{ backgroundColor: `color-mix(in oklch, ${accent} 12%, transparent)`, color: accent }}>

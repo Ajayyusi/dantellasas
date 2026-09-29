@@ -5,6 +5,8 @@ import { SIDEBAR_COOKIE } from "@/lib/cookies";
 import { userRef } from "@/lib/db";
 import { getAppContext } from "@/lib/tenancy/context";
 
+const BRAND_ACCENTS = new Set(["#965660", "#8b3a62"]);
+
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const ctx = await getAppContext();
   const jar = await cookies();
@@ -13,7 +15,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   if (!orgs.some((o) => o.id === ctx.org.id)) orgs.unshift({ id: ctx.org.id, name: ctx.org.name });
 
   // Tenant accent from Settings → Appearance; validated so it can be inlined safely.
-  const accent = /^#[0-9a-f]{6}$/i.test(ctx.settings.appearance.accentColor) ? ctx.settings.appearance.accentColor : null;
+  // The brand default (and the pre-redesign default) use the tuned palette as-is.
+  const chosen = ctx.settings.appearance.accentColor.toLowerCase();
+  const accent = /^#[0-9a-f]{6}$/.test(chosen) && !BRAND_ACCENTS.has(chosen) ? chosen : null;
 
   return (
     <>

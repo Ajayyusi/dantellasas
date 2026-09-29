@@ -1,5 +1,6 @@
 "use client";
 
+import { MotionConfig } from "motion/react";
 import { Direction } from "radix-ui";
 
 import { Toaster } from "@/components/ui/sonner";
@@ -20,10 +21,13 @@ export function AppProviders({
   return (
     <I18nProvider locale={locale} messages={messages}>
       <Direction.Provider dir={locale === "ar" ? "rtl" : "ltr"}>
-        <TooltipProvider>
-          {children}
-          <Toaster />
-        </TooltipProvider>
+        {/* Honour the OS "reduce motion" setting for every motion component. */}
+        <MotionConfig reducedMotion="user">
+          <TooltipProvider>
+            {children}
+            <Toaster />
+          </TooltipProvider>
+        </MotionConfig>
       </Direction.Provider>
     </I18nProvider>
   );

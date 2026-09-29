@@ -268,7 +268,7 @@ function BookingForm({
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold">{t("appointments.form.services")}</h3>
               {lines.some((l) => l.serviceId) ? (
-                <span className="text-[13px] text-muted-foreground">
+                <span className="text-[14px] text-muted-foreground">
                   {t("appointments.form.summary", { count: lines.length, duration: formatDuration(spanEnd - spanStart, locale) })}
                 </span>
               ) : null}
@@ -282,7 +282,7 @@ function BookingForm({
                 return (
                   <li key={l.key} className="grid gap-3 rounded-lg border bg-card p-3 shadow-sm">
                     <div className="flex items-start gap-2">
-                      <span className="mt-2 grid size-5 shrink-0 place-items-center rounded-full bg-muted text-[11px] font-semibold">{idx + 1}</span>
+                      <span className="mt-2 grid size-5 shrink-0 place-items-center rounded-full bg-muted text-[12px] font-semibold">{idx + 1}</span>
                       <div className="min-w-0 flex-1">
                         <ServiceCombobox
                           services={services}
@@ -365,7 +365,7 @@ function BookingForm({
                       </Field>
                     </div>
                     {avail !== "free" ? (
-                      <p className="ps-7 text-[13px] text-warning">
+                      <p className="ps-7 text-[14px] text-warning">
                         {catalog.staff.find((s) => s.id === l.staffId)?.displayName}: {statusLabel[avail]}
                       </p>
                     ) : null}

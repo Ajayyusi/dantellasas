@@ -23,6 +23,9 @@ import { useClientTable } from "./client-columns";
 import { ClientFormSheet } from "./client-form-sheet";
 import { ClientServerSearch } from "./client-server-search";
 
+/** Every row on a tab shares its status, so the column starts hidden. */
+const CLIENT_HIDDEN_COLUMNS = { status: false };
+
 export function ClientsView({
   clients,
   status,
@@ -99,14 +102,14 @@ export function ClientsView({
         {capped ? <ClientServerSearch /> : null}
       </div>
       {capped ? (
-        <p className="mb-3 flex items-start gap-2 rounded-lg border bg-muted/40 px-3 py-2 text-[13px] text-muted-foreground">
+        <p className="mb-4 flex items-start gap-2 rounded-xl border bg-muted/40 px-4 py-2.5 text-[14px] text-muted-foreground">
           <InfoIcon className="mt-0.5 size-4 shrink-0" />
           {t("clients.capNotice", { count: cap.toLocaleString(locale === "ar" ? "ar-AE-u-nu-latn" : "en-US") })}
         </p>
       ) : null}
 
       {clients.length === 0 ? (
-        <div className="rounded-xl border bg-card shadow-sm">
+        <div className="rounded-2xl border bg-card shadow-sm">
           {status === "archived" ? (
             <EmptyState icon={ArchiveIcon} title={t("clients.emptyArchived")} description={t("clients.emptyArchivedHint")} />
           ) : (
@@ -121,6 +124,7 @@ export function ClientsView({
           searchText={searchText}
           searchPlaceholder={t("clients.searchPlaceholder")}
           facets={facets}
+          initialVisibility={CLIENT_HIDDEN_COLUMNS}
           onRowClick={(c) => router.push(`/clients/${c.id}`)}
           mobileCard={mobileCard}
           csv={canExport ? { filename: status === "archived" ? "clients-archived" : "clients", columns: csvColumns } : undefined}

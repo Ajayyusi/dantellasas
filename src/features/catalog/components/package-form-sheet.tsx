@@ -148,7 +148,7 @@ function PackageForm({
             </Segmented>
             {form.kind === "services" ? (
               <>
-                <p className="text-[13px] text-muted-foreground">{t("catalog.packages.servicesHint")}</p>
+                <p className="text-[14px] text-muted-foreground">{t("catalog.packages.servicesHint")}</p>
                 <ServiceLinesEditor
                   idPrefix="pkg"
                   value={form.items}
@@ -204,15 +204,15 @@ function PackageForm({
             </FieldGroup>
             <div className="grid grid-cols-2 gap-3 rounded-lg bg-muted/50 p-3 text-sm sm:grid-cols-3">
               <div>
-                <div className="text-[13px] text-muted-foreground">{t("catalog.packages.value")}</div>
+                <div className="text-[14px] text-muted-foreground">{t("catalog.packages.value")}</div>
                 <div className="font-medium tabular">{org.money(value)}</div>
               </div>
               <div>
-                <div className="text-[13px] text-muted-foreground">{t("catalog.packages.price")}</div>
+                <div className="text-[14px] text-muted-foreground">{t("catalog.packages.price")}</div>
                 <div className="font-medium tabular">{org.money(form.priceMinor)}</div>
               </div>
               <div>
-                <div className="text-[13px] text-muted-foreground">{t("catalog.packages.clientSaves")}</div>
+                <div className="text-[14px] text-muted-foreground">{t("catalog.packages.clientSaves")}</div>
                 <div className="font-medium tabular text-success">
                   {saving ? `${org.money(value - form.priceMinor)} (${formatPercent(saving, locale, 1)})` : "—"}
                 </div>
@@ -225,7 +225,7 @@ function PackageForm({
           <label className="flex items-center justify-between gap-4">
             <span className="grid gap-0.5">
               <span className="text-sm font-medium">{t("common.active")}</span>
-              <span className="text-[13px] text-muted-foreground">{t("catalog.packages.activeHint")}</span>
+              <span className="text-[14px] text-muted-foreground">{t("catalog.packages.activeHint")}</span>
             </span>
             <Switch checked={form.active} onCheckedChange={(v) => set("active", v)} />
           </label>

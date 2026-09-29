@@ -137,7 +137,7 @@ export function CommissionsReport({ data, range }: { data: Data; range: DateRang
             <div className="flex items-center justify-between gap-2">
               <span className="min-w-0">
                 <span className="block truncate font-medium">{r.name}</span>
-                <span className="text-[13px] text-muted-foreground tabular">
+                <span className="text-[14px] text-muted-foreground tabular">
                   {t("reports.commissions.earned")} {org.money(r.earnedMinor)}
                   {r.reversedMinor ? ` · ${t("reports.commissions.reversed")} ${org.money(r.reversedMinor)}` : ""}
                 </span>
@@ -165,7 +165,7 @@ export function CommissionsReport({ data, range }: { data: Data; range: DateRang
                 <span className="truncate font-medium">{r.itemName}</span>
                 <span className="shrink-0 font-semibold tabular">{org.money(r.commissionMinor)}</span>
               </div>
-              <p className="truncate text-[13px] text-muted-foreground tabular">
+              <p className="truncate text-[14px] text-muted-foreground tabular">
                 {r.staffName} · {r.creditNumber || r.invoiceNumber} · {org.dateKey(r.dateKey)}
               </p>
             </div>

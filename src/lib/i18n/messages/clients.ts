@@ -109,6 +109,9 @@ export const clients = defineMessages({
         restored: "Client restored",
         backToClients: "Clients",
         noContact: "No contact details",
+        member: "{plan} member",
+        prefers: "Prefers {name}",
+        birthday: "Birthday · {date}",
       },
       stats: {
         spend: "Lifetime spend",
@@ -120,6 +123,8 @@ export const clients = defineMessages({
         noShows: "No-shows",
         none: "None booked",
         neverVisited: "No visits yet",
+        attendance: "Attendance",
+        perVisit: "per visit",
       },
       tabs: {
         overview: "Overview",
@@ -154,6 +159,8 @@ export const clients = defineMessages({
         birthdaySoon: "Birthday in {count} days",
         birthdayToday: "Birthday today",
         noShowRisk: "{count} no-shows — consider a deposit or a reminder call",
+        favouriteServices: "Favourite services",
+        favouriteEmpty: "Appears after the first completed visit.",
       },
       appointments: {
         empty: "No appointments yet",
@@ -380,6 +387,9 @@ export const clients = defineMessages({
         restored: "تمت استعادة العميل",
         backToClients: "العملاء",
         noContact: "لا توجد بيانات تواصل",
+        member: "عضوية {plan}",
+        prefers: "الموظف المفضّل: {name}",
+        birthday: "عيد الميلاد · {date}",
       },
       stats: {
         spend: "إجمالي الإنفاق",
@@ -391,6 +401,8 @@ export const clients = defineMessages({
         noShows: "عدم الحضور",
         none: "لا يوجد حجز",
         neverVisited: "لا زيارات بعد",
+        attendance: "الالتزام بالحضور",
+        perVisit: "لكل زيارة",
       },
       tabs: {
         overview: "نظرة عامة",
@@ -425,6 +437,8 @@ export const clients = defineMessages({
         birthdaySoon: "عيد الميلاد بعد {count} يوم",
         birthdayToday: "عيد الميلاد اليوم",
         noShowRisk: "{count} مرات عدم حضور — فكّر في عربون أو مكالمة تذكير",
+        favouriteServices: "الخدمات المفضّلة",
+        favouriteEmpty: "تظهر بعد أول زيارة مكتملة.",
       },
       appointments: {
         empty: "لا توجد مواعيد بعد",

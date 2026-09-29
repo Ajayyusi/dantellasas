@@ -176,7 +176,7 @@ export function AuditLogView({
               <span className="text-sm font-medium">{label(e)}</span>
               <span className="shrink-0 text-xs tabular text-muted-foreground">{when(e)}</span>
             </div>
-            {e.summary ? <p className="line-clamp-2 text-[13px] text-muted-foreground" dir="auto">{e.summary}</p> : null}
+            {e.summary ? <p className="line-clamp-2 text-[14px] text-muted-foreground" dir="auto">{e.summary}</p> : null}
             <p className="text-xs text-muted-foreground">
               {e.actorName}
               {e.branchId && branchName.get(e.branchId) ? ` · ${branchName.get(e.branchId)}` : ""}
@@ -185,7 +185,7 @@ export function AuditLogView({
         )}
         empty={<EmptyState compact icon={HistoryIcon} title={t("settings.audit.empty")} description={t("settings.audit.emptyHint")} />}
       />
-      {entries.length >= limit ? <p className="text-[13px] text-muted-foreground">{t("settings.audit.limitNote", { count: limit })}</p> : null}
+      {entries.length >= limit ? <p className="text-[14px] text-muted-foreground">{t("settings.audit.limitNote", { count: limit })}</p> : null}
     </div>
   );
 }

@@ -179,8 +179,8 @@ export function DataTable<T>({
   const hideable = table.getAllLeafColumns().filter((c) => c.getCanHide() && typeof c.columnDef.header === "string");
 
   return (
-    <div className={cn("overflow-hidden rounded-xl border bg-card shadow-sm", className)}>
-      <div className="flex flex-wrap items-center gap-2 border-b p-3">
+    <div className={cn("overflow-hidden rounded-2xl border bg-card shadow-sm", className)}>
+      <div className="flex flex-wrap items-center gap-2.5 border-b px-4 py-3.5 sm:px-5">
         {searchText ? (
           <div className="relative min-w-0 flex-1 basis-full sm:max-w-xs sm:basis-auto">
             <SearchIcon className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -199,7 +199,13 @@ export function DataTable<T>({
             value={facetValues[f.id] ?? "__all"}
             onValueChange={(v) => setFacetValues((s) => ({ ...s, [f.id]: v }))}
           >
-            <SelectTrigger className="w-auto min-w-36" aria-label={f.label}>
+            <SelectTrigger
+              className={cn(
+                "w-auto min-w-36",
+                facetValues[f.id] && facetValues[f.id] !== "__all" && "border-primary/35 bg-primary-soft font-semibold text-primary",
+              )}
+              aria-label={f.label}
+            >
               <SelectValue placeholder={f.label} />
             </SelectTrigger>
             <SelectContent>
@@ -265,8 +271,8 @@ export function DataTable<T>({
       </div>
 
       {bulkActions && selectedRows.length > 0 ? (
-        <div className="flex flex-wrap items-center gap-2 border-b bg-primary/5 px-4 py-2 text-sm">
-          <span className="font-medium">{t("common.selected", { count: selectedRows.length })}</span>
+        <div className="flex animate-fade-up flex-wrap items-center gap-2 border-b bg-primary-soft/70 px-5 py-2.5 text-[15px]">
+          <span className="font-semibold text-primary">{t("common.selected", { count: selectedRows.length })}</span>
           <div className="ms-auto flex items-center gap-2">{bulkActions(selectedRows, () => setSelection({}))}</div>
         </div>
       ) : null}
@@ -286,13 +292,13 @@ export function DataTable<T>({
                   {onRowClick ? (
                     <button
                       type="button"
-                      className="block w-full px-4 py-3 text-start hover:bg-muted/40"
+                      className="block w-full px-4 py-3.5 text-start outline-none transition-colors hover:bg-primary-soft/50 focus-visible:bg-primary-soft/50"
                       onClick={() => onRowClick(row.original)}
                     >
                       {mobileCard(row.original)}
                     </button>
                   ) : (
-                    <div className="px-4 py-3">{mobileCard(row.original)}</div>
+                    <div className="px-4 py-3.5">{mobileCard(row.original)}</div>
                   )}
                 </li>
               ))}
@@ -319,17 +325,18 @@ export function DataTable<T>({
                               type="button"
                               onClick={header.column.getToggleSortingHandler()}
                               className={cn(
-                                "inline-flex items-center gap-1 rounded uppercase outline-none hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring",
+                                "inline-flex items-center gap-1.5 rounded uppercase outline-none transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring",
                                 meta?.align === "end" && "flex-row-reverse",
+                                sorted && "text-primary",
                               )}
                             >
                               {flexRender(header.column.columnDef.header, header.getContext())}
                               {sorted === "asc" ? (
-                                <ArrowUpIcon className="size-3" />
+                                <ArrowUpIcon className="size-3.5" />
                               ) : sorted === "desc" ? (
-                                <ArrowDownIcon className="size-3" />
+                                <ArrowDownIcon className="size-3.5" />
                               ) : (
-                                <ArrowUpDownIcon className="size-3 opacity-40" />
+                                <ArrowUpDownIcon className="size-3.5 opacity-40" />
                               )}
                             </button>
                           ) : (
@@ -371,7 +378,7 @@ export function DataTable<T>({
             </Table>
           </div>
           {footer}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t px-4 py-3 text-sm text-muted-foreground">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t bg-muted/25 px-4 py-3 text-[14px] text-muted-foreground sm:px-5">
             <span className="tabular">{t("common.showing", { from, to, total })}</span>
             <div className="flex items-center gap-2">
               <Select value={String(size)} onValueChange={(v) => table.setPageSize(Number(v))}>

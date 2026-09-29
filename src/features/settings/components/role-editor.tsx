@@ -82,7 +82,7 @@ export function RoleEditor({
                 {t("settings.roles.locked")}
               </Badge>
             ) : null}
-            <span className="text-[13px] text-muted-foreground">{tp("settings.roles.memberCount", role.memberCount ?? 0)}</span>
+            <span className="text-[14px] text-muted-foreground">{tp("settings.roles.memberCount", role.memberCount ?? 0)}</span>
           </div>
           <p className="mt-0.5 text-sm text-muted-foreground">{roleDescription(role, t)}</p>
         </div>
@@ -113,7 +113,7 @@ export function RoleEditor({
       </div>
 
       {locked ? (
-        <p className="flex items-start gap-2 rounded-lg border border-dashed bg-muted/30 px-4 py-3 text-[13px] text-muted-foreground">
+        <p className="flex items-start gap-2 rounded-lg border border-dashed bg-muted/30 px-4 py-3 text-[14px] text-muted-foreground">
           <LockIcon className="mt-0.5 size-4 shrink-0" />
           {t("settings.roles.lockedHint")}
         </p>
@@ -151,7 +151,7 @@ export function RoleEditor({
                         <Checkbox id={id} checked={perms.has(p)} onCheckedChange={(v) => toggle(p, v === true)} disabled={locked} className="mt-0.5" />
                         <span className="grid min-w-0 gap-0.5">
                           <span className="text-sm font-medium">{t(`settings.permissions.${p}.label`)}</span>
-                          <span className="text-[13px] text-muted-foreground">{t(`settings.permissions.${p}.description`)}</span>
+                          <span className="text-[14px] text-muted-foreground">{t(`settings.permissions.${p}.description`)}</span>
                         </span>
                       </label>
                     </li>
@@ -167,10 +167,10 @@ export function RoleEditor({
         <div
           className={cn(
             "flex flex-wrap items-center justify-end gap-2 py-3",
-            dirty && "sticky bottom-0 z-10 -mx-4 border-t bg-background/90 px-4 backdrop-blur sm:mx-0 sm:px-0",
+            dirty && "sticky bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-10 -mx-4 border-t bg-background/90 px-4 backdrop-blur sm:mx-0 sm:px-0 lg:bottom-0",
           )}
         >
-          <span className="me-auto text-[13px] text-muted-foreground">
+          <span className="me-auto text-[14px] text-muted-foreground">
             {dirty ? t("settings.unsaved") : t("settings.roles.membersNote")}
           </span>
           {dirty ? (

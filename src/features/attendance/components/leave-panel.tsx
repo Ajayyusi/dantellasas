@@ -75,7 +75,7 @@ export function LeavePanel({
       accessorFn: (l) => diffDays(l.startDate, l.endDate) + 1,
       meta: { align: "end" },
     },
-    { id: "note", header: t("common.notes"), enableSorting: false, accessorFn: (l) => l.note, cell: ({ getValue }) => <span className="line-clamp-1 max-w-56 text-[13px] text-muted-foreground">{(getValue() as string) || "—"}</span> },
+    { id: "note", header: t("common.notes"), enableSorting: false, accessorFn: (l) => l.note, cell: ({ getValue }) => <span className="line-clamp-1 max-w-56 text-[14px] text-muted-foreground">{(getValue() as string) || "—"}</span> },
     { id: "status", header: t("common.status"), accessorFn: (l) => l.status, cell: ({ row: { original: l } }) => <LeaveStatusBadge status={l.status} /> },
   );
   if (canDecide) {

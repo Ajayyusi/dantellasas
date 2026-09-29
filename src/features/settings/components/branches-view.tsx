@@ -102,7 +102,7 @@ export function BranchesView({ branches: initial }: { branches: BranchDTO[] }) {
                     ) : null}
                     {!b.active ? <Badge variant="neutral">{t("settings.branches.inactive")}</Badge> : null}
                   </span>
-                  <span className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-0.5 text-[13px] text-muted-foreground">
+                  <span className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-0.5 text-[14px] text-muted-foreground">
                     <span className="tabular" dir="auto">{hoursSummary(b)}</span>
                     {b.phone ? (
                       <span className="inline-flex items-center gap-1" dir="ltr">
@@ -148,7 +148,7 @@ export function BranchesView({ branches: initial }: { branches: BranchDTO[] }) {
           />
         </Card>
       )}
-      {branches.length > 1 ? <p className="text-[13px] text-muted-foreground">{t("settings.branches.reorderHint")}</p> : null}
+      {branches.length > 1 ? <p className="text-[14px] text-muted-foreground">{t("settings.branches.reorderHint")}</p> : null}
 
       <BranchSheet open={sheet.open} onOpenChange={(open) => setSheet((s) => ({ ...s, open }))} branch={sheet.branch} />
       <ConfirmDialog

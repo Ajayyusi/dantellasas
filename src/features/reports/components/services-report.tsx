@@ -106,7 +106,7 @@ export function ServicesReport({ data, range }: { data: Data; range: DateRange }
               <span className="truncate font-medium">{name(r)}</span>
               <span className="shrink-0 font-semibold tabular">{org.money(r.revenueMinor)}</span>
             </div>
-            <div className="flex justify-between gap-2 text-[13px] text-muted-foreground">
+            <div className="flex justify-between gap-2 text-[14px] text-muted-foreground">
               <span className="truncate">{categoryName(r.categoryId)}</span>
               <span className="shrink-0 tabular">
                 {t("reports.times", { count: formatNumber(r.count, locale) })} · {org.money(r.avgPriceMinor)}

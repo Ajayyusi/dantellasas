@@ -73,7 +73,7 @@ export function StaffProfileView({
           {tabs.map((k) => (
             <TabsTrigger key={k} value={k}>
               {t(`staff.profile.tabs.${k}`)}
-              {counts[k] ? <span className="rounded-full bg-muted px-1.5 text-xs tabular text-muted-foreground">{counts[k]}</span> : null}
+              {counts[k] ? <span className="rounded-full bg-primary-soft px-2 py-px text-[12px] font-semibold tabular text-primary">{counts[k]}</span> : null}
             </TabsTrigger>
           ))}
         </TabsList>

@@ -8,7 +8,7 @@ export function toCategory(id: string, d: Data): ServiceCategoryDTO {
     id,
     name: str(d.name),
     nameAr: str(d.nameAr),
-    color: str(d.color, "#8b3a62"),
+    color: str(d.color, "#965660"),
     sortOrder: num(d.sortOrder),
     active: bool(d.active, true),
   };

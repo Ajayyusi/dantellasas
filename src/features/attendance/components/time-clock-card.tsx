@@ -68,7 +68,7 @@ export function TimeClockCard({
           <PersonAvatar name={staff.displayName} src={staff.photoUrl} color={staff.color} className="size-10" />
           <div className="min-w-0">
             <div className="truncate text-sm font-medium">{staff.displayName}</div>
-            <div className="text-[13px]">
+            <div className="text-[14px]">
               <ClockSummary record={record} now={now} earlierMinutes={earlier} />
             </div>
           </div>

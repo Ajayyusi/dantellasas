@@ -34,18 +34,18 @@ export function NoteCard({ note, clientId, editable }: { note: ClientNoteView; c
   return (
     <article
       className={cn(
-        "group grid grid-cols-1 gap-2 rounded-xl border bg-card p-4",
-        note.pinned && "border-warning/40 bg-[color-mix(in_oklch,var(--warning)_7%,var(--card))]",
+        "group grid grid-cols-1 gap-2.5 rounded-2xl border bg-card p-5 shadow-xs",
+        note.pinned && "border-[color-mix(in_oklch,var(--gold)_45%,transparent)] bg-[color-mix(in_oklch,var(--gold)_9%,var(--card))]",
       )}
     >
-      <p className="whitespace-pre-wrap break-words text-sm leading-relaxed" dir="auto">
+      <p className="whitespace-pre-wrap break-words text-[15px] leading-relaxed" dir="auto">
         {note.body}
       </p>
       <div className="flex items-center justify-between gap-2">
-        <span className="flex min-w-0 items-center gap-2 text-xs text-muted-foreground">
+        <span className="flex min-w-0 items-center gap-2 text-[13px] text-muted-foreground">
           {note.pinned ? (
-            <span className="inline-flex items-center gap-1 font-medium text-[color-mix(in_oklch,var(--warning)_70%,var(--foreground))]">
-              <PinIcon className="size-3" />
+            <span className="inline-flex items-center gap-1 font-semibold text-gold-foreground">
+              <PinIcon className="size-3.5" />
               {t("clients.notes.pinned")}
             </span>
           ) : null}
@@ -55,7 +55,7 @@ export function NoteCard({ note, clientId, editable }: { note: ClientNoteView; c
         </span>
         {editable ? (
           <span className="flex shrink-0 items-center gap-0.5">
-            <Button variant="ghost" size="sm" className="h-7 px-2" onClick={togglePin} disabled={busy}>
+            <Button variant="ghost" size="sm" className="h-8 px-2.5" onClick={togglePin} disabled={busy}>
               {busy ? <Loader2Icon className="animate-spin" /> : note.pinned ? <PinOffIcon /> : <PinIcon />}
               {note.pinned ? t("clients.notes.unpin") : t("clients.notes.pin")}
             </Button>
@@ -63,7 +63,7 @@ export function NoteCard({ note, clientId, editable }: { note: ClientNoteView; c
               <Button
                 variant="ghost"
                 size="icon-sm"
-                className="size-7 text-muted-foreground hover:text-destructive"
+                className="size-8 text-muted-foreground hover:text-destructive"
                 onClick={() => setConfirmDelete(true)}
                 aria-label={t("common.delete")}
               >
@@ -105,7 +105,7 @@ function NoteComposer({ clientId }: { clientId: string }) {
 
   return (
     <form
-      className="grid gap-2 rounded-xl border bg-card p-3 shadow-sm"
+      className="grid gap-2 rounded-2xl border bg-card p-3 shadow-sm transition-[border-color,box-shadow] focus-within:border-[color-mix(in_oklch,var(--primary)_40%,var(--border))] focus-within:ring-4 focus-within:ring-ring/20"
       onSubmit={(e) => {
         e.preventDefault();
         submit();
@@ -128,9 +128,9 @@ function NoteComposer({ clientId }: { clientId: string }) {
         className="resize-y border-0 shadow-none focus-visible:ring-0"
         dir="auto"
       />
-      {errorFor("body") ? <p className="px-3 text-[13px] text-destructive">{errorFor("body")}</p> : null}
+      {errorFor("body") ? <p className="px-3 text-[14px] text-destructive">{errorFor("body")}</p> : null}
       <div className="flex items-center justify-between gap-3 border-t pt-2">
-        <label className="flex items-center gap-2 px-1 text-[13px]">
+        <label className="flex items-center gap-2 px-1 text-[14px]">
           <Checkbox checked={pinned} onCheckedChange={(v) => setPinned(!!v)} />
           {t("clients.notes.pinOnAdd")}
         </label>
@@ -149,9 +149,9 @@ export function NotesTab({ clientId, notes }: { clientId: string; notes: ClientN
   const editable = org.can("edit_customers");
   return (
     <div className="grid max-w-3xl grid-cols-1 gap-3">
-      {editable ? <NoteComposer clientId={clientId} /> : <p className="text-[13px] text-muted-foreground">{t("clients.notes.readOnly")}</p>}
+      {editable ? <NoteComposer clientId={clientId} /> : <p className="text-[14px] text-muted-foreground">{t("clients.notes.readOnly")}</p>}
       {notes.length === 0 ? (
-        <div className="rounded-xl border border-dashed">
+        <div className="rounded-2xl border border-dashed bg-card/60">
           <EmptyState compact icon={StickyNoteIcon} title={t("clients.notes.empty")} description={t("clients.notes.emptyHint")} />
         </div>
       ) : (

@@ -11,8 +11,13 @@ import { useI18n } from "@/lib/i18n/client";
 import { formatPercent } from "@/lib/money";
 import { cn } from "@/lib/utils";
 
+/** KPI cards laid out by the space the report actually has, not the viewport. */
 export function KpiGrid({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={cn("mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4", className)}>{children}</div>;
+  return (
+    <div className={cn("@container mb-6", className)}>
+      <div className="grid gap-4 @md:grid-cols-2 @3xl:grid-cols-4">{children}</div>
+    </div>
+  );
 }
 
 export function Section({
@@ -41,8 +46,8 @@ export function Section({
 export function SubHeading({ title, description }: { title: React.ReactNode; description?: React.ReactNode }) {
   return (
     <div className="mb-3">
-      <h3 className="text-[15px] font-semibold tracking-tight">{title}</h3>
-      {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
+      <h3 className="text-lg font-semibold tracking-tight">{title}</h3>
+      {description ? <p className="text-[15px] text-muted-foreground">{description}</p> : null}
     </div>
   );
 }
@@ -54,12 +59,12 @@ export function Notice({ children, tone = "info", className }: { children: React
     <p
       role={tone === "warning" ? "status" : undefined}
       className={cn(
-        "flex items-start gap-2 rounded-lg border px-3 py-2 text-[13px] leading-relaxed",
-        tone === "warning" ? "border-warning/40 bg-warning/10 text-foreground" : "bg-muted/40 text-muted-foreground",
+        "flex items-start gap-2.5 rounded-xl border px-4 py-3 text-[14px] leading-relaxed",
+        tone === "warning" ? "border-warning/40 bg-warning/10 text-foreground" : "border-border/80 bg-champagne/40 text-muted-foreground",
         className,
       )}
     >
-      <Icon className={cn("mt-0.5 size-4 shrink-0", tone === "warning" ? "text-warning" : "")} aria-hidden />
+      <Icon className={cn("mt-0.5 size-4 shrink-0", tone === "warning" ? "text-warning" : "text-gold-foreground")} aria-hidden />
       <span>{children}</span>
     </p>
   );
@@ -78,23 +83,29 @@ export interface BarItem {
  * value on one line, a thin single-colour bar underneath scaled to the max.
  */
 export function BarList({ items, empty }: { items: BarItem[]; empty?: React.ReactNode }) {
-  const { locale } = useI18n();
+  const { locale, dir } = useI18n();
   const max = Math.max(0, ...items.map((i) => i.value));
   const total = items.reduce((s, i) => s + Math.max(0, i.value), 0);
   if (items.length === 0) return <>{empty ?? null}</>;
   return (
-    <ul className="grid gap-3">
+    <ul className="grid gap-3.5">
       {items.map((i) => (
-        <li key={i.key} className="grid gap-1">
-          <div className="flex items-baseline justify-between gap-3 text-sm">
-            <span className="min-w-0 truncate">{i.label}</span>
-            <span className="shrink-0 font-medium tabular">
+        <li key={i.key} className="grid gap-1.5">
+          <div className="flex items-baseline justify-between gap-3 text-[15px]">
+            <span className="min-w-0 truncate font-medium">{i.label}</span>
+            <span className="shrink-0 font-semibold tabular">
               {i.display}
-              <span className="ms-2 text-xs font-normal text-muted-foreground">{i.hint ?? (total > 0 ? formatPercent(Math.max(0, i.value) / total, locale) : "")}</span>
+              <span className="ms-2 text-[13px] font-normal text-muted-foreground">{i.hint ?? (total > 0 ? formatPercent(Math.max(0, i.value) / total, locale) : "")}</span>
             </span>
           </div>
-          <div className="h-1.5 overflow-hidden rounded-full bg-muted" aria-hidden>
-            <div className="h-full rounded-full bg-chart-1" style={{ width: `${max > 0 ? Math.max(0, (i.value / max) * 100) : 0}%` }} />
+          <div className="h-2 overflow-hidden rounded-full bg-muted" aria-hidden>
+            <div
+              className="h-full rounded-full"
+              style={{
+                width: `${max > 0 ? Math.max(0, (i.value / max) * 100) : 0}%`,
+                background: `linear-gradient(${dir === "rtl" ? "270deg" : "90deg"}, var(--primary), color-mix(in oklch, var(--primary) 55%, var(--gold)))`,
+              }}
+            />
           </div>
         </li>
       ))}

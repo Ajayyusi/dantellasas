@@ -34,6 +34,9 @@ const ICONS: Record<AudienceKey, typeof CakeIcon> = {
 const pad = (n: number) => String(n).padStart(2, "0");
 const searchText = (c: AudienceClient) => `${c.fullName} ${c.phone} ${c.email}`;
 
+/** E-mail shows under the name; the column is still available (and always exported). */
+const MARKETING_HIDDEN_COLUMNS = { email: false };
+
 export function MarketingView({
   audiences,
   discounts,
@@ -70,7 +73,16 @@ export function MarketingView({
         id: "name",
         accessorKey: "fullName",
         header: t("common.name"),
-        cell: ({ row }) => <span className="font-medium">{row.original.fullName}</span>,
+        cell: ({ row }) => (
+          <span className="grid min-w-44 leading-tight">
+            <span className="truncate font-semibold">{row.original.fullName}</span>
+            {row.original.email ? (
+              <span className="max-w-60 truncate text-[13px] text-muted-foreground rtl:text-right" dir="ltr">
+                {row.original.email}
+              </span>
+            ) : null}
+          </span>
+        ),
       },
       {
         id: "phone",
@@ -145,8 +157,8 @@ export function MarketingView({
     <PageContainer>
       <PageHeader title={t("marketing.title")} description={t("marketing.description")} />
 
-      <div className="mb-5 flex items-start gap-3 rounded-xl border border-info/30 bg-info/5 px-4 py-3 text-sm">
-        <InfoIcon className="mt-0.5 size-4 shrink-0 text-info" />
+      <div className="mb-6 flex items-start gap-3 rounded-2xl border border-[color-mix(in_oklch,var(--gold)_40%,var(--border))] bg-[color-mix(in_oklch,var(--champagne)_55%,var(--card))] px-5 py-3.5 text-[15px] leading-relaxed">
+        <InfoIcon className="mt-1 size-4 shrink-0 text-gold-foreground" />
         <p>{t("marketing.noSending")}</p>
       </div>
 
@@ -165,28 +177,28 @@ export function MarketingView({
                   aria-selected={active}
                   onClick={() => setSelected(a.key)}
                   className={cn(
-                    "flex flex-col gap-2 rounded-xl border bg-card p-4 text-start shadow-sm outline-none transition-colors hover:border-primary/40 focus-visible:outline-2 focus-visible:outline-ring",
-                    active && "border-primary ring-1 ring-primary",
+                    "hover-lift flex flex-col gap-2 rounded-2xl border bg-card p-5 text-start shadow-xs outline-none transition-colors hover:border-primary/35 focus-visible:outline-2 focus-visible:outline-ring",
+                    active && "border-primary/60 bg-[color-mix(in_oklch,var(--primary)_5%,var(--card))] ring-2 ring-primary/20",
                   )}
                 >
                   <span className="flex items-center justify-between gap-2">
                     <span
                       className={cn(
-                        "grid size-8 place-items-center rounded-lg bg-muted text-muted-foreground",
-                        active && "bg-primary/10 text-primary",
+                        "grid size-10 place-items-center rounded-xl bg-muted text-muted-foreground transition-colors",
+                        active && "bg-primary text-primary-foreground shadow-sm",
                       )}
                     >
-                      <Icon className="size-4" />
+                      <Icon className="size-5" />
                     </span>
-                    <span className="text-2xl font-semibold tabular">
+                    <span className="font-display text-[32px] font-semibold leading-none tabular">
                       {count}
                       {a.capped ? "+" : ""}
                     </span>
                   </span>
-                  <span className="text-sm font-medium leading-tight">
+                  <span className="text-[15px] font-semibold leading-tight">
                     {t(`marketing.audience.${a.key}.title`, { month: monthName })}
                   </span>
-                  <span className="text-[13px] leading-snug text-muted-foreground">
+                  <span className="text-[14px] leading-snug text-muted-foreground">
                     {t(`marketing.audience.${a.key}.hint`, { days: lapsedDays, count: a.limit })}
                   </span>
                 </button>
@@ -200,12 +212,13 @@ export function MarketingView({
               key={selected}
               data={rows}
               columns={columns}
+              initialVisibility={MARKETING_HIDDEN_COLUMNS}
               getRowId={(c) => c.id}
               searchText={searchText}
               searchPlaceholder={t("marketing.searchPlaceholder")}
               initialSort={initialSort}
               toolbar={
-                <label className="flex items-center gap-2 text-[13px] font-medium">
+                <label className="flex items-center gap-2 text-[14px] font-medium">
                   <Switch checked={consentOnly} onCheckedChange={setConsentOnly} />
                   <span className="hidden sm:inline">{t("marketing.consentOnly")}</span>
                   <span className="sm:hidden">{t("marketing.consentShort")}</span>
@@ -242,11 +255,11 @@ export function MarketingView({
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="truncate text-sm font-medium">{c.fullName}</div>
-                    <div className="text-[13px] text-muted-foreground tabular" dir="ltr">
+                    <div className="text-[14px] text-muted-foreground tabular" dir="ltr">
                       {c.phone || c.email || "—"}
                     </div>
                   </div>
-                  <div className="text-end text-[13px] text-muted-foreground">
+                  <div className="text-end text-[14px] text-muted-foreground">
                     {selected === "birthdays" ? (
                       birthday(c)
                     ) : selected === "topSpenders" ? (
@@ -282,14 +295,14 @@ export function MarketingView({
               }
               footer={
                 audience.capped ? (
-                  <p className="border-t px-4 py-2 text-[13px] text-[color-mix(in_oklch,var(--warning)_70%,var(--foreground))]">
+                  <p className="border-t px-4 py-2 text-[14px] text-[color-mix(in_oklch,var(--warning)_70%,var(--foreground))]">
                     {t("marketing.capped", { limit: audience.limit })}
                   </p>
                 ) : null
               }
             />
           ) : null}
-          <p className="text-[13px] text-muted-foreground">{t("marketing.capNote", { limit: audiences[0]?.limit ?? 0 })}</p>
+          <p className="text-[14px] text-muted-foreground">{t("marketing.capNote", { limit: audiences[0]?.limit ?? 0 })}</p>
         </div>
 
         <DiscountSummary discounts={discounts} today={today} />

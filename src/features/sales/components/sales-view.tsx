@@ -1,7 +1,7 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { PlusIcon, ReceiptIcon } from "lucide-react";
+import { LandmarkIcon, PlusIcon, ReceiptIcon, RotateCcwIcon, TrendingUpIcon, WalletIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
@@ -167,10 +167,10 @@ export function SalesView({ transactions, preset, range }: { transactions: Trans
         <DateRangeFilter preset={preset} range={range} />
       </div>
       <div className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label={t("sales.summary.net")} value={org.money(summary.netMinor)} hint={t("sales.summary.countHint", { count: formatNumber(summary.count, locale) })} />
-        <StatCard label={t("sales.summary.gross")} value={org.money(summary.grossMinor)} hint={summary.discountMinor ? t("sales.summary.discountHint", { amount: org.money(summary.discountMinor) }) : undefined} />
-        <StatCard label={t("sales.summary.refunds")} value={org.money(summary.refundsMinor)} hint={summary.balanceMinor ? t("sales.summary.outstanding", { amount: org.money(summary.balanceMinor) }) : undefined} />
-        <StatCard label={t("sales.summary.vat")} value={org.money(summary.vatMinor)} hint={summary.tipsMinor ? t("sales.summary.tipsHint", { amount: org.money(summary.tipsMinor) }) : undefined} />
+        <StatCard icon={WalletIcon} tone="rose" label={t("sales.summary.net")} value={org.money(summary.netMinor)} hint={t("sales.summary.countHint", { count: formatNumber(summary.count, locale) })} />
+        <StatCard icon={TrendingUpIcon} tone="gold" label={t("sales.summary.gross")} value={org.money(summary.grossMinor)} hint={summary.discountMinor ? t("sales.summary.discountHint", { amount: org.money(summary.discountMinor) }) : undefined} />
+        <StatCard icon={RotateCcwIcon} tone="mauve" label={t("sales.summary.refunds")} value={org.money(summary.refundsMinor)} hint={summary.balanceMinor ? t("sales.summary.outstanding", { amount: org.money(summary.balanceMinor) }) : undefined} />
+        <StatCard icon={LandmarkIcon} tone="blue" label={t("sales.summary.vat")} value={org.money(summary.vatMinor)} hint={summary.tipsMinor ? t("sales.summary.tipsHint", { amount: org.money(summary.tipsMinor) }) : undefined} />
       </div>
       <DataTable
         data={transactions}
@@ -188,7 +188,7 @@ export function SalesView({ transactions, preset, range }: { transactions: Trans
               <span className="font-medium tabular">{r.number}</span>
               <span className="font-semibold tabular">{org.money(r.totalMinor + r.tipMinor)}</span>
             </div>
-            <div className="flex items-center justify-between gap-2 text-[13px] text-muted-foreground">
+            <div className="flex items-center justify-between gap-2 text-[14px] text-muted-foreground">
               <span className="truncate">{r.clientName || t("pos.walkInSale")} · {org.date(r.createdAt, "datetime")}</span>
               <TransactionStatusBadge status={r.status} />
             </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import { AlertTriangleIcon, XCircleIcon } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
 import { useI18n } from "@/lib/i18n/client";
 import type { MovementType } from "@/lib/types";
@@ -8,8 +10,20 @@ import type { StockStatus } from "../types";
 
 export function StockStatusBadge({ status }: { status: StockStatus }) {
   const { t } = useI18n();
-  if (status === "out") return <Badge variant="danger">{t("inventory.status.out")}</Badge>;
-  if (status === "low") return <Badge variant="warning">{t("inventory.status.low")}</Badge>;
+  if (status === "out")
+    return (
+      <Badge variant="danger">
+        <XCircleIcon aria-hidden />
+        {t("inventory.status.out")}
+      </Badge>
+    );
+  if (status === "low")
+    return (
+      <Badge variant="warning">
+        <AlertTriangleIcon aria-hidden />
+        {t("inventory.status.low")}
+      </Badge>
+    );
   return null;
 }
 

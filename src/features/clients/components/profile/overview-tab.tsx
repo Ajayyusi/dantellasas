@@ -1,16 +1,16 @@
 "use client";
 
-import { AlertTriangleIcon, CakeIcon } from "lucide-react";
+import { AlertTriangleIcon, CakeIcon, HeartIcon } from "lucide-react";
 
 import { useOrg } from "@/components/providers/org-provider";
 import { PersonAvatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { addDaysToKey, dateKeyOf, diffDays } from "@/lib/dates";
 import { useI18n } from "@/lib/i18n/client";
 import type { AppointmentDTO, ClientDTO, ClientMembershipDTO, ClientPackageDTO } from "@/lib/types";
 
 import type { ClientNoteView, StaffOption } from "../../types";
+import { daysUntilBirthday, favouriteServices } from "../../utils";
 import { monthName } from "../birthday-field";
 import { AppointmentRow } from "./appointment-list";
 import { NoteCard } from "./notes-tab";
@@ -36,14 +36,6 @@ function Section({
       {children}
     </Card>
   );
-}
-
-function daysUntilBirthday(b: NonNullable<ClientDTO["birthday"]>, now: number, tz: string): number {
-  const today = dateKeyOf(now, tz);
-  const year = Number(today.slice(0, 4));
-  const key = (y: number) => addDaysToKey(`${y}-${String(b.month).padStart(2, "0")}-01`, b.day - 1);
-  const thisYear = key(year);
-  return thisYear >= today ? diffDays(today, thisYear) : diffDays(today, key(year + 1));
 }
 
 export function OverviewTab({
@@ -76,6 +68,7 @@ export function OverviewTab({
   const editable = org.can("edit_customers");
   const b = client.birthday;
   const bdayIn = b ? daysUntilBirthday(b, now, org.timezone) : null;
+  const favourites = visits ? favouriteServices(visits) : null;
   const viewAll = (tab: ProfileTab) => (
     <Button variant="link" size="sm" className="h-auto p-0" onClick={() => onNavigate(tab)}>
       {t("clients.overview.viewAll")}
@@ -90,7 +83,7 @@ export function OverviewTab({
         <span className="grid justify-items-end gap-0.5">
           <span>{[b.day, monthName(b.month, locale), b.year].filter(Boolean).join(" ")}</span>
           {bdayIn !== null && bdayIn <= 30 ? (
-            <span className="inline-flex items-center gap-1 text-xs font-medium text-primary">
+            <span className="inline-flex items-center gap-1 text-[13px] font-medium text-primary">
               <CakeIcon className="size-3.5" />
               {bdayIn === 0 ? t("clients.overview.birthdayToday") : t("clients.overview.birthdaySoon", { count: bdayIn })}
             </span>
@@ -104,7 +97,7 @@ export function OverviewTab({
       label: t("clients.overview.preferredStaff"),
       value: preferred ? (
         <span className="inline-flex items-center gap-2">
-          <PersonAvatar name={preferred.displayName} src={preferred.photoUrl} color={preferred.color} className="size-5 text-[9px]" />
+          <PersonAvatar name={preferred.displayName} src={preferred.photoUrl} color={preferred.color} className="size-6 text-[11px]" />
           {preferred.displayName}
         </span>
       ) : (
@@ -127,10 +120,10 @@ export function OverviewTab({
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
+    <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
       <div className="grid min-w-0 grid-cols-1 content-start gap-4">
         {client.stats.noShows >= 2 ? (
-          <div className="flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+          <div className="flex items-start gap-2.5 rounded-2xl border border-destructive/25 bg-destructive/6 px-5 py-3.5 text-[15px] text-destructive">
             <AlertTriangleIcon className="mt-0.5 size-4 shrink-0" />
             {t("clients.overview.noShowRisk", { count: client.stats.noShows })}
           </div>
@@ -139,7 +132,7 @@ export function OverviewTab({
         {pinned.length > 0 ? (
           <section className="grid grid-cols-1 gap-2">
             <div className="flex items-center justify-between">
-              <h2 className="text-[15px] font-semibold">{t("clients.overview.pinnedNotes")}</h2>
+              <h2 className="text-lg font-semibold">{t("clients.overview.pinnedNotes")}</h2>
               {viewAll("notes")}
             </div>
             {pinned.map((n) => (
@@ -199,13 +192,43 @@ export function OverviewTab({
       </div>
 
       <div className="grid min-w-0 grid-cols-1 content-start gap-4">
+        {favourites ? (
+          <Section title={t("clients.overview.favouriteServices")}>
+            <CardContent>
+              {favourites.length === 0 ? (
+                <p className="text-sm text-muted-foreground">{t("clients.overview.favouriteEmpty")}</p>
+              ) : (
+                <ul className="grid gap-2">
+                  {favourites.map((f, i) => (
+                    <li key={f.id} className="flex items-center gap-3 rounded-xl bg-muted/45 px-3 py-2.5">
+                      <span
+                        aria-hidden
+                        className={
+                          i === 0
+                            ? "grid size-8 shrink-0 place-items-center rounded-full bg-gold-soft text-gold-foreground ring-1 ring-gold/50"
+                            : "grid size-8 shrink-0 place-items-center rounded-full bg-primary-soft text-primary"
+                        }
+                      >
+                        <HeartIcon className="size-4" />
+                      </span>
+                      <span className="min-w-0 flex-1 truncate text-[15px] font-semibold">{f.name}</span>
+                      <span className="shrink-0 rounded-full bg-card px-2.5 py-0.5 text-[13px] font-semibold tabular text-muted-foreground">
+                        ×{f.count}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </CardContent>
+          </Section>
+        ) : null}
         <Section title={t("clients.overview.details")}>
           <CardContent>
-            <dl className="grid gap-3 text-sm">
+            <dl className="grid divide-y text-[15px]">
               {details.map((d) => (
-                <div key={d.label} className="flex items-start justify-between gap-4">
+                <div key={d.label} className="flex items-start justify-between gap-4 py-2.5 first:pt-0 last:pb-0">
                   <dt className="shrink-0 text-muted-foreground">{d.label}</dt>
-                  <dd className="min-w-0 text-end">{d.value}</dd>
+                  <dd className="min-w-0 text-end font-medium">{d.value}</dd>
                 </div>
               ))}
             </dl>

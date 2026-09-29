@@ -121,12 +121,12 @@ export function MembershipsTab({
                     onClick={() => setSheet({ open: true, plan: p })}
                   >
                     <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="truncate text-[15px] font-semibold">{localName(p, locale)}</h3>
+                      <h3 className="truncate text-[16px] font-semibold">{localName(p, locale)}</h3>
                       {!p.active ? <Badge variant="neutral">{t("common.inactive")}</Badge> : null}
                     </div>
                     <div className="mt-1 flex items-baseline gap-1">
                       <span className="text-xl font-semibold tabular">{org.money(p.priceMinor)}</span>
-                      <span className="text-[13px] text-muted-foreground">
+                      <span className="text-[14px] text-muted-foreground">
                         / {t(`catalog.memberships.periodNouns.${p.period}`)}
                       </span>
                     </div>
@@ -158,7 +158,7 @@ export function MembershipsTab({
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
-                <ul className="grid gap-1.5 px-4 pb-4 text-[13px]">
+                <ul className="grid gap-1.5 px-4 pb-4 text-[14px]">
                   {benefits.length === 0 ? (
                     <li className="text-muted-foreground">{t("catalog.memberships.noBenefits")}</li>
                   ) : (

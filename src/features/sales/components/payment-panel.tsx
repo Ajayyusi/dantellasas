@@ -104,13 +104,13 @@ export function PaymentPanel({
   return (
     <div className="grid gap-5">
       <div className="rounded-xl border bg-muted/30 p-4 text-center">
-        <div className="text-[13px] text-muted-foreground">{t("pos.amountDue")}</div>
+        <div className="text-[14px] text-muted-foreground">{t("pos.amountDue")}</div>
         <div className="mt-1 text-3xl font-semibold tracking-tight tabular">{org.money(dueMinor)}</div>
       </div>
 
       {dueMinor > 0 ? (
         <div>
-          <div className="mb-2 text-[13px] font-medium">{t("pos.methods")}</div>
+          <div className="mb-2 text-[14px] font-medium">{t("pos.methods")}</div>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {available.map((m) => {
               const Icon = ICONS[m.type];
@@ -124,7 +124,7 @@ export function PaymentPanel({
                   disabled={settlement.remainingMinor <= 0 && m.type !== "cash"}
                 >
                   <Icon className="size-5" />
-                  <span className="text-[13px]">{methodLabel(m)}</span>
+                  <span className="text-[14px]">{methodLabel(m)}</span>
                 </Button>
               );
             })}
@@ -173,7 +173,7 @@ export function PaymentPanel({
                     onChange={(e) => update(x.key, { reference: e.target.value })}
                     placeholder={t("pos.referencePlaceholder")}
                     aria-label={t("pos.reference")}
-                    className="h-8 text-[13px]"
+                    className="h-8 text-[14px]"
                     maxLength={80}
                   />
                 ) : null}
@@ -184,7 +184,7 @@ export function PaymentPanel({
                       onChange={(e) => update(x.key, { giftCardCode: e.target.value.toUpperCase(), giftCardBalance: null, amountMinor: 0 })}
                       placeholder={t("pos.giftCardCode")}
                       aria-label={t("pos.giftCardCode")}
-                      className="h-8 flex-1 font-mono text-[13px]"
+                      className="h-8 flex-1 font-mono text-[14px]"
                       dir="ltr"
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {

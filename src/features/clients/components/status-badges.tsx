@@ -1,5 +1,6 @@
 "use client";
 
+import { StatusPill } from "@/components/common/status-pill";
 import { Badge } from "@/components/ui/badge";
 import { useI18n } from "@/lib/i18n/client";
 import type {
@@ -14,24 +15,20 @@ import { cn } from "@/lib/utils";
 /** Appointment status pill coloured from the `--status-<status>` CSS variables. */
 export function AppointmentStatusBadge({ status, className }: { status: AppointmentStatus; className?: string }) {
   const { t } = useI18n();
-  const color = `var(--status-${status})`;
   return (
-    <span
-      className={cn(
-        "inline-flex w-fit shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-medium",
-        className,
-      )}
-      style={{ backgroundColor: `color-mix(in oklch, ${color} 14%, transparent)`, color: `color-mix(in oklch, ${color} 80%, var(--foreground))` }}
-    >
-      <span className="size-1.5 rounded-full" style={{ backgroundColor: color }} aria-hidden />
+    <StatusPill color={`var(--status-${status})`} className={className}>
       {t(`clients.appointmentStatus.${status}`)}
-    </span>
+    </StatusPill>
   );
 }
 
 export function ClientStatusBadge({ status }: { status: ClientDTO["status"] }) {
   const { t } = useI18n();
-  return <Badge variant={status === "active" ? "success" : "neutral"}>{t(`clients.status.${status}`)}</Badge>;
+  return (
+    <Badge variant={status === "active" ? "success" : "neutral"} dot>
+      {t(`clients.status.${status}`)}
+    </Badge>
+  );
 }
 
 const TX_VARIANT: Record<TransactionStatus, "success" | "warning" | "danger" | "neutral" | "info"> = {
@@ -45,7 +42,11 @@ const TX_VARIANT: Record<TransactionStatus, "success" | "warning" | "danger" | "
 
 export function TransactionStatusBadge({ status }: { status: TransactionStatus }) {
   const { t } = useI18n();
-  return <Badge variant={TX_VARIANT[status] ?? "neutral"}>{t(`clients.txStatus.${status}`)}</Badge>;
+  return (
+    <Badge variant={TX_VARIANT[status] ?? "neutral"} dot>
+      {t(`clients.txStatus.${status}`)}
+    </Badge>
+  );
 }
 
 export function PackageStatusBadge({ status }: { status: ClientPackageDTO["status"] }) {
@@ -66,7 +67,9 @@ export function TagList({ tags, max = 3, className }: { tags: string[]; max?: nu
     <span className={cn("flex flex-wrap items-center gap-1", className)}>
       {shown.map((tag) => (
         <Badge key={tag} variant="primary" className="max-w-32" title={tag}>
-          <span className="truncate">{tag}</span>
+          <span className="truncate" dir="auto">
+            {tag}
+          </span>
         </Badge>
       ))}
       {tags.length > max ? <Badge variant="neutral">+{tags.length - max}</Badge> : null}

@@ -97,7 +97,7 @@ export function RevenueReport({ data, range }: { data: Data; range: DateRange })
               <span className="font-medium tabular">{org.dateKey(r.dateKey, "weekdayDate")}</span>
               <span className="font-semibold tabular">{org.money(r.netMinor)}</span>
             </div>
-            <div className="flex flex-wrap justify-between gap-x-3 text-[13px] text-muted-foreground">
+            <div className="flex flex-wrap justify-between gap-x-3 text-[14px] text-muted-foreground">
               <span>{t("reports.revenue.invoicesCount", { count: formatNumber(r.invoices, locale) })}</span>
               <span className="tabular">
                 {label("vatMinor")} {org.money(r.vatMinor)}

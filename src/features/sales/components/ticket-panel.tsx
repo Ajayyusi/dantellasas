@@ -88,8 +88,8 @@ export function TicketPanel({
           : "";
 
   return (
-    <div className="flex min-h-0 flex-col overflow-hidden rounded-xl border bg-card shadow-sm">
-      <div className="border-b p-3">
+    <div className="flex min-h-0 flex-col overflow-hidden rounded-2xl border bg-card shadow-sm">
+      <div className="border-b p-4">
         <ClientPicker value={client} onChange={onClientChange} />
         {wallet?.membership ? (
           <Badge variant="primary" className="mt-2">
@@ -97,15 +97,18 @@ export function TicketPanel({
             {t("pos.activeMembership", { plan: wallet.membership.planName })}
           </Badge>
         ) : null}
-        {appointmentLabel ? <p className="mt-2 text-xs text-muted-foreground">{appointmentLabel}</p> : null}
+        {appointmentLabel ? <p className="mt-2 text-[13px] font-medium text-muted-foreground">{appointmentLabel}</p> : null}
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto scrollbar-thin">
         {lines.length === 0 ? (
-          <div className="flex flex-col items-center gap-2 px-6 py-12 text-center">
-            <ShoppingBagIcon className="size-8 text-muted-foreground/60" />
-            <p className="text-sm font-medium">{t("pos.emptyTicket")}</p>
-            <p className="text-[13px] text-muted-foreground">{t("pos.emptyTicketHint")}</p>
+          <div className="flex flex-col items-center gap-2 px-8 py-14 text-center">
+            <span className="relative mb-2 grid size-16 place-items-center rounded-full bg-brand-wash text-primary">
+              <span aria-hidden className="absolute inset-0 rounded-full border border-dashed border-gold/60" />
+              <ShoppingBagIcon className="size-7" strokeWidth={1.6} />
+            </span>
+            <p className="font-display text-[22px] font-semibold leading-tight">{t("pos.emptyTicket")}</p>
+            <p className="max-w-64 text-[14px] text-muted-foreground">{t("pos.emptyTicketHint")}</p>
           </div>
         ) : (
           <ul className="divide-y">
@@ -117,18 +120,18 @@ export function TicketPanel({
                   : undefined;
               const redeemedPkg = l.redeemClientPackageId ? wallet?.packages.find((p) => p.id === l.redeemClientPackageId) : undefined;
               return (
-                <li key={l.key} className="grid gap-2 px-3 py-3">
+                <li key={l.key} className="grid animate-fade-up gap-2.5 px-4 py-3.5">
                   <div className="flex items-start gap-2">
                     <div className="min-w-0 flex-1">
-                      <div className="truncate text-sm font-medium">{l.name}</div>
-                      <div className="truncate text-xs text-muted-foreground">{l.detail}</div>
+                      <div className="truncate text-[15px] font-semibold">{l.name}</div>
+                      <div className="truncate text-[13px] text-muted-foreground">{l.detail}</div>
                     </div>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <button type="button" className="rounded px-1 text-end outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring" aria-label={t("pos.editLine")}>
-                          <div className="text-sm font-semibold tabular">{org.money(priced?.totalMinor ?? 0)}</div>
+                        <button type="button" className="rounded-lg px-1.5 py-0.5 text-end outline-none transition-colors hover:bg-primary-soft focus-visible:ring-2 focus-visible:ring-ring" aria-label={t("pos.editLine")}>
+                          <div className="text-[15px] font-semibold tabular">{org.money(priced?.totalMinor ?? 0)}</div>
                           {priced && priced.discountMinor > 0 ? (
-                            <div className="text-xs tabular text-muted-foreground line-through">{org.money(priced.baseMinor)}</div>
+                            <div className="text-[13px] tabular text-muted-foreground line-through">{org.money(priced.baseMinor)}</div>
                           ) : null}
                         </button>
                       </PopoverTrigger>
@@ -155,7 +158,7 @@ export function TicketPanel({
                   <div className="flex flex-wrap items-center gap-2">
                     {l.type === "service" || l.type === "product" ? (
                       <Select value={l.staffId ?? "__none"} onValueChange={(v) => update(l.key, { staffId: v === "__none" ? null : v })}>
-                        <SelectTrigger size="sm" className="h-7 w-auto min-w-32 max-w-44 text-xs" aria-label={t("pos.staff")}>
+                        <SelectTrigger size="sm" className="h-8 w-auto min-w-32 max-w-48 rounded-lg text-[13px]" aria-label={t("pos.staff")}>
                           <UserCheckIcon className="size-3.5 text-muted-foreground" />
                           <SelectValue />
                         </SelectTrigger>
@@ -170,18 +173,18 @@ export function TicketPanel({
                       </Select>
                     ) : null}
                     {l.type !== "membership" ? (
-                      <div className="flex items-center rounded-md border">
-                        <button type="button" className="grid size-7 place-items-center text-muted-foreground hover:text-foreground disabled:opacity-40" disabled={l.quantity <= 1} onClick={() => update(l.key, { quantity: l.quantity - 1 })} aria-label={t("common.remove")}>
+                      <div className="flex h-8 items-center rounded-lg border bg-card">
+                        <button type="button" className="grid size-8 place-items-center rounded-s-lg text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary disabled:opacity-40" disabled={l.quantity <= 1} onClick={() => update(l.key, { quantity: l.quantity - 1 })} aria-label={t("common.remove")}>
                           <MinusIcon className="size-3.5" />
                         </button>
-                        <span className="w-6 text-center text-xs font-medium tabular">{l.quantity}</span>
-                        <button type="button" className="grid size-7 place-items-center text-muted-foreground hover:text-foreground" onClick={() => update(l.key, { quantity: l.quantity + 1 })} aria-label={t("common.add")}>
+                        <span className="w-7 text-center text-[14px] font-semibold tabular">{l.quantity}</span>
+                        <button type="button" className="grid size-8 place-items-center rounded-e-lg text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary" onClick={() => update(l.key, { quantity: l.quantity + 1 })} aria-label={t("common.add")}>
                           <PlusIcon className="size-3.5" />
                         </button>
                       </div>
                     ) : null}
                     {redeemable ? (
-                      <Button type="button" variant="outline" size="sm" className="h-7 text-xs" onClick={() => update(l.key, { redeemClientPackageId: redeemable.id })}>
+                      <Button type="button" variant="soft" size="sm" className="h-8 text-[13px]" onClick={() => update(l.key, { redeemClientPackageId: redeemable.id })}>
                         <PackageCheckIcon />
                         {t("pos.redeemPackage", { remaining: redeemable.items.find((it) => it.serviceId === l.refId)!.total - redeemable.items.find((it) => it.serviceId === l.refId)!.used })}
                       </Button>
@@ -195,8 +198,8 @@ export function TicketPanel({
                         </button>
                       </Badge>
                     ) : null}
-                    <Button type="button" variant="ghost" size="icon-sm" className="ms-auto size-7" onClick={() => onLinesChange(lines.filter((x) => x.key !== l.key))} aria-label={t("pos.removeLine")}>
-                      <Trash2Icon className="size-3.5" />
+                    <Button type="button" variant="ghost" size="icon-sm" className="ms-auto size-8 text-muted-foreground hover:bg-destructive/10 hover:text-destructive" onClick={() => onLinesChange(lines.filter((x) => x.key !== l.key))} aria-label={t("pos.removeLine")}>
+                      <Trash2Icon className="size-4" />
                     </Button>
                   </div>
                 </li>
@@ -206,7 +209,7 @@ export function TicketPanel({
         )}
       </div>
 
-      <div className="grid gap-3 border-t bg-muted/20 p-3">
+      <div className="grid gap-3.5 border-t bg-[linear-gradient(180deg,color-mix(in_oklch,var(--champagne)_45%,var(--card)),var(--card))] p-4">
         <div className="flex flex-wrap gap-2">
           <Popover>
             <PopoverTrigger asChild>
@@ -284,7 +287,7 @@ export function TicketPanel({
           </Popover>
         </div>
 
-        <dl className="grid gap-1 text-sm">
+        <dl className="grid gap-1.5 text-[15px]">
           <div className="flex justify-between">
             <dt className="text-muted-foreground">{t("pos.subtotal")}</dt>
             <dd className="tabular">{org.money(pricing.subtotalMinor)}</dd>
@@ -307,12 +310,12 @@ export function TicketPanel({
               <dd className="tabular">{org.money(pricing.tipMinor)}</dd>
             </div>
           ) : null}
-          <div className="mt-1 flex items-baseline justify-between border-t pt-2">
-            <dt className="font-semibold">{t("pos.total")}</dt>
-            <dd className="text-xl font-semibold tabular">{org.money(pricing.dueMinor)}</dd>
+          <div className="mt-1.5 flex items-baseline justify-between border-t border-dashed pt-3">
+            <dt className="text-base font-semibold">{t("pos.total")}</dt>
+            <dd className="font-display text-[32px] font-semibold leading-none tabular">{org.money(pricing.dueMinor)}</dd>
           </div>
         </dl>
-        <Button size="lg" className={cn("w-full")} disabled={lines.length === 0} onClick={onCharge}>
+        <Button size="lg" className={cn("h-13 w-full rounded-2xl text-[17px]")} disabled={lines.length === 0} onClick={onCharge}>
           {t("pos.charge", { amount: org.money(pricing.dueMinor) })}
         </Button>
       </div>

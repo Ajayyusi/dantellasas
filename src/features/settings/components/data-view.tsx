@@ -61,7 +61,7 @@ export function DataView({
             {t("settings.data.demoButton")}
           </Button>
           {demo !== "ok" ? (
-            <span className="text-[13px] text-muted-foreground">
+            <span className="text-[14px] text-muted-foreground">
               {demo === "owner_only" ? t("settings.data.demoOwnerOnly") : t("settings.data.demoDisabled")}
             </span>
           ) : null}
@@ -75,7 +75,7 @@ export function DataView({
             </div>
             <div className="grid gap-0.5">
               <span className="text-sm font-medium">{t("settings.data.exportClients")}</span>
-              <span className="text-[13px] text-muted-foreground">{t("settings.data.exportClientsHint")}</span>
+              <span className="text-[14px] text-muted-foreground">{t("settings.data.exportClientsHint")}</span>
             </div>
           </div>
           <Button type="button" variant="outline" onClick={exportClients} disabled={exporting}>

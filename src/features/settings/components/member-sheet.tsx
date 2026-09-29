@@ -132,7 +132,7 @@ function MemberForm({ onOpenChange, member, roles, branches, staff, actorIsOwner
 
           <FormSection title={t("settings.users.branchAccess")}>
             {orgWide ? (
-              <p className="text-[13px] text-muted-foreground">{t("settings.users.orgWideRole")}</p>
+              <p className="text-[14px] text-muted-foreground">{t("settings.users.orgWideRole")}</p>
             ) : (
               <div className="grid gap-3">
                 <RadioGroup
@@ -145,7 +145,7 @@ function MemberForm({ onOpenChange, member, roles, branches, staff, actorIsOwner
                     <RadioGroupItem value="all" className="mt-0.5" />
                     <span className="grid gap-0.5">
                       <span className="font-medium">{t("settings.users.allBranches")}</span>
-                      <span className="text-[13px] text-muted-foreground">{t("settings.users.allBranchesHint")}</span>
+                      <span className="text-[14px] text-muted-foreground">{t("settings.users.allBranchesHint")}</span>
                     </span>
                   </label>
                   <label className="flex items-center gap-2.5 text-sm">

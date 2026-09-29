@@ -88,7 +88,7 @@ export function UsersView({
           <span className="truncate font-medium">{m.displayName || m.email}</span>
           {m.uid === me ? <Badge variant="primary">{t("settings.users.you")}</Badge> : null}
         </div>
-        <div className="truncate text-[13px] text-muted-foreground" dir="ltr">
+        <div className="truncate text-[14px] text-muted-foreground" dir="ltr">
           {m.email}
         </div>
       </div>
@@ -159,7 +159,7 @@ export function UsersView({
         const s = row.original.staffId ? staffName.get(row.original.staffId) : null;
         return s ? (
           <span className="flex items-center gap-2">
-            <PersonAvatar name={s.displayName} src={s.photoUrl} color={s.color} className="size-6 text-[10px]" />
+            <PersonAvatar name={s.displayName} src={s.photoUrl} color={s.color} className="size-6 text-[11px]" />
             {s.displayName}
           </span>
         ) : (
@@ -207,7 +207,7 @@ export function UsersView({
         mobileCard={(m) => (
           <div className="flex items-center gap-3">
             <div className="min-w-0 flex-1">{person(m)}</div>
-            <div className="grid justify-items-end gap-1 text-[13px]">
+            <div className="grid justify-items-end gap-1 text-[14px]">
               {statusBadge(m)}
               <span className="text-muted-foreground">{roleLabel(m)}</span>
             </div>

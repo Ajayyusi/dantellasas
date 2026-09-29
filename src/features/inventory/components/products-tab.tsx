@@ -2,6 +2,7 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import {
+  AlertTriangleIcon,
   ArrowLeftRightIcon,
   HandIcon,
   MoreHorizontalIcon,
@@ -39,6 +40,31 @@ import { stockIn, stockStatus, type ProductRow, type StockOperation, type StockS
 import { StockStatusBadge } from "./stock-badge";
 
 const STATUSES: StockStatus[] = ["in_stock", "low", "out", "untracked"];
+/** Products are hidden by default: the SKU sits under the product name instead. */
+const HIDDEN_COLUMNS = { sku: false };
+const THUMB_TONES = ["#965660", "#90693b", "#507357", "#4b6d8a", "#7d5279", "#a25c43", "#715f53", "#4f7b80"];
+
+/** Monogram tile standing in for a product photo, tinted per category. */
+function ProductThumb({ product, locale }: { product: ProductRow; locale: string }) {
+  const key = product.categoryId || product.brand || product.id;
+  let h = 0;
+  for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
+  const tone = THUMB_TONES[h % THUMB_TONES.length]!;
+  const letter = (product.brand || localName(product, locale)).trim().charAt(0).toUpperCase();
+  return (
+    <span
+      aria-hidden
+      className="relative grid size-11 shrink-0 place-items-center overflow-hidden rounded-xl font-display text-[21px] font-semibold"
+      style={{
+        background: `linear-gradient(145deg, color-mix(in oklch, ${tone} 16%, var(--card)), color-mix(in oklch, ${tone} 6%, var(--card)))`,
+        color: `color-mix(in oklch, ${tone} 85%, var(--foreground))`,
+      }}
+    >
+      {letter}
+      <span className="absolute inset-x-2.5 bottom-1.5 h-[3px] rounded-full opacity-40" style={{ backgroundColor: tone }} />
+    </span>
+  );
+}
 
 export function ProductsTab({
   products,
@@ -87,11 +113,19 @@ export function ProductsTab({
       header: t("inventory.product"),
       accessorFn: (p) => localName(p, locale),
       cell: ({ row }) => (
-        <div className="min-w-0">
-          <p className="truncate font-medium">{localName(row.original, locale)}</p>
-          <p className="truncate text-xs text-muted-foreground">
-            {[row.original.brand, row.original.usage !== "retail" ? t(`inventory.usages.${row.original.usage}`) : ""].filter(Boolean).join(" · ") || "—"}
-          </p>
+        <div className={cn("flex min-w-56 items-center gap-3", !row.original.active && "opacity-60")}>
+          <ProductThumb product={row.original} locale={locale} />
+          <div className="min-w-0">
+            <p className="truncate font-semibold">{localName(row.original, locale)}</p>
+            <p className="truncate text-[13px] text-muted-foreground">
+              {[row.original.brand, row.original.usage !== "retail" ? t(`inventory.usages.${row.original.usage}`) : ""].filter(Boolean).join(" · ") || "—"}
+              {row.original.sku ? (
+                <span className="ms-2 font-mono text-[12px]" dir="ltr">
+                  {row.original.sku}
+                </span>
+              ) : null}
+            </p>
+          </div>
         </div>
       ),
     },
@@ -122,7 +156,7 @@ export function ProductsTab({
       meta: { align: "end" },
       cell: ({ row }) => {
         const p = row.original;
-        if (!p.trackStock) return <span className="text-xs text-muted-foreground">{t("inventory.status.untracked")}</span>;
+        if (!p.trackStock) return <span className="text-[13px] text-muted-foreground">{t("inventory.status.untracked")}</span>;
         const status = statusOf(p);
         return (
           <span className="inline-flex items-center justify-end gap-2">
@@ -181,73 +215,116 @@ export function ProductsTab({
     },
   ];
 
+  const needing = products.filter((p) => p.active && (statusOf(p) === "low" || statusOf(p) === "out"));
+  const outCount = needing.filter((p) => statusOf(p) === "out").length;
+
   return (
-    <DataTable
-      data={products}
-      columns={columns}
-      getRowId={(p) => p.id}
-      searchText={(p) => `${p.name} ${p.nameAr} ${p.brand} ${p.sku} ${p.barcode}`}
-      searchPlaceholder={t("inventory.searchProducts")}
-      facets={facets}
-      initialSort={[{ id: "name", desc: false }]}
-      onRowClick={onOpen}
-      csv={
-        org.can("export_data")
-          ? {
-              filename: "products",
-              columns: [
-                { header: t("inventory.sku"), value: (p) => p.sku },
-                { header: t("inventory.barcode"), value: (p) => p.barcode },
-                { header: t("inventory.productName"), value: (p) => p.name },
-                { header: t("common.nameAr"), value: (p) => p.nameAr },
-                { header: t("inventory.brand"), value: (p) => p.brand },
-                { header: t("common.category"), value: (p) => categoryLabel(p) },
-                { header: t("inventory.usage"), value: (p) => t(`inventory.usages.${p.usage}`) },
-                { header: t("inventory.cost"), value: (p) => csvMoney(p.costMinor) },
-                { header: t("common.price"), value: (p) => csvMoney(p.priceMinor) },
-                ...org.branches.map((b) => ({ header: `${t("inventory.stock")} · ${b.name}`, value: (p: ProductRow) => p.stock[b.id] ?? 0 })),
-                { header: t("inventory.minStock"), value: (p) => p.minStock },
-                { header: t("inventory.stockStatus"), value: (p) => t(`inventory.status.${statusOf(p)}`) },
-                { header: t("common.status"), value: (p) => (p.active ? t("common.active") : t("common.inactive")) },
-              ],
-            }
-          : undefined
-      }
-      mobileCard={(p) => (
-        <div className={cn("flex items-center justify-between gap-3", !p.active && "opacity-60")}>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-medium">{localName(p, locale)}</p>
-            <p className="truncate text-[13px] text-muted-foreground">
-              {[p.brand, p.sku].filter(Boolean).join(" · ") || categoryLabel(p) || "—"}
+    <>
+      {needing.length > 0 ? (
+        <div
+          role="status"
+          className="mb-4 flex animate-fade-up flex-col gap-3 rounded-2xl border border-warning/35 bg-[color-mix(in_oklch,var(--warning)_8%,var(--card))] px-5 py-4 sm:flex-row sm:items-center"
+        >
+          <span
+            aria-hidden
+            className="grid size-10 shrink-0 place-items-center rounded-xl bg-warning/15 text-[color-mix(in_oklch,var(--warning)_75%,var(--foreground))]"
+          >
+            <AlertTriangleIcon className="size-5" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-[15px] font-semibold">
+              {needing.length === 1 ? t("inventory.restock.titleOne") : t("inventory.restock.title", { count: needing.length })}
+            </p>
+            <p className="truncate text-[14px] text-muted-foreground">
+              {[
+                needing.length - outCount > 0 ? t("inventory.restock.low", { count: needing.length - outCount }) : "",
+                outCount > 0 ? t("inventory.restock.out", { count: outCount }) : "",
+              ]
+                .filter(Boolean)
+                .join(" · ")}
+              {" · "}
+              {needing
+                .slice(0, 3)
+                .map((p) => localName(p, locale))
+                .join(locale === "ar" ? "، " : ", ")}
+              {needing.length > 3 ? ` ${t("inventory.restock.andMore", { count: needing.length - 3 })}` : ""}
             </p>
           </div>
-          <div className="shrink-0 text-end">
-            <p className="text-sm font-medium tabular">{org.money(p.priceMinor)}</p>
-            <div className="mt-0.5 flex items-center justify-end gap-1.5 text-xs">
-              <StockStatusBadge status={statusOf(p)} />
-              {p.trackStock ? (
-                <span className="tabular text-muted-foreground">{t("inventory.inStockCount", { qty: qtyOf(p) })}</span>
-              ) : (
-                <span className="text-muted-foreground">{t("inventory.status.untracked")}</span>
-              )}
+          <Button variant="outline" className="shrink-0" onClick={() => onOperation(null, "receive")}>
+            <PackagePlusIcon />
+            {t("inventory.receiveStock")}
+          </Button>
+        </div>
+      ) : null}
+      <DataTable
+        data={products}
+        columns={columns}
+        initialVisibility={HIDDEN_COLUMNS}
+        getRowId={(p) => p.id}
+        searchText={(p) => `${p.name} ${p.nameAr} ${p.brand} ${p.sku} ${p.barcode}`}
+        searchPlaceholder={t("inventory.searchProducts")}
+        facets={facets}
+        initialSort={[{ id: "name", desc: false }]}
+        onRowClick={onOpen}
+        csv={
+          org.can("export_data")
+            ? {
+                filename: "products",
+                columns: [
+                  { header: t("inventory.sku"), value: (p) => p.sku },
+                  { header: t("inventory.barcode"), value: (p) => p.barcode },
+                  { header: t("inventory.productName"), value: (p) => p.name },
+                  { header: t("common.nameAr"), value: (p) => p.nameAr },
+                  { header: t("inventory.brand"), value: (p) => p.brand },
+                  { header: t("common.category"), value: (p) => categoryLabel(p) },
+                  { header: t("inventory.usage"), value: (p) => t(`inventory.usages.${p.usage}`) },
+                  { header: t("inventory.cost"), value: (p) => csvMoney(p.costMinor) },
+                  { header: t("common.price"), value: (p) => csvMoney(p.priceMinor) },
+                  ...org.branches.map((b) => ({ header: `${t("inventory.stock")} · ${b.name}`, value: (p: ProductRow) => p.stock[b.id] ?? 0 })),
+                  { header: t("inventory.minStock"), value: (p) => p.minStock },
+                  { header: t("inventory.stockStatus"), value: (p) => t(`inventory.status.${statusOf(p)}`) },
+                  { header: t("common.status"), value: (p) => (p.active ? t("common.active") : t("common.inactive")) },
+                ],
+              }
+            : undefined
+        }
+        mobileCard={(p) => (
+          <div className={cn("flex items-center gap-3", !p.active && "opacity-60")}>
+            <ProductThumb product={p} locale={locale} />
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[15px] font-semibold">{localName(p, locale)}</p>
+              <p className="truncate text-[14px] text-muted-foreground">
+                {[p.brand, p.sku].filter(Boolean).join(" · ") || categoryLabel(p) || "—"}
+              </p>
+            </div>
+            <div className="shrink-0 text-end">
+              <p className="text-[15px] font-semibold tabular">{org.money(p.priceMinor)}</p>
+              <div className="mt-0.5 flex items-center justify-end gap-1.5 text-[13px]">
+                <StockStatusBadge status={statusOf(p)} />
+                {p.trackStock ? (
+                  <span className="tabular text-muted-foreground">{t("inventory.inStockCount", { qty: qtyOf(p) })}</span>
+                ) : (
+                  <span className="text-muted-foreground">{t("inventory.status.untracked")}</span>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      )}
-      empty={
-        <EmptyState
-          icon={PackageIcon}
-          title={t("inventory.emptyProducts")}
-          description={t("inventory.emptyProductsHint")}
-          action={
-            <Button onClick={onNew}>
-              <PlusIcon />
-              {t("inventory.addProduct")}
-            </Button>
-          }
-        />
-      }
-    />
+        )}
+        empty={
+          <EmptyState
+            icon={PackageIcon}
+            title={t("inventory.emptyProducts")}
+            description={t("inventory.emptyProductsHint")}
+            action={
+              <Button onClick={onNew}>
+                <PlusIcon />
+                {t("inventory.addProduct")}
+              </Button>
+            }
+          />
+        }
+      />
+    </>
   );
 }
 

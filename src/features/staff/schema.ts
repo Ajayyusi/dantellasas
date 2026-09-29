@@ -66,7 +66,7 @@ export const staffInput = z.object({
   position: z.string().trim().max(60, "validation.tooLong").default(""),
   branchIds: z.array(z.string().min(1)).min(1, "staff.errors.branchRequired").max(50),
   status: z.enum(STAFF_STATUSES).default("active"),
-  color: z.string().regex(/^#[0-9a-fA-F]{6}$/, "validation.invalid").default("#8b3a62"),
+  color: z.string().regex(/^#[0-9a-fA-F]{6}$/, "validation.invalid").default("#965660"),
   hireDate: optionalDate,
   bookable: z.boolean().default(true),
   schedule: scheduleInput,

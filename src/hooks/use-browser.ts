@@ -19,9 +19,9 @@ const listeners = new Set<() => void>();
 
 function readTheme(): Theme {
   try {
-    return (localStorage.getItem(THEME_KEY) as Theme | null) ?? "system";
+    return (localStorage.getItem(THEME_KEY) as Theme | null) ?? "light";
   } catch {
-    return "system";
+    return "light";
   }
 }
 
@@ -38,7 +38,7 @@ export function useTheme(): [Theme, (theme: Theme) => void] {
       return () => listeners.delete(cb);
     },
     readTheme,
-    () => "system" as Theme,
+    () => "light" as Theme,
   );
   const setTheme = useCallback((next: Theme) => {
     try {
@@ -50,6 +50,47 @@ export function useTheme(): [Theme, (theme: Theme) => void] {
     listeners.forEach((l) => l());
   }, []);
   return [theme, setTheme];
+}
+
+const prefListeners = new Set<() => void>();
+/** Session copy so the choice still applies where storage is blocked. */
+const prefMemory = new Map<string, string>();
+
+/**
+ * A per-browser UI preference (a remembered view or tab) from a fixed set of
+ * values. Renders `fallback` on the server and until storage is readable.
+ */
+export function useLocalPreference<T extends string>(key: string, values: readonly T[], fallback: T): [T, (next: T) => void] {
+  const read = useCallback(() => {
+    let v = prefMemory.get(key) ?? null;
+    try {
+      v = localStorage.getItem(key) ?? v;
+    } catch {
+      /* storage unavailable */
+    }
+    return v && (values as readonly string[]).includes(v) ? (v as T) : fallback;
+  }, [key, values, fallback]);
+  const value = useSyncExternalStore(
+    (cb) => {
+      prefListeners.add(cb);
+      return () => prefListeners.delete(cb);
+    },
+    read,
+    () => fallback,
+  );
+  const set = useCallback(
+    (next: T) => {
+      prefMemory.set(key, next);
+      try {
+        localStorage.setItem(key, next);
+      } catch {
+        /* storage unavailable */
+      }
+      prefListeners.forEach((l) => l());
+    },
+    [key],
+  );
+  return [value, set];
 }
 
 const minuteListeners = new Set<() => void>();

@@ -34,10 +34,10 @@ export function DiscountSummary({ discounts, today }: { discounts: DiscountDTO[]
             {live.map((d) => (
               <li key={d.id} className="flex items-center gap-3 rounded-lg border px-3 py-2.5">
                 <div className="min-w-0 flex-1">
-                  <div className="font-mono text-[13px] font-semibold tracking-wide" dir="ltr">
+                  <div className="font-mono text-[14px] font-semibold tracking-wide" dir="ltr">
                     {d.code}
                   </div>
-                  <div className="truncate text-[13px] text-muted-foreground">
+                  <div className="truncate text-[14px] text-muted-foreground">
                     {d.name}
                     {d.endsAt ? ` · ${t("marketing.discounts.until", { date: org.dateKey(d.endsAt, "monthDay") })}` : ""}
                   </div>
@@ -46,7 +46,7 @@ export function DiscountSummary({ discounts, today }: { discounts: DiscountDTO[]
                   <div className="text-sm font-semibold tabular">
                     {d.kind === "percent" ? formatPercent(d.valueBps / 10000, locale, 2) : org.money(d.valueMinor)}
                   </div>
-                  <div className="text-[12px] text-muted-foreground tabular">
+                  <div className="text-[13px] text-muted-foreground tabular">
                     {d.maxUses !== null
                       ? t("marketing.discounts.usedOf", { used: d.usedCount, max: d.maxUses })
                       : t("marketing.discounts.used", { used: d.usedCount })}
@@ -57,7 +57,7 @@ export function DiscountSummary({ discounts, today }: { discounts: DiscountDTO[]
           </ul>
         )}
         {scheduled > 0 ? (
-          <p className="text-[13px] text-muted-foreground">{tp("marketing.discounts.scheduled", scheduled)}</p>
+          <p className="text-[14px] text-muted-foreground">{tp("marketing.discounts.scheduled", scheduled)}</p>
         ) : null}
         {org.can("manage_catalog") ? (
           <Button variant="outline" size="sm" className="justify-self-start" asChild>

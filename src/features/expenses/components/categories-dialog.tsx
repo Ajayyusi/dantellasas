@@ -119,7 +119,7 @@ function CategoryRow({
           {!active ? <Badge variant="neutral">{t("common.inactive")}</Badge> : null}
         </div>
         {category.nameAr ? (
-          <span dir="rtl" lang="ar" className="inline-block max-w-full truncate align-top text-[13px] text-muted-foreground">
+          <span dir="rtl" lang="ar" className="inline-block max-w-full truncate align-top text-[14px] text-muted-foreground">
             {category.nameAr}
           </span>
         ) : null}

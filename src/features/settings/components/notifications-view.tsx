@@ -35,7 +35,7 @@ export function NotificationsView({ initial }: { initial: SectionValues<"notific
           />
         </div>
       </SettingsCard>
-      <p className="flex items-start gap-2 rounded-lg border border-dashed bg-muted/30 px-4 py-3 text-[13px] text-muted-foreground">
+      <p className="flex items-start gap-2 rounded-lg border border-dashed bg-muted/30 px-4 py-3 text-[14px] text-muted-foreground">
         <InfoIcon className="mt-0.5 size-4 shrink-0" />
         {t("settings.notifications.futureNote")}
       </p>

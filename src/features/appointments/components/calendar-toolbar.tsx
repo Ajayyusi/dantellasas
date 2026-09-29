@@ -58,7 +58,7 @@ export function CalendarToolbar({
   const { y, m, d } = parseKey(date);
 
   return (
-    <div className="flex flex-wrap items-center gap-2 pb-4">
+    <div className="flex flex-wrap items-center gap-2.5 pb-5">
       <div className="flex items-center gap-1">
         <Button variant="outline" size="sm" onClick={() => onNavigate({ date: today })} disabled={date === today && !weekMode}>
           {t("appointments.today")}
@@ -81,8 +81,8 @@ export function CalendarToolbar({
         </Button>
         <Popover open={pickerOpen} onOpenChange={setPickerOpen}>
           <PopoverTrigger asChild>
-            <Button variant="ghost" className="gap-2 px-2 text-[15px] font-semibold" aria-label={t("appointments.pickDate")}>
-              <CalendarIcon className="size-4 text-muted-foreground" />
+            <Button variant="ghost" className="h-12 gap-2.5 px-2.5 font-display text-[26px] font-semibold tracking-normal" aria-label={t("appointments.pickDate")}>
+              <CalendarIcon className="size-5 text-primary" />
               <span className="hidden sm:inline">{label}</span>
               <span className="sm:hidden">{shortLabel}</span>
             </Button>

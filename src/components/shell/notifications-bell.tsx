@@ -46,7 +46,7 @@ export function NotificationsBell() {
         <Button variant="ghost" size="icon-sm" className="relative" aria-label={t("shell.notifications")}>
           <BellIcon />
           {count > 0 ? (
-            <span className="absolute end-1 top-1 grid min-w-4 place-items-center rounded-full bg-primary px-1 text-[10px] font-semibold leading-4 text-primary-foreground">
+            <span className="absolute end-1 top-1 grid min-w-4 place-items-center rounded-full bg-primary px-1 text-[11px] font-semibold leading-4 text-primary-foreground">
               {count > 9 ? "9+" : count}
             </span>
           ) : null}
@@ -74,7 +74,7 @@ export function NotificationsBell() {
                     )}
                     <span className="min-w-0 text-sm">
                       <span className="block truncate font-medium">{a.title}</span>
-                      <span className="block text-[13px] text-muted-foreground">
+                      <span className="block text-[14px] text-muted-foreground">
                         {a.kind === "low_stock"
                           ? t("alerts.lowStock", { qty: a.quantity ?? 0, min: a.minStock ?? 0, branch: org.branchName(a.branchId) })
                           : t(a.document === "visaExpiry" ? "alerts.visaExpiry" : "alerts.passportExpiry", {

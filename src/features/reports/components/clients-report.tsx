@@ -111,7 +111,7 @@ export function ClientsReport({ data, range }: { data: Data; range: DateRange })
               <span className="truncate font-medium">{r.name || "—"}</span>
               <span className="shrink-0 font-semibold tabular">{org.money(r.spendMinor)}</span>
             </div>
-            <p className="text-[13px] text-muted-foreground">
+            <p className="text-[14px] text-muted-foreground">
               {kind(r)} · {t("reports.clients.visitsCount", { count: formatNumber(r.visits, locale) })}
             </p>
           </div>

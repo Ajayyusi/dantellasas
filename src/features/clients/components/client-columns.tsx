@@ -35,11 +35,11 @@ export function useClientTable(clients: ClientDTO[], now: number) {
           const c = row.original;
           return (
             <div className="flex min-w-44 items-center gap-3">
-              <PersonAvatar name={c.fullName} color={avatarColor(c.id)} className="size-8" />
+              <PersonAvatar name={c.fullName} color={avatarColor(c.id)} className="size-10 text-[14px]" />
               <div className="min-w-0">
-                <div className="truncate font-medium">{c.fullName}</div>
+                <div className="truncate font-semibold">{c.fullName}</div>
                 {c.phone ? (
-                  <div className="truncate text-[13px] text-muted-foreground tabular" dir="ltr">
+                  <div className="truncate text-[14px] text-muted-foreground tabular rtl:text-right" dir="ltr">
                     {c.phone}
                   </div>
                 ) : null}
@@ -54,7 +54,7 @@ export function useClientTable(clients: ClientDTO[], now: number) {
         accessorFn: (c) => c.email,
         cell: ({ row }) =>
           row.original.email ? (
-            <span className="block max-w-44 truncate text-muted-foreground" dir="ltr">
+            <span className="block max-w-52 truncate text-muted-foreground rtl:text-right" dir="ltr">
               {row.original.email}
             </span>
           ) : (
@@ -93,7 +93,7 @@ export function useClientTable(clients: ClientDTO[], now: number) {
         header: t("clients.columns.spend"),
         accessorFn: (c) => c.stats.totalSpendMinor,
         meta: { align: "end" },
-        cell: ({ row }) => <span className="whitespace-nowrap font-medium">{org.money(row.original.stats.totalSpendMinor)}</span>,
+        cell: ({ row }) => <span className="whitespace-nowrap font-semibold">{org.money(row.original.stats.totalSpendMinor)}</span>,
       },
       {
         id: "nextAppointment",
@@ -107,7 +107,7 @@ export function useClientTable(clients: ClientDTO[], now: number) {
           return at ? (
             <span className="grid whitespace-nowrap leading-tight">
               <span>{org.date(at, "weekdayDate")}</span>
-              <span className="text-[13px] text-muted-foreground">{org.date(at, "time")}</span>
+              <span className="text-[14px] text-muted-foreground">{org.date(at, "time")}</span>
             </span>
           ) : (
             muted("—")
@@ -192,13 +192,13 @@ export function useClientTable(clients: ClientDTO[], now: number) {
     const next = upcomingAt(c.stats.nextAppointmentAt, now);
     return (
       <div className="flex items-start gap-3">
-        <PersonAvatar name={c.fullName} color={avatarColor(c.id)} className="size-10" />
+        <PersonAvatar name={c.fullName} color={avatarColor(c.id)} className="size-11 text-[15px]" />
         <div className="grid min-w-0 flex-1 gap-1">
           <div className="flex items-center justify-between gap-2">
-            <span className="truncate font-medium">{c.fullName}</span>
-            <span className="shrink-0 text-sm font-medium tabular">{org.money(c.stats.totalSpendMinor)}</span>
+            <span className="truncate text-[15px] font-semibold">{c.fullName}</span>
+            <span className="shrink-0 text-[15px] font-semibold tabular">{org.money(c.stats.totalSpendMinor)}</span>
           </div>
-          <div className="flex items-center justify-between gap-2 text-[13px] text-muted-foreground">
+          <div className="flex items-center justify-between gap-2 text-[14px] text-muted-foreground">
             <span className="truncate tabular" dir="ltr">
               {c.phone || c.email || "—"}
             </span>
@@ -207,10 +207,10 @@ export function useClientTable(clients: ClientDTO[], now: number) {
             </span>
           </div>
           {next || c.tags.length > 0 || c.status === "archived" ? (
-            <div className="flex flex-wrap items-center gap-1.5 pt-0.5 text-[13px]">
+            <div className="flex flex-wrap items-center gap-1.5 pt-0.5 text-[14px]">
               {c.status === "archived" ? <ClientStatusBadge status={c.status} /> : null}
               {next ? (
-                <span className="inline-flex items-center gap-1 text-primary">
+                <span className="inline-flex items-center gap-1 font-medium text-primary">
                   <CalendarClockIcon className="size-3.5" />
                   {org.date(next, "weekdayDate")} · {org.date(next, "time")}
                 </span>

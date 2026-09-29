@@ -99,7 +99,7 @@ export function AppointmentListView({ appointments, onOpen }: { appointments: Ap
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="text-sm font-medium">{a.clientName}</div>
-            <div className="truncate text-[13px] text-muted-foreground">{serviceNames(a)}</div>
+            <div className="truncate text-[14px] text-muted-foreground">{serviceNames(a)}</div>
             <div className="text-xs tabular text-muted-foreground">
               {org.date(a.startAt, "time")} · {staffNames(a)}
             </div>

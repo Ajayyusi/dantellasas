@@ -1,4 +1,5 @@
-import type { ClientDTO } from "@/lib/types";
+import { addDaysToKey, dateKeyOf, diffDays } from "@/lib/dates";
+import type { AppointmentDTO, ClientDTO } from "@/lib/types";
 
 import type { LastVisitBucket } from "./types";
 
@@ -61,9 +62,38 @@ export function averageSpendMinor(c: ClientDTO): number {
 }
 
 /** Stable accent colour for a client's avatar, derived from the id. */
-const AVATAR_COLORS = ["#7c5cff", "#e5484d", "#0d9488", "#d97706", "#2563eb", "#db2777", "#16a34a", "#9333ea"];
+const AVATAR_COLORS = ["#965660", "#a25c43", "#90693b", "#507357", "#4b6d8a", "#7d5279", "#715f53", "#4f7b80"];
 export function avatarColor(id: string): string {
   let h = 0;
   for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
   return AVATAR_COLORS[h % AVATAR_COLORS.length]!;
+}
+
+/** Whole days from today (in `tz`) to the next birthday; 0 on the day itself. */
+export function daysUntilBirthday(b: NonNullable<ClientDTO["birthday"]>, now: number, tz: string): number {
+  const today = dateKeyOf(now, tz);
+  const year = Number(today.slice(0, 4));
+  const key = (y: number) => addDaysToKey(`${y}-${String(b.month).padStart(2, "0")}-01`, b.day - 1);
+  const thisYear = key(year);
+  return thisYear >= today ? diffDays(today, thisYear) : diffDays(today, key(year + 1));
+}
+
+/** The client's most booked services across completed visits, most frequent first. */
+export function favouriteServices(visits: AppointmentDTO[], limit = 3): { id: string; name: string; count: number }[] {
+  const byService = new Map<string, { id: string; name: string; count: number; last: string }>();
+  for (const a of visits) {
+    for (const i of a.items) {
+      const id = i.serviceId || i.serviceName;
+      const row = byService.get(id);
+      if (!row) byService.set(id, { id, name: i.serviceName, count: 1, last: i.startAt });
+      else {
+        row.count += 1;
+        if (i.startAt > row.last) row.last = i.startAt;
+      }
+    }
+  }
+  return [...byService.values()]
+    .sort((a, b) => b.count - a.count || b.last.localeCompare(a.last))
+    .slice(0, limit)
+    .map(({ id, name, count }) => ({ id, name, count }));
 }

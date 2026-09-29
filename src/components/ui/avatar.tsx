@@ -9,7 +9,7 @@ function Avatar({ className, ...props }: React.ComponentProps<typeof AvatarPrimi
   return (
     <AvatarPrimitive.Root
       data-slot="avatar"
-      className={cn("relative flex size-8 shrink-0 overflow-hidden rounded-full", className)}
+      className={cn("relative flex size-9 shrink-0 overflow-hidden rounded-full ring-2 ring-card", className)}
       {...props}
     />
   );
@@ -22,10 +22,22 @@ function AvatarImage({ className, ...props }: React.ComponentProps<typeof Avatar
 function AvatarFallback({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {
   return (
     <AvatarPrimitive.Fallback
-      className={cn("flex size-full items-center justify-center rounded-full bg-muted text-xs font-semibold", className)}
+      className={cn(
+        "flex size-full items-center justify-center rounded-full bg-primary-soft text-[0.8em] font-semibold tracking-wide text-primary",
+        className,
+      )}
       {...props}
     />
   );
+}
+
+/** Brand tones for initials when a person has no colour of their own. */
+const AVATAR_TONES = ["#965660", "#a25c43", "#90693b", "#507357", "#4b6d8a", "#7d5279", "#715f53", "#4f7b80"];
+
+function toneFor(name: string): string {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  return AVATAR_TONES[h % AVATAR_TONES.length] ?? AVATAR_TONES[0]!;
 }
 
 /** Convenience: photo or initials on a colour derived from the name. */
@@ -40,16 +52,11 @@ function PersonAvatar({
   color?: string;
   className?: string;
 }) {
+  const tone = color || toneFor(name);
   return (
     <Avatar className={className}>
       {src ? <AvatarImage src={src} alt="" /> : null}
-      <AvatarFallback
-        style={
-          color
-            ? { backgroundColor: `color-mix(in oklch, ${color} 18%, transparent)`, color }
-            : undefined
-        }
-      >
+      <AvatarFallback style={{ backgroundColor: `color-mix(in oklch, ${tone} 16%, var(--card))`, color: tone }}>
         {initials(name)}
       </AvatarFallback>
     </Avatar>

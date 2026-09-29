@@ -161,15 +161,15 @@ export function TimeGrid({
   }
 
   return (
-    <div className="relative overflow-auto rounded-xl border bg-card shadow-sm scrollbar-thin" style={{ maxHeight: "calc(100dvh - 12rem)" }}>
+    <div className="relative overflow-auto rounded-2xl border bg-card shadow-sm scrollbar-thin" style={{ maxHeight: "calc(100dvh - 13rem)" }}>
       <div className="min-w-fit">
         {/* Header */}
-        <div className="sticky top-0 z-20 flex border-b bg-card">
-          <div className="sticky start-0 z-10 w-14 shrink-0 border-e bg-card" />
+        <div className="sticky top-0 z-20 flex border-b bg-card/95 backdrop-blur-sm">
+          <div className="sticky start-0 z-10 w-16 shrink-0 border-e bg-card" />
           {columns.map((c) => (
             <div
               key={c.key}
-              className={cn("flex-1 border-e px-2 py-2 last:border-e-0", c.isToday && "bg-primary/5")}
+              className={cn("relative flex-1 border-e px-3 py-2.5 last:border-e-0", c.isToday && "bg-primary-soft/70 after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:rounded-full after:bg-gradient-to-r after:from-primary after:to-gold")}
               style={{ minWidth: columnMinWidth }}
             >
               {c.header}
@@ -180,11 +180,11 @@ export function TimeGrid({
         {/* Body */}
         <div ref={bodyRef} className="relative flex" style={{ height }}>
           {/* Time labels */}
-          <div className="sticky start-0 z-10 w-14 shrink-0 border-e bg-card">
+          <div className="sticky start-0 z-10 w-16 shrink-0 border-e bg-card">
             {labelHours.map((m) => (
               <div
                 key={m}
-                className="absolute inset-x-0 -translate-y-2 whitespace-nowrap pe-2 text-end text-[11px] font-medium tabular text-muted-foreground"
+                className="absolute inset-x-0 -translate-y-2 whitespace-nowrap pe-2.5 text-end text-[12px] font-semibold tabular text-muted-foreground"
                 style={{ top: y(m) }}
               >
                 {formatHour(m, locale)}
@@ -205,7 +205,7 @@ export function TimeGrid({
                 className={cn(
                   "relative flex-1 border-e last:border-e-0",
                   canCreate && "cursor-cell",
-                  c.isToday && "bg-primary/[0.02]",
+                  c.isToday && "bg-[color-mix(in_oklch,var(--primary)_3%,transparent)]",
                 )}
                 style={{ minWidth: columnMinWidth }}
               >
@@ -214,7 +214,7 @@ export function TimeGrid({
                   <div key={m} className="pointer-events-none absolute inset-x-0 border-t border-border/70" style={{ top: y(m) }} />
                 ))}
                 {hours.map((m) => (
-                  <div key={`h${m}`} className="pointer-events-none absolute inset-x-0 border-t border-dashed border-border/40" style={{ top: y(m + 30) }} />
+                  <div key={`h${m}`} className="pointer-events-none absolute inset-x-0 border-t border-dashed border-border/35" style={{ top: y(m + 30) }} />
                 ))}
 
                 {c.shaded.map((s, i) => (
@@ -222,7 +222,7 @@ export function TimeGrid({
                     key={i}
                     className={cn(
                       "absolute inset-x-0 hatch",
-                      s.kind === "blocked" ? "z-[1] bg-muted/60" : "pointer-events-none bg-muted/35",
+                      s.kind === "blocked" ? "z-[1] cursor-pointer bg-muted/75" : "pointer-events-none bg-muted/40",
                     )}
                     style={{ top: y(Math.max(s.start, dayStart)), height: (Math.min(s.end, dayEnd) - Math.max(s.start, dayStart)) * pxPerMin }}
                     onClick={
@@ -235,7 +235,7 @@ export function TimeGrid({
                     }
                   >
                     {s.kind !== "off" && (s.end - s.start) * pxPerMin > 18 ? (
-                      <span className="block truncate px-2 pt-1 text-[11px] font-medium text-muted-foreground">
+                      <span className="block truncate px-2 pt-1 text-[12px] font-medium text-muted-foreground">
                         {s.label ?? (s.kind === "break" ? t("appointments.break") : t("appointments.blocked"))}
                       </span>
                     ) : null}
@@ -244,8 +244,8 @@ export function TimeGrid({
 
                 {c.isToday && nowMinute !== null && nowMinute >= dayStart && nowMinute <= dayEnd ? (
                   <div className="pointer-events-none absolute inset-x-0 z-[5] flex items-center" style={{ top: y(nowMinute) }}>
-                    <span className="-ms-1 size-2 rounded-full bg-destructive" />
-                    <span className="h-px flex-1 bg-destructive" />
+                    <span className="-ms-1.5 size-3 shrink-0 rounded-full bg-primary ring-4 ring-primary/15" />
+                    <span className="h-[2px] flex-1 rounded-full bg-gradient-to-r from-primary via-primary/80 to-gold rtl:bg-gradient-to-l" />
                   </div>
                 ) : null}
 
@@ -265,10 +265,10 @@ export function TimeGrid({
 
                 {drag?.moved && drag.columnKey === c.key ? (
                   <div
-                    className="pointer-events-none absolute inset-x-1 z-30 rounded-md border-2 border-dashed border-primary bg-primary/10"
+                    className="pointer-events-none absolute inset-x-1 z-30 rounded-lg border-2 border-dashed border-primary bg-primary/10 shadow-md"
                     style={{ top: y(drag.start), height: (drag.event.end - drag.event.start) * pxPerMin - 2 }}
                   >
-                    <span className="flex items-center gap-1 px-2 pt-1 text-[11px] font-semibold text-primary">
+                    <span className="flex items-center gap-1 px-2 pt-1 text-[12px] font-semibold text-primary">
                       <MoveIcon className="size-3" />
                       {formatClock(drag.start, locale)}
                     </span>
@@ -320,29 +320,35 @@ function EventBlock({
         }
       }}
       className={cn(
-        "absolute z-10 cursor-pointer touch-none select-none overflow-hidden rounded-md border border-s-[3px] px-2 py-1 text-start shadow-sm outline-none transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring",
-        a.status === "completed" && "opacity-75",
+        "group absolute z-10 cursor-pointer touch-none select-none overflow-hidden rounded-lg border border-s-[3px] px-2.5 py-1.5 text-start shadow-xs outline-none",
+        "transition-[box-shadow,transform,filter] duration-200 ease-out hover:z-20 hover:-translate-y-px hover:shadow-md hover:brightness-[1.02] focus-visible:ring-2 focus-visible:ring-ring",
+        a.status === "completed" && "opacity-80",
+        (a.status === "cancelled" || a.status === "no_show") && "opacity-70",
         dragging && "opacity-35",
       )}
       style={{
         top,
         height,
-        insetInlineStart: `calc(${offsetPct}% + 2px)`,
-        width: `calc(${widthPct}% - 4px)`,
-        borderColor: `color-mix(in oklch, ${color} 35%, var(--border))`,
+        insetInlineStart: `calc(${offsetPct}% + 3px)`,
+        width: `calc(${widthPct}% - 6px)`,
+        borderColor: `color-mix(in oklch, ${color} 30%, var(--border))`,
         borderInlineStartColor: color,
-        backgroundColor: `color-mix(in oklch, ${color} 10%, var(--card))`,
+        background: `linear-gradient(180deg, color-mix(in oklch, ${color} 13%, var(--card)), color-mix(in oklch, ${color} 7%, var(--card)))`,
       }}
     >
-      <div className="flex items-center gap-1">
-        {ev.accent ? <span className="size-1.5 shrink-0 rounded-full" style={{ backgroundColor: ev.accent }} /> : null}
-        <span className="truncate text-[12.5px] font-semibold leading-tight">{a.clientName}</span>
-        {a.status === "completed" ? <CheckIcon className="ms-auto size-3.5 shrink-0 text-success" /> : null}
+      <div className="flex items-center gap-1.5">
+        {ev.accent ? <span className="size-2 shrink-0 rounded-full ring-2 ring-card" style={{ backgroundColor: ev.accent }} /> : null}
+        <span className="truncate text-[13.5px] font-semibold leading-tight text-foreground">{a.clientName}</span>
+        {a.status === "completed" ? (
+          <CheckIcon className="ms-auto size-3.5 shrink-0 text-success" strokeWidth={2.5} />
+        ) : (
+          <span aria-hidden className="ms-auto size-1.5 shrink-0 rounded-full" style={{ backgroundColor: color }} />
+        )}
       </div>
       {!compact ? (
         <>
-          <div className="truncate text-xs leading-snug text-muted-foreground">{ev.line.serviceName}</div>
-          <div className="truncate text-[11px] tabular text-muted-foreground">
+          <div className="mt-0.5 truncate text-[12.5px] font-medium leading-snug text-foreground/75">{ev.line.serviceName}</div>
+          <div className="truncate text-[12px] tabular text-muted-foreground">
             {formatClock(ev.start, locale)} – {formatClock(ev.end, locale)}
           </div>
         </>

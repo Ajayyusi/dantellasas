@@ -123,7 +123,7 @@ function Members({ plan }: { plan: MembershipPlanDTO }) {
                     <span className="truncate text-sm font-medium">{m.clientName || t("common.unknown")}</span>
                     <Badge variant={STATUS_VARIANT[m.status]}>{t(`catalog.members.statuses.${m.status}`)}</Badge>
                   </div>
-                  <div className="mt-0.5 text-[13px] text-muted-foreground tabular">
+                  <div className="mt-0.5 text-[14px] text-muted-foreground tabular">
                     {org.date(m.startAt)} – {org.date(m.endAt)}
                     {m.autoRenew && m.status === "active" ? ` · ${t("catalog.members.autoRenew")}` : ""}
                   </div>

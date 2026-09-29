@@ -50,8 +50,8 @@ export function OnboardingForm({ defaultLocale, allowDemo }: { defaultLocale: Lo
   return (
     <form onSubmit={onSubmit} className="grid gap-6" noValidate>
       <div className="grid gap-1.5">
-        <h1 className="text-2xl font-semibold tracking-tight">{t("onboarding.title")}</h1>
-        <p className="text-[15px] text-muted-foreground">{t("onboarding.subtitle")}</p>
+        <h1 className="font-display text-[34px] font-semibold leading-tight">{t("onboarding.title")}</h1>
+        <p className="text-[16px] text-muted-foreground">{t("onboarding.subtitle")}</p>
       </div>
       <div className="grid gap-4">
         <Field label={t("onboarding.businessName")} htmlFor="businessName" error={errors.businessName ? te(errors.businessName) : null} required>
@@ -61,7 +61,7 @@ export function OnboardingForm({ defaultLocale, allowDemo }: { defaultLocale: Lo
             onChange={(e) => setBusinessName(e.target.value)}
             placeholder={t("onboarding.businessNamePlaceholder")}
             aria-invalid={!!errors.businessName}
-            className="h-10"
+            className="h-12"
           />
         </Field>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -72,11 +72,11 @@ export function OnboardingForm({ defaultLocale, allowDemo }: { defaultLocale: Lo
               onChange={(e) => setBranchName(e.target.value)}
               placeholder={t("onboarding.branchNamePlaceholder")}
               aria-invalid={!!errors.branchName}
-              className="h-10"
+              className="h-12"
             />
           </Field>
           <Field label={t("onboarding.phone")} htmlFor="phone" optionalLabel={t("common.optional")}>
-            <Input id="phone" type="tel" dir="ltr" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+971 4 000 0000" className="h-10" />
+            <Input id="phone" type="tel" dir="ltr" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+971 4 000 0000" className="h-12" />
           </Field>
         </div>
         <Field label={t("onboarding.defaultLanguage")}>
@@ -89,14 +89,14 @@ export function OnboardingForm({ defaultLocale, allowDemo }: { defaultLocale: Lo
           <label className="flex cursor-pointer items-start justify-between gap-4 rounded-lg border bg-muted/40 p-4">
             <span className="grid gap-1">
               <span className="text-sm font-medium">{t("onboarding.demoData")}</span>
-              <span className="text-[13px] leading-relaxed text-muted-foreground">{t("onboarding.demoDataHint")}</span>
+              <span className="text-[14px] leading-relaxed text-muted-foreground">{t("onboarding.demoDataHint")}</span>
             </span>
             <Switch checked={demo} onCheckedChange={setDemo} aria-label={t("onboarding.demoData")} />
           </label>
         ) : null}
       </div>
       {formError ? (
-        <p role="alert" className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+        <p role="alert" className="animate-fade-up rounded-xl border border-destructive/20 bg-destructive/8 px-4 py-3 text-sm font-medium text-destructive">
           {formError}
         </p>
       ) : null}

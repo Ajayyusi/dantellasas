@@ -73,7 +73,7 @@ export function SettingsNav({ sections }: { sections: SettingsSection[] }) {
                 href={s.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex h-8 items-center gap-1.5 rounded-full border px-3 text-[13px] font-medium whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:outline-ring",
+                  "flex h-8 items-center gap-1.5 rounded-full border px-3 text-[14px] font-medium whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:outline-ring",
                   active ? "border-primary/30 bg-primary/10 text-primary" : "bg-card text-muted-foreground hover:text-foreground",
                 )}
               >
@@ -92,7 +92,7 @@ export function SettingsNav({ sections }: { sections: SettingsSection[] }) {
           if (items.length === 0) return null;
           return (
             <div key={g} className="grid gap-0.5">
-              <div className="px-2.5 pb-1 text-[11px] font-medium tracking-wider text-muted-foreground uppercase">
+              <div className="px-2.5 pb-1 text-[12px] font-medium tracking-wider text-muted-foreground uppercase">
                 {t(`settings.groups.${g}`)}
               </div>
               {items.map((s) => {

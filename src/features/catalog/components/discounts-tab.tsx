@@ -120,7 +120,7 @@ export function DiscountsTab({ discounts, today }: { discounts: DiscountDTO[]; t
         header: t("catalog.discounts.code"),
         cell: ({ row }) =>
           row.original.code ? (
-            <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] tracking-wide" dir="ltr">
+            <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-[14px] tracking-wide" dir="ltr">
               {row.original.code}
             </span>
           ) : (
@@ -144,7 +144,7 @@ export function DiscountsTab({ discounts, today }: { discounts: DiscountDTO[]; t
         id: "period",
         accessorFn: (d) => d.startsAt ?? "",
         header: t("catalog.discounts.period"),
-        cell: ({ row }) => <span className="tabular text-[13px]">{helpers.period(row.original)}</span>,
+        cell: ({ row }) => <span className="tabular text-[14px]">{helpers.period(row.original)}</span>,
       },
       {
         id: "usage",
@@ -210,7 +210,7 @@ export function DiscountsTab({ discounts, today }: { discounts: DiscountDTO[]; t
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <div className="truncate text-sm font-medium">{d.name}</div>
-                  <div className="mt-0.5 flex flex-wrap items-center gap-2 text-[13px] text-muted-foreground">
+                  <div className="mt-0.5 flex flex-wrap items-center gap-2 text-[14px] text-muted-foreground">
                     {d.code ? (
                       <span className="font-mono" dir="ltr">
                         {d.code}

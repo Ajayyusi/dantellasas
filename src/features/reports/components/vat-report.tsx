@@ -88,7 +88,7 @@ export function VatReport({ data, range }: { data: Data; range: DateRange }) {
           <div className="flex items-center justify-between gap-2">
             <span className="min-w-0">
               <span className="block truncate font-medium">{describe(r)}</span>
-              <span className="text-[13px] text-muted-foreground tabular">
+              <span className="text-[14px] text-muted-foreground tabular">
                 {t("reports.vat.taxable")} {org.money(r.kind === "credit" ? -r.taxableMinor : r.taxableMinor)}
               </span>
             </span>

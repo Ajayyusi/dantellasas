@@ -75,13 +75,13 @@ function CorrectionForm({ record, onDone }: { record: AttendanceDTO; onDone: () 
 
       <div className="grid gap-2">
         <div className="flex items-center justify-between">
-          <span className="text-[13px] font-medium">{t("attendance.columns.breaks")}</span>
+          <span className="text-[14px] font-medium">{t("attendance.columns.breaks")}</span>
           <Button type="button" variant="ghost" size="sm" onClick={() => setBreaks((l) => [...l, { start: clockIn || "13:00", end: "" }])}>
             <PlusIcon />
             {t("attendance.correct.addBreak")}
           </Button>
         </div>
-        {breaks.length === 0 ? <p className="text-[13px] text-muted-foreground">{t("attendance.correct.noBreaks")}</p> : null}
+        {breaks.length === 0 ? <p className="text-[14px] text-muted-foreground">{t("attendance.correct.noBreaks")}</p> : null}
         {breaks.map((b, i) => (
           <div key={i} className="grid gap-1">
             <div className="flex items-center gap-2">
@@ -113,7 +113,7 @@ function CorrectionForm({ record, onDone }: { record: AttendanceDTO; onDone: () 
               </Button>
             </div>
             {errorFor(`breaks.${i}.start`) || errorFor(`breaks.${i}.end`) ? (
-              <p role="alert" className="text-[13px] text-destructive">
+              <p role="alert" className="text-[14px] text-destructive">
                 {errorFor(`breaks.${i}.start`) ?? errorFor(`breaks.${i}.end`)}
               </p>
             ) : null}
@@ -133,11 +133,11 @@ function CorrectionForm({ record, onDone }: { record: AttendanceDTO; onDone: () 
 
       {record.corrections.length > 0 ? (
         <div className="grid gap-1.5 rounded-lg border bg-muted/30 p-3">
-          <span className="flex items-center gap-1.5 text-[13px] font-medium">
+          <span className="flex items-center gap-1.5 text-[14px] font-medium">
             <HistoryIcon className="size-3.5" />
             {t("attendance.correct.history")}
           </span>
-          <ul className="grid gap-1 text-[13px]">
+          <ul className="grid gap-1 text-[14px]">
             {record.corrections.map((c, i) => (
               <li key={i}>
                 <span className="text-muted-foreground">{t("attendance.correct.by", { name: c.byName, date: org.date(c.at, "datetime") })}</span>
