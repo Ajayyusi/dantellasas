@@ -50,7 +50,8 @@ export function PaymentPanel({
   dueMinor: number;
   methods: PaymentMethod[];
   tenders: Tender[];
-  onTendersChange: (t: Tender[]) => void;
+  /** A state setter: updates are functional so async checks never write back a stale list. */
+  onTendersChange: React.Dispatch<React.SetStateAction<Tender[]>>;
   settlement: Settlement;
   wallet: PosWallet | null;
   canLeaveBalance: boolean;
@@ -66,13 +67,14 @@ export function PaymentPanel({
   const credits = (wallet?.packages ?? []).filter((p) => p.kind === "credit" && creditLeft(p) > 0);
   const available = methods.filter((m) => m.type !== "package" || credits.length > 0);
   const typeOf = (methodId: string) => methods.find((m) => m.id === methodId)?.type ?? "other";
-  const update = (key: string, patch: Partial<Tender>) => onTendersChange(tenders.map((x) => (x.key === key ? { ...x, ...patch } : x)));
+  const update = (key: string, patch: Partial<Tender>) =>
+    onTendersChange((list) => list.map((x) => (x.key === key ? { ...x, ...patch } : x)));
 
   function add(m: PaymentMethod) {
     const remaining = settlement.remainingMinor;
     const credit = m.type === "package" ? credits[0] : undefined;
-    onTendersChange([
-      ...tenders,
+    onTendersChange((list) => [
+      ...list,
       {
         key: newId(),
         methodId: m.id,
@@ -93,11 +95,19 @@ export function PaymentPanel({
       update(tender.key, { giftCardBalance: null, amountMinor: 0 });
       return toast.error(te(res.error));
     }
-    const others = tenders.filter((x) => x.key !== tender.key).reduce((s, x) => s + x.amountMinor, 0);
-    update(tender.key, {
-      giftCardCode: res.data.code,
-      giftCardBalance: res.data.balanceMinor,
-      amountMinor: Math.max(0, Math.min(res.data.balanceMinor, dueMinor - others)),
+    // Read the list as it is now: the cashier may have added cash or card while the check ran.
+    onTendersChange((list) => {
+      const others = list.filter((x) => x.key !== tender.key).reduce((s, x) => s + x.amountMinor, 0);
+      return list.map((x) =>
+        x.key === tender.key
+          ? {
+              ...x,
+              giftCardCode: res.data.code,
+              giftCardBalance: res.data.balanceMinor,
+              amountMinor: Math.max(0, Math.min(res.data.balanceMinor, dueMinor - others)),
+            }
+          : x,
+      );
     });
   }
 
@@ -154,7 +164,7 @@ export function PaymentPanel({
                     disabled={type === "gift_card" && x.giftCardBalance === null}
                     aria-label={t("common.amount")}
                   />
-                  <Button type="button" variant="ghost" size="icon-sm" onClick={() => onTendersChange(tenders.filter((y) => y.key !== x.key))} aria-label={t("common.remove")}>
+                  <Button type="button" variant="ghost" size="icon-sm" onClick={() => onTendersChange((list) => list.filter((y) => y.key !== x.key))} aria-label={t("common.remove")}>
                     <XIcon />
                   </Button>
                 </div>
