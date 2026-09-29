@@ -8,6 +8,7 @@ import { findGiftCardByCode, uniqueGiftCardCode } from "@/features/catalog/gift-
 import { validateDiscountCode } from "@/features/catalog/discounts";
 import { toCommissionRule, toMembershipPlan, toPackage } from "@/features/catalog/mappers";
 import { readProductsForSale, writeSaleStockMovements } from "@/features/inventory/service";
+import { productDisplayName } from "@/features/inventory/types";
 import { listServices } from "@/features/services/queries";
 import { listStaff } from "@/features/staff/queries";
 import { fail } from "@/lib/actions";
@@ -139,7 +140,7 @@ export async function executeSale(ctx: AppContext, input: SaleInput, branchId: s
       } else if (l.type === "product") {
         const p = products.get(l.refId);
         if (!p || !p.active || p.usage === "professional") fail("errors.validation", { [`lines.${index}`]: "errors.notFound" });
-        name = [p.brand, p.name].filter(Boolean).join(" ");
+        name = productDisplayName(p.brand, p.name);
         catalogPrice = p.priceMinor;
         taxRateBps = taxRateFor(settings, p);
       } else if (l.type === "package") {

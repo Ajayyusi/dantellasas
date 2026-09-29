@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { useOrg } from "@/components/providers/org-provider";
 import { Input } from "@/components/ui/input";
 import { Segmented, SegmentedItem } from "@/components/ui/segmented";
+import { productDisplayName } from "@/features/inventory/types";
 import { useI18n } from "@/lib/i18n/client";
 import { formatDuration } from "@/lib/i18n/format";
 import { localName } from "@/lib/localize";
@@ -145,7 +146,7 @@ export function CatalogPanel({ catalog, onPick }: { catalog: PosCatalog; onPick:
           products.map((p) => (
             <Tile
               key={p.id}
-              title={`${p.brand} ${p.name}`.trim()}
+              title={productDisplayName(p.brand, p.name)}
               meta={p.trackStock ? (p.stock > 0 ? t("pos.stock", { count: p.stock }) : t("pos.outOfStock")) : p.sku}
               price={org.money(p.priceMinor)}
               disabled={p.trackStock && p.stock <= 0}

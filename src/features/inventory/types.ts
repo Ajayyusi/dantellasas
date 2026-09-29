@@ -17,6 +17,18 @@ export const PRODUCT_USAGES = ["retail", "professional", "both"] as const;
 
 export type StockStatus = "in_stock" | "low" | "out" | "untracked";
 
+/**
+ * Brand plus product name for tickets and invoices, without repeating the
+ * brand when the name already starts with it ("Moroccanoil Treatment 100ml").
+ */
+export function productDisplayName(brand: string, name: string): string {
+  const b = brand.trim();
+  const n = name.trim();
+  if (!b) return n;
+  if (!n) return b;
+  return n.toLocaleLowerCase().startsWith(b.toLocaleLowerCase()) ? n : `${b} ${n}`;
+}
+
 /** Quantity at one branch, or the sum over `branchIds` when `branchId` is null. */
 export function stockIn(product: Pick<ProductDTO, "stock">, branchId: string | null, branchIds: string[]): number {
   if (branchId) return product.stock[branchId] ?? 0;

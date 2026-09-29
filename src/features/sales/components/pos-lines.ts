@@ -1,3 +1,4 @@
+import { productDisplayName } from "@/features/inventory/types";
 import { formatDuration } from "@/lib/i18n/format";
 import type { Locale } from "@/lib/i18n/config";
 import { localName } from "@/lib/localize";
@@ -44,7 +45,7 @@ export function productLine(catalog: PosCatalog, id: string, settings: OrgSettin
   return base({
     type: "product",
     refId: p.id,
-    name: [p.brand, p.name].filter(Boolean).join(" "),
+    name: productDisplayName(p.brand, p.name),
     detail: p.sku,
     unitPriceMinor: p.priceMinor,
     taxRateBps: taxRateFor(settings, p),

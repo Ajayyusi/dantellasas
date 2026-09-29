@@ -2,6 +2,7 @@ import "server-only";
 
 import { FieldValue, Timestamp, type BulkWriter, type DocumentReference } from "firebase-admin/firestore";
 
+import { productDisplayName } from "@/features/inventory/types";
 import { db, orgCol, orgRef } from "@/lib/db";
 import { addDaysToKey, dateKeyOf, minutesToTime, timeToMinutes, todayKey, weekdayOfKey, zonedInstant } from "@/lib/dates";
 import { computeTicket, percentOf, splitTax } from "@/lib/money";
@@ -378,7 +379,7 @@ export async function seedDemoData(input: SeedDemoInput): Promise<SeedDemoResult
           if (chance(0.15) && retail.length) {
             const p = pick(retail);
             p.sold++;
-            saleLines.push({ type: "product", refId: p.id, name: `${p.brand} ${p.name}`, quantity: 1, unitPriceMinor: M(p.price), discountMinor: 0, taxRateBps: vatBps, rate: 500 });
+            saleLines.push({ type: "product", refId: p.id, name: productDisplayName(p.brand, p.name), quantity: 1, unitPriceMinor: M(p.price), discountMinor: 0, taxRateBps: vatBps, rate: 500 });
           }
           const ticket = computeTicket(saleLines, 0, inclusive);
           const txItems = saleLines.map((l, i) => {
@@ -522,7 +523,7 @@ export async function seedDemoData(input: SeedDemoInput): Promise<SeedDemoResult
     const movement = (type: string, quantity: number, balanceAfter: number, note: string, at: number) =>
       set(orgCol(orgId, "inventoryMovements").doc(), {
         productId: p.id,
-        productName: `${p.brand} ${p.name}`,
+        productName: productDisplayName(p.brand, p.name),
         branchId,
         type,
         quantity,
