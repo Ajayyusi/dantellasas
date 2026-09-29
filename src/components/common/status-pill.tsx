@@ -16,7 +16,7 @@ export function StatusPill({
   return (
     <span
       className={cn(
-        "inline-flex w-fit shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold leading-5",
+        "inline-flex w-fit shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-0.5 font-sans text-xs font-semibold leading-5 tracking-normal",
         className,
       )}
       style={{
