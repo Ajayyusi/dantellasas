@@ -69,7 +69,7 @@ export interface DataTableProps<T> {
   csv?: { filename: string; columns: CsvColumn<T>[] };
   toolbar?: React.ReactNode;
   empty?: React.ReactNode;
-  /** Card layout used below the `md` breakpoint. */
+  /** Card layout used below the `lg` breakpoint (phones and portrait tablets). */
   mobileCard?: (row: T) => React.ReactNode;
   className?: string;
   footer?: React.ReactNode;
@@ -248,7 +248,7 @@ export function DataTable<T>({
           {hideable.length > 0 ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon-sm" aria-label={t("common.columns")} className="hidden md:inline-flex">
+                <Button variant="outline" size="icon-sm" aria-label={t("common.columns")} className={cn("hidden", mobileCard ? "lg:inline-flex" : "md:inline-flex")}>
                   <Settings2Icon />
                 </Button>
               </DropdownMenuTrigger>
@@ -286,7 +286,7 @@ export function DataTable<T>({
       ) : (
         <>
           {mobileCard ? (
-            <ul className="divide-y md:hidden">
+            <ul className="divide-y lg:hidden">
               {table.getRowModel().rows.map((row) => (
                 <li key={row.id}>
                   {onRowClick ? (
@@ -304,7 +304,7 @@ export function DataTable<T>({
               ))}
             </ul>
           ) : null}
-          <div className={cn(mobileCard && "hidden md:block")}>
+          <div className={cn(mobileCard && "hidden lg:block")}>
             <Table>
               <TableHeader>
                 {table.getHeaderGroups().map((hg) => (
