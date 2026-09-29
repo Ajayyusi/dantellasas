@@ -1,6 +1,6 @@
 import { summarizeSales } from "@/features/sales/summary";
-import { eachDayKey, type DateRange } from "@/lib/dates";
-import type { AppointmentDTO, AppointmentStatus, TransactionDTO } from "@/lib/types";
+import { eachDayKey, minutesOfDay, weekdayOfKey, type DateRange } from "@/lib/dates";
+import type { AppointmentDTO, AppointmentStatus, StaffDTO, TransactionDTO } from "@/lib/types";
 
 /** Pure dashboard maths, shared by the page and unit tests. */
 
@@ -126,4 +126,169 @@ export function topStaff(transactions: TransactionDTO[], limit = 5): RankedRow[]
     }
   }
   return [...m.values()].sort((a, b) => b.revenueMinor - a.revenueMinor).slice(0, limit);
+}
+
+export interface TodaySummary {
+  revenueMinor: number;
+  sales: number;
+  appointments: number;
+  completed: number;
+  upcoming: number;
+  clients: number;
+}
+
+/** Today at a glance: takings, bookings and distinct clients (booked or served). */
+export function todaySummary(transactions: TransactionDTO[], appointments: AppointmentDTO[], nowMs: number): TodaySummary {
+  const live = appointments.filter((a) => a.status !== "cancelled");
+  const clients = new Set<string>();
+  for (const a of live) clients.add(a.clientId ?? `walk-in:${a.clientName}`);
+  for (const tx of transactions) if (tx.status !== "void") clients.add(tx.clientId ?? `walk-in:${tx.id}`);
+  const sales = summarizeSales(transactions);
+  return {
+    revenueMinor: sales.netMinor,
+    sales: sales.count,
+    appointments: live.length,
+    completed: live.filter((a) => a.status === "completed").length,
+    upcoming: live.filter((a) => (a.status === "booked" || a.status === "confirmed") && Date.parse(a.startAt) > nowMs).length,
+    clients: clients.size,
+  };
+}
+
+/** Open balances left on unpaid and part-paid invoices. */
+export function pendingPayments(transactions: TransactionDTO[]): { count: number; balanceMinor: number } {
+  let count = 0;
+  let balanceMinor = 0;
+  for (const tx of transactions) {
+    if ((tx.status === "unpaid" || tx.status === "partially_paid") && tx.balanceMinor > 0) {
+      count += 1;
+      balanceMinor += tx.balanceMinor;
+    }
+  }
+  return { count, balanceMinor };
+}
+
+export interface Retention {
+  current: number;
+  previous: number;
+  /** Clients who bought in both periods. */
+  returning: number;
+  /** Clients this period who did not buy last period. */
+  fresh: number;
+  /** Share of last period's clients who came back (null without a baseline). */
+  rate: number | null;
+}
+
+function clientSet(list: TransactionDTO[]): Set<string> {
+  const s = new Set<string>();
+  for (const tx of list) if (tx.clientId && tx.status !== "void") s.add(tx.clientId);
+  return s;
+}
+
+export function clientRetention(transactions: TransactionDTO[], prevTransactions: TransactionDTO[]): Retention {
+  const cur = clientSet(transactions);
+  const prev = clientSet(prevTransactions);
+  let returning = 0;
+  for (const id of cur) if (prev.has(id)) returning += 1;
+  return {
+    current: cur.size,
+    previous: prev.size,
+    returning,
+    fresh: cur.size - returning,
+    rate: prev.size ? returning / prev.size : null,
+  };
+}
+
+export interface BookingPoint {
+  dateKey: string;
+  count: number;
+  prevCount: number;
+}
+
+/** Bookings per day (cancellations excluded), aligned with the previous period. */
+export function bookingsSeries(
+  range: DateRange,
+  prevRange: DateRange,
+  appointments: AppointmentDTO[],
+  prevAppointments: AppointmentDTO[],
+): BookingPoint[] {
+  const byDay = (list: AppointmentDTO[]) => {
+    const m = new Map<string, number>();
+    for (const a of list) if (a.status !== "cancelled") m.set(a.dateKey, (m.get(a.dateKey) ?? 0) + 1);
+    return m;
+  };
+  const cur = byDay(appointments);
+  const prev = byDay(prevAppointments);
+  const prevDays = eachDayKey(prevRange.from, prevRange.to);
+  return eachDayKey(range.from, range.to).map((dateKey, i) => ({
+    dateKey,
+    count: cur.get(dateKey) ?? 0,
+    prevCount: prev.get(prevDays[i] ?? "") ?? 0,
+  }));
+}
+
+export interface BusyHours {
+  /** First hour shown (inclusive) and last hour (exclusive). */
+  from: number;
+  to: number;
+  /** counts[weekday][hour - from], weekday 0 = Sunday. */
+  counts: number[][];
+  max: number;
+}
+
+/** Booking starts by weekday and hour, clipped to the hours that saw bookings. */
+export function busyHours(appointments: AppointmentDTO[], tz: string): BusyHours {
+  const live = appointments.filter((a) => a.status !== "cancelled");
+  const hours = live.map((a) => Math.floor(minutesOfDay(new Date(a.startAt), tz) / 60));
+  const from = hours.length ? Math.min(...hours) : 9;
+  const to = hours.length ? Math.max(...hours) + 1 : 21;
+  const counts = Array.from({ length: 7 }, () => Array.from({ length: to - from }, () => 0));
+  live.forEach((a, i) => {
+    const row = counts[weekdayOfKey(a.dateKey)];
+    const h = hours[i]!;
+    if (row) row[h - from] = (row[h - from] ?? 0) + 1;
+  });
+  return { from, to, counts, max: Math.max(0, ...counts.flat()) };
+}
+
+export interface CategoryRow {
+  id: string;
+  name: string;
+  nameAr: string;
+  color: string;
+  revenueMinor: number;
+  count: number;
+}
+
+/** Service revenue (after line refunds) grouped by service category. */
+export function categoryPerformance(
+  transactions: TransactionDTO[],
+  services: { id: string; categoryId: string }[],
+  categories: { id: string; name: string; nameAr: string; color: string }[],
+): CategoryRow[] {
+  const categoryOf = new Map(services.map((s) => [s.id, s.categoryId]));
+  const info = new Map(categories.map((c) => [c.id, c]));
+  const m = new Map<string, CategoryRow>();
+  for (const tx of transactions) {
+    if (tx.status === "void") continue;
+    for (const i of tx.items) {
+      if (i.type !== "service") continue;
+      const id = categoryOf.get(i.refId) ?? "";
+      const c = info.get(id);
+      const row = m.get(id) ?? { id, name: c?.name ?? "", nameAr: c?.nameAr ?? "", color: c?.color ?? "", revenueMinor: 0, count: 0 };
+      row.count += i.quantity;
+      row.revenueMinor += lineNet(tx, i.id, i.totalMinor);
+      m.set(id, row);
+    }
+  }
+  return [...m.values()].filter((r) => r.revenueMinor > 0).sort((a, b) => b.revenueMinor - a.revenueMinor);
+}
+
+/** Active staff whose weekly schedule has them working on `weekday` in the branch scope. */
+export function staffWorkingToday(staff: StaffDTO[], weekday: number, branchIds: string[]): number {
+  return staff.filter(
+    (s) =>
+      s.status === "active" &&
+      s.schedule[String(weekday)]?.working === true &&
+      (s.branchIds.length === 0 || s.branchIds.some((b) => branchIds.includes(b))),
+  ).length;
 }
