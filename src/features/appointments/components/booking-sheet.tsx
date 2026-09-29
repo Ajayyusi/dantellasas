@@ -118,7 +118,6 @@ function BookingForm({
       },
     ];
   });
-  const [checkoutAfter, setCheckoutAfter] = useState(false);
 
   useEffect(() => {
     if (!prefillClientId || appointment) return;
@@ -136,10 +135,7 @@ function BookingForm({
 
   const { run, pending, errorFor } = useAction(saveAppointmentAction, {
     success: appointment ? t("appointments.updated") : t("appointments.booked"),
-    onSuccess: (data) => {
-      onOpenChange(false);
-      if (checkoutAfter) router.push(`/pos?appointment=${data.id}`);
-    },
+    onSuccess: () => onOpenChange(false),
   });
 
   const slots = useMemo(() => {
@@ -203,9 +199,10 @@ function BookingForm({
   const spanStart = Math.min(...lines.map((l) => timeToMinutes(l.start)));
   const spanEnd = Math.max(...lines.map((l) => timeToMinutes(l.start) + l.durationMin));
 
-  function submit(checkout: boolean) {
-    setCheckoutAfter(checkout);
-    void run({
+  // `checkout` is read from this call, not from state: `run` keeps the
+  // onSuccess of the render it was created in, so state set here is stale.
+  async function submit(checkout: boolean) {
+    const res = await run({
       id: appointment?.id,
       branchId,
       date,
@@ -223,6 +220,7 @@ function BookingForm({
         discountMinor: l.discountMinor,
       })),
     });
+    if (res.ok && checkout) router.push(`/pos?appointment=${res.data.id}`);
   }
 
   const statusLabel = { busy: t("appointments.form.busy"), off: t("appointments.form.off"), break: t("appointments.form.onBreak"), free: "" };
@@ -236,7 +234,7 @@ function BookingForm({
         className="contents"
         onSubmit={(e) => {
           e.preventDefault();
-          submit(false);
+          void submit(false);
         }}
       >
         <SheetBody className="grid gap-6">
@@ -395,7 +393,7 @@ function BookingForm({
               {t("common.cancel")}
             </Button>
             {!appointment && org.can("create_sales") ? (
-              <Button type="button" variant="secondary" disabled={pending || !client || !complete || !date} onClick={() => submit(true)}>
+              <Button type="button" variant="secondary" disabled={pending || !client || !complete || !date} onClick={() => void submit(true)}>
                 {t("appointments.form.saveAndCheckout")}
               </Button>
             ) : null}
