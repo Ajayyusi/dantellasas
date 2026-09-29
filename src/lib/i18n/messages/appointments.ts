@@ -127,6 +127,10 @@ export const appointments = defineMessages({
         cancelledBecause: "Cancelled: {reason}",
         paidWith: "Paid · {number}",
         history: "History",
+        futureHint: "Check-in opens on the day of the appointment.",
+        whatsappReminder: "WhatsApp reminder",
+        reminderMessage:
+          "Hi {name}, this is {business}. A reminder of your appointment on {date} at {time}: {services}. Reply to confirm, or let us know if you need to reschedule.",
       },
       blocked_time: {
         add: "Block time",
@@ -280,6 +284,10 @@ export const appointments = defineMessages({
         cancelledBecause: "ملغي: {reason}",
         paidWith: "مدفوع · {number}",
         history: "السجل",
+        futureHint: "يُتاح تسجيل الوصول في يوم الموعد.",
+        whatsappReminder: "تذكير عبر واتساب",
+        reminderMessage:
+          "مرحبًا {name}، معك {business}. نذكّرك بموعدك يوم {date} الساعة {time}: {services}. يرجى الرد للتأكيد، أو أخبرنا إذا رغبت في تغيير الموعد.",
       },
       blocked_time: {
         add: "حجب وقت",

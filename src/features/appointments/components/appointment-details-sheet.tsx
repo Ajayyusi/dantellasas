@@ -6,6 +6,7 @@ import {
   CheckIcon,
   Loader2Icon,
   LogInIcon,
+  MessageCircleIcon,
   PencilIcon,
   PhoneIcon,
   PlayIcon,
@@ -33,7 +34,9 @@ import { Field } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetBody, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
+import { whatsappLink } from "@/features/clients/utils";
 import { useAction } from "@/hooks/use-action";
+import { todayKey } from "@/lib/dates";
 import { useI18n } from "@/lib/i18n/client";
 import { formatDuration } from "@/lib/i18n/format";
 import type { AppointmentDTO, AppointmentStatus } from "@/lib/types";
@@ -78,8 +81,31 @@ export function AppointmentDetailsSheet({
 
   const canEdit = org.can("edit_appointments");
   const canCancel = org.can("cancel_appointments");
+  // Arrival, service and no-show only make sense from the appointment's day on.
+  const today = todayKey(org.timezone);
+  const futureDay = a.dateKey > today;
+  const onTheDay: AppointmentStatus[] = ["checked_in", "in_service", "completed", "no_show"];
   const allowed = (to: AppointmentStatus) =>
-    canTransition(a.status, to) && (to === "cancelled" || to === "no_show" ? canCancel : canEdit);
+    canTransition(a.status, to) &&
+    !(futureDay && onTheDay.includes(to)) &&
+    (to === "cancelled" || to === "no_show" ? canCancel : canEdit);
+
+  // A ready-to-send WhatsApp reminder for upcoming bookings (sent from the salon's own WhatsApp).
+  const waBase =
+    a.clientPhone && (a.status === "booked" || a.status === "confirmed") && a.dateKey >= today
+      ? whatsappLink(a.clientPhone, org.settings.locale.phoneCountryCode)
+      : null;
+  const reminder = waBase
+    ? `${waBase}?text=${encodeURIComponent(
+        t("appointments.details.reminderMessage", {
+          name: a.clientName.split(" ")[0] ?? a.clientName,
+          business: org.settings.business.displayName || org.orgName,
+          date: org.dateKey(a.dateKey, "dateLong"),
+          time: org.date(a.startAt, "time"),
+          services: a.items.map((i) => i.serviceName).join(locale === "ar" ? "، " : ", "),
+        }),
+      )}`
+    : null;
 
   const forward: StatusAction[] = (
     [
@@ -147,6 +173,15 @@ export function AppointmentDetailsSheet({
               ) : null}
             </section>
 
+            {reminder ? (
+              <Button asChild variant="soft" className="w-full justify-center">
+                <a href={reminder} target="_blank" rel="noopener noreferrer">
+                  <MessageCircleIcon />
+                  {t("appointments.details.whatsappReminder")}
+                </a>
+              </Button>
+            ) : null}
+
             {a.cancellation && a.status === "cancelled" ? (
               <p className="rounded-xl border border-destructive/20 bg-destructive/5 px-4 py-3 text-[15px]">
                 {t("appointments.details.cancelledBecause", { reason: a.cancellation.reason || "—" })}
@@ -206,6 +241,9 @@ export function AppointmentDetailsSheet({
               </Button>
             ) : null}
 
+            {futureDay && (a.status === "booked" || a.status === "confirmed") ? (
+              <p className="rounded-xl bg-muted/50 px-4 py-2.5 text-[14px] text-muted-foreground">{t("appointments.details.futureHint")}</p>
+            ) : null}
             {a.createdAt ? <p className="text-[13px] text-muted-foreground">{t("appointments.details.createdAt", { date: org.date(a.createdAt, "datetime") })}</p> : null}
           </SheetBody>
           {hasFooter ? (
