@@ -12,16 +12,16 @@ export function orderedWeekdays(weekStartsOn: number): WeekdayKey[] {
 }
 
 export const STAFF_COLORS = [
-  "#965660",
-  "#b07a7f",
-  "#a25c43",
-  "#b08d57",
-  "#507357",
-  "#4b6d8a",
-  "#7d5279",
-  "#715f53",
-  "#7a323b",
-  "#4f7b80",
+  "#a8406a",
+  "#3f5f99",
+  "#2f7a55",
+  "#8a5a0b",
+  "#6a4c96",
+  "#2e6b73",
+  "#9a4b34",
+  "#b8527d",
+  "#5f595c",
+  "#4a78b0",
 ];
 
 /** Documents expiring within this many days are flagged (UAE residence/passport). */

@@ -14,7 +14,7 @@ import type { SectionValues } from "../schema";
 import { SaveBar, SectionHeader, SettingsCard } from "./form-parts";
 import { useSettingsForm } from "./use-settings-form";
 
-export const ACCENT_PRESETS = ["#965660", "#7d5279", "#7a323b", "#a25c43", "#90693b", "#507357", "#715f53", "#4b6d8a", "#553b32"];
+export const ACCENT_PRESETS = ["#a8406a", "#8a3f73", "#6a4c96", "#3f5f99", "#2e6b73", "#2f7a55", "#8a5a0b", "#9a4b34", "#4b4548"];
 const HEX = /^#[0-9a-fA-F]{6}$/;
 
 export function AppearanceView({ initial }: { initial: SectionValues<"appearance"> }) {

@@ -151,7 +151,7 @@ export const DEFAULT_SETTINGS: OrgSettings = {
     documentExpiryAlerts: true,
   },
   appearance: {
-    accentColor: "#965660",
+    accentColor: "#a8406a",
     calendarDensity: "comfortable",
   },
   clients: {
@@ -176,8 +176,15 @@ function merge<T>(base: T, override: unknown): T {
   return out as T;
 }
 
+/** Accents that were the product default in earlier versions; they now follow the current default. */
+const PREVIOUS_DEFAULT_ACCENTS = new Set(["#965660", "#8b3a62"]);
+
 export function resolveSettings(raw: unknown): OrgSettings {
-  return merge(DEFAULT_SETTINGS, raw);
+  const settings = merge(DEFAULT_SETTINGS, raw);
+  if (PREVIOUS_DEFAULT_ACCENTS.has(settings.appearance.accentColor.toLowerCase())) {
+    return { ...settings, appearance: { ...settings.appearance, accentColor: DEFAULT_SETTINGS.appearance.accentColor } };
+  }
+  return settings;
 }
 
 export function defaultTaxRate(settings: OrgSettings): TaxRate | undefined {

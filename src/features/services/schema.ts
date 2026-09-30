@@ -4,7 +4,7 @@ export const categoryInput = z.object({
   id: z.string().optional(),
   name: z.string().trim().min(1, "validation.required").max(60, "validation.tooLong"),
   nameAr: z.string().trim().max(60, "validation.tooLong").default(""),
-  color: z.string().regex(/^#[0-9a-fA-F]{6}$/, "validation.invalid").default("#965660"),
+  color: z.string().regex(/^#[0-9a-fA-F]{6}$/, "validation.invalid").default("#a8406a"),
 });
 export type CategoryInput = z.input<typeof categoryInput>;
 

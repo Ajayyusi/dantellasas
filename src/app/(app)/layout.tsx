@@ -3,9 +3,8 @@ import { cookies } from "next/headers";
 import { AppShell } from "@/components/shell/app-shell";
 import { SIDEBAR_COOKIE } from "@/lib/cookies";
 import { userRef } from "@/lib/db";
+import { DEFAULT_SETTINGS } from "@/lib/settings";
 import { getAppContext } from "@/lib/tenancy/context";
-
-const BRAND_ACCENTS = new Set(["#965660", "#8b3a62"]);
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const ctx = await getAppContext();
@@ -15,9 +14,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   if (!orgs.some((o) => o.id === ctx.org.id)) orgs.unshift({ id: ctx.org.id, name: ctx.org.name });
 
   // Tenant accent from Settings → Appearance; validated so it can be inlined safely.
-  // The brand default (and the pre-redesign default) use the tuned palette as-is.
+  // The brand default uses the tuned palette as-is (earlier defaults resolve to it).
   const chosen = ctx.settings.appearance.accentColor.toLowerCase();
-  const accent = /^#[0-9a-f]{6}$/.test(chosen) && !BRAND_ACCENTS.has(chosen) ? chosen : null;
+  const accent = /^#[0-9a-f]{6}$/.test(chosen) && chosen !== DEFAULT_SETTINGS.appearance.accentColor ? chosen : null;
 
   return (
     <>
