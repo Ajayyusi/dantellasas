@@ -1,6 +1,7 @@
 import "server-only";
 
 import { arr, bool, num, str, strOrNull, type Data } from "@/lib/db";
+import { currentColor } from "@/lib/palette";
 import type { StaffDTO, WeeklySchedule } from "@/lib/types";
 
 export const DEFAULT_SCHEDULE: WeeklySchedule = Object.fromEntries(
@@ -24,7 +25,7 @@ export function toStaff(id: string, d: Data, serviceIds: string[] = []): StaffDT
     position: str(d.position),
     branchIds: arr<string>(d.branchIds),
     status: (d.status as StaffDTO["status"]) ?? "active",
-    color: str(d.color, "#a8406a"),
+    color: currentColor(str(d.color, "#a8406a")),
     hireDate: strOrNull(d.hireDate),
     bookable: bool(d.bookable, true),
     schedule: { ...DEFAULT_SCHEDULE, ...((d.schedule ?? {}) as WeeklySchedule) },

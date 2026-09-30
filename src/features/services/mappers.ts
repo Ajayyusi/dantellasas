@@ -1,6 +1,7 @@
 import "server-only";
 
 import { arr, bool, num, str, strOrNull, type Data } from "@/lib/db";
+import { currentColor } from "@/lib/palette";
 import type { ServiceCategoryDTO, ServiceDTO } from "@/lib/types";
 
 export function toCategory(id: string, d: Data): ServiceCategoryDTO {
@@ -8,7 +9,7 @@ export function toCategory(id: string, d: Data): ServiceCategoryDTO {
     id,
     name: str(d.name),
     nameAr: str(d.nameAr),
-    color: str(d.color, "#a8406a"),
+    color: currentColor(str(d.color, "#a8406a")),
     sortOrder: num(d.sortOrder),
     active: bool(d.active, true),
   };
