@@ -3,7 +3,8 @@
  * its equivalent in the current (A2) palette. Stored colours are read through
  * `currentColor`, so records saved before the redesign match the current look;
  * the next save stores the new value. Colours a business entered themselves
- * pass through unchanged.
+ * pass through unchanged, and so does the premium palette's wine, which the
+ * current palette keeps (it is Makeup's colour).
  */
 const PREVIOUS_COLORS: Record<string, string> = {
   // "Premium salon" palette (Sep 2026)
@@ -15,8 +16,7 @@ const PREVIOUS_COLORS: Record<string, string> = {
   "#4b6d8a": "#3f5f99",
   "#7d5279": "#6a4c96",
   "#715f53": "#5f595c",
-  "#7a323b": "#2e6b73",
-  "#4f7b80": "#4a78b0",
+  "#4f7b80": "#2e6b73",
   // Original palette
   "#8b3a62": "#a8406a",
   "#b4536e": "#b8527d",
@@ -26,8 +26,8 @@ const PREVIOUS_COLORS: Record<string, string> = {
   "#3e6fa8": "#3f5f99",
   "#6b5bb5": "#6a4c96",
   "#5b6472": "#5f595c",
-  "#a33f3f": "#2e6b73",
-  "#2f8a9a": "#4a78b0",
+  "#a33f3f": "#7a323b",
+  "#2f8a9a": "#2e6b73",
 };
 
 export function currentColor(hex: string): string {

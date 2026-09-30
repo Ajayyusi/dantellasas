@@ -22,6 +22,7 @@ export const STAFF_COLORS = [
   "#b8527d",
   "#5f595c",
   "#4a78b0",
+  "#7a323b",
 ];
 
 /** Documents expiring within this many days are flagged (UAE residence/passport). */

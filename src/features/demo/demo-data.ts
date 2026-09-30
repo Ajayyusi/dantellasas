@@ -10,7 +10,7 @@ export const DEMO_CATEGORIES = [
   { key: "massage", name: "Massage", nameAr: "المساج", color: "#3f5f99" },
   { key: "waxing", name: "Waxing", nameAr: "إزالة الشعر بالشمع", color: "#9a4b34" },
   { key: "brows", name: "Brows & Lashes", nameAr: "الحواجب والرموش", color: "#6a4c96" },
-  { key: "makeup", name: "Makeup", nameAr: "المكياج", color: "#2e6b73" },
+  { key: "makeup", name: "Makeup", nameAr: "المكياج", color: "#7a323b" },
 ] as const;
 
 export type DemoCategoryKey = (typeof DEMO_CATEGORIES)[number]["key"];
@@ -72,7 +72,7 @@ export const DEMO_STAFF: {
   { key: "joy", firstName: "Joy", lastName: "Dela Cruz", position: "Nail Technician", color: "#6a4c96", categories: ["nails"], dayOff: 2, shift: ["12:00", "22:00"], nationality: "Filipino", hireDate: "2023-02-05" },
   { key: "aisha", firstName: "Aisha", lastName: "Rahman", position: "Beauty Therapist", color: "#2f7a55", categories: ["skin", "waxing", "brows"], dayOff: 0, shift: ["10:00", "20:00"], nationality: "Indian", hireDate: "2021-11-22" },
   { key: "priya", firstName: "Priya", lastName: "Nair", position: "Massage Therapist", color: "#3f5f99", categories: ["massage", "waxing"], dayOff: 4, shift: ["11:00", "21:00"], nationality: "Indian", hireDate: "2023-05-10" },
-  { key: "hana", firstName: "Hana", lastName: "Yousef", position: "Makeup Artist", color: "#2e6b73", categories: ["makeup", "brows"], dayOff: 6, shift: ["12:00", "22:00"], nationality: "Jordanian", hireDate: "2024-01-08" },
+  { key: "hana", firstName: "Hana", lastName: "Yousef", position: "Makeup Artist", color: "#7a323b", categories: ["makeup", "brows"], dayOff: 6, shift: ["12:00", "22:00"], nationality: "Jordanian", hireDate: "2024-01-08" },
 ];
 
 export const DEMO_CLIENTS: { first: string; last: string; gender: "female" | "male"; nationality: string }[] = [

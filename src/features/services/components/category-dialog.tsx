@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 
 import { saveCategoryAction } from "../actions";
 
-export const CATEGORY_COLORS = ["#a8406a", "#b8527d", "#9a4b34", "#2f7a55", "#3f5f99", "#6a4c96", "#5f595c", "#2e6b73"];
+export const CATEGORY_COLORS = ["#a8406a", "#b8527d", "#9a4b34", "#2f7a55", "#3f5f99", "#6a4c96", "#5f595c", "#2e6b73", "#7a323b"];
 
 export function CategoryDialog({
   open,
