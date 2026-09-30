@@ -2,28 +2,23 @@
 
 import {
   CalendarCheckIcon,
-  CalendarPlusIcon,
   CrownIcon,
   HourglassIcon,
   ReceiptTextIcon,
   RepeatIcon,
-  ShoppingBagIcon,
   SparklesIcon,
   TrendingUpIcon,
   UserPlusIcon,
   UsersIcon,
   WalletIcon,
 } from "lucide-react";
-import Link from "next/link";
 
-import { Rosette } from "@/components/brand-mark";
 import { DateRangeFilter } from "@/components/common/date-range-filter";
 import { PageContainer, SectionCard } from "@/components/common/page-header";
 import { change, StatCard } from "@/components/common/stat-card";
 import { CountUp } from "@/components/motion/count-up";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import { useOrg } from "@/components/providers/org-provider";
-import { Button } from "@/components/ui/button";
 import { todayKey, type DateRange, type RangePreset } from "@/lib/dates";
 import { useI18n } from "@/lib/i18n/client";
 import { formatNumber } from "@/lib/money";
@@ -36,12 +31,7 @@ import { BusyHeatmap, CategoryBars } from "./insight-panels";
 import { RevenueChart } from "./revenue-chart";
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
-  return (
-    <h2 className="flex items-center gap-3 font-display text-[26px] font-semibold leading-tight">
-      {children}
-      <span aria-hidden className="hidden h-px w-16 bg-gradient-to-r from-gold to-transparent sm:block rtl:bg-gradient-to-l" />
-    </h2>
-  );
+  return <h2 className="font-display text-[19px] font-bold leading-tight">{children}</h2>;
 }
 
 export function DashboardView({
@@ -69,41 +59,17 @@ export function DashboardView({
 
   return (
     <PageContainer>
-      <section className="relative mb-9 overflow-hidden rounded-3xl border bg-brand-wash px-6 py-8 shadow-sm sm:px-10 sm:py-10">
-        <Rosette className="pointer-events-none absolute -end-20 -top-24 size-80 opacity-60" />
-        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="min-w-0">
-            <div className="mb-3 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.16em] text-gold-foreground">
-              <span aria-hidden className="h-px w-8 bg-gold" />
-              {org.dateKey(todayKey(org.timezone), "dateLong")}
-            </div>
-            <h1 className="font-display text-[38px] font-semibold leading-[1.05] sm:text-[46px]">
-              {t(`dashboard.greeting.${greeting}`, { name: firstName })}
-            </h1>
-            <p className="mt-3 max-w-xl text-base text-muted-foreground">{t("dashboard.subtitle")}</p>
-          </div>
-          <div className="flex flex-wrap gap-2.5">
-            {org.can("create_appointments") ? (
-              <Button variant="outline" size="lg" asChild className="bg-card/80">
-                <Link href="/appointments?new=1">
-                  <CalendarPlusIcon />
-                  {t("shell.newAppointment")}
-                </Link>
-              </Button>
-            ) : null}
-            {org.can("create_sales") ? (
-              <Button size="lg" asChild>
-                <Link href="/pos">
-                  <ShoppingBagIcon />
-                  {t("nav.checkout")}
-                </Link>
-              </Button>
-            ) : null}
-          </div>
-        </div>
+      <section className="mb-7 min-w-0">
+        <h1 className="font-display text-[26px] font-bold leading-[1.15] sm:text-[30px]">
+          {t(`dashboard.greeting.${greeting}`, { name: firstName })}
+        </h1>
+        <p className="mt-1 text-[15px] text-muted-foreground">
+          {org.dateKey(todayKey(org.timezone), "dateLong")}
+          <span className="hidden md:inline"> · {t("dashboard.subtitle")}</span>
+        </p>
       </section>
 
-      <div className="mb-4">
+      <div className="mb-3">
         <SectionTitle>{t("dashboard.sections.today")}</SectionTitle>
       </div>
       <Stagger className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
@@ -147,7 +113,7 @@ export function DashboardView({
         </StaggerItem>
       </Stagger>
 
-      <div className="mb-4 mt-11 flex flex-wrap items-end justify-between gap-4">
+      <div className="mb-3 mt-9 flex flex-wrap items-end justify-between gap-3">
         <SectionTitle>{t("dashboard.sections.performance")}</SectionTitle>
         <DateRangeFilter preset={preset} range={range} />
       </div>
@@ -224,7 +190,7 @@ export function DashboardView({
                 icon={CrownIcon}
                 tone="gold"
                 label={t("dashboard.kpi.topService")}
-                value={<span className="block truncate text-[28px]">{top?.name ?? "—"}</span>}
+                value={<span className="block truncate text-[clamp(1.125rem,10cqi,1.375rem)] tracking-[-0.02em]">{top?.name ?? "—"}</span>}
                 hint={top ? t("dashboard.kpi.topServiceHint", { amount: org.money(top.revenueMinor) }) : undefined}
               />
             </StaggerItem>
@@ -232,7 +198,7 @@ export function DashboardView({
         ) : null}
       </Stagger>
 
-      <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3">
+      <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-3">
         {data.canSales ? (
           <SectionCard
             className="lg:col-span-2"
@@ -250,7 +216,7 @@ export function DashboardView({
           className={data.canSales ? "lg:col-span-2" : "lg:col-span-3"}
           title={t("dashboard.bookings.title")}
           description={t("dashboard.bookings.description")}
-          actions={<Legend current={t("dashboard.revenue.current")} previous={t("dashboard.revenue.previous")} swatch="var(--chart-2)" />}
+          actions={<Legend current={t("dashboard.revenue.current")} previous={t("dashboard.revenue.previous")} swatch="var(--chart-muted)" />}
         >
           <BookingsChart data={data.bookings} />
         </SectionCard>
@@ -281,7 +247,7 @@ export function DashboardView({
       </div>
 
       {data.canSales ? (
-        <div className="mt-5">
+        <div className="mt-4">
           <RecentSalesPanel transactions={data.recent} />
         </div>
       ) : null}
@@ -293,7 +259,7 @@ function Legend({ current, previous, swatch }: { current: string; previous: stri
   return (
     <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground">
       <span className="flex items-center gap-1.5">
-        <span className="size-2.5 rounded-full" style={{ backgroundColor: swatch }} />
+        <span className="size-2.5 rounded-full ring-1 ring-inset ring-black/5" style={{ backgroundColor: swatch }} />
         {current}
       </span>
       <span className="flex items-center gap-1.5">

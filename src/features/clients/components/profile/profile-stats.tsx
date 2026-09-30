@@ -12,9 +12,9 @@ import { averageSpendMinor } from "../../utils";
 
 const TONES = {
   rose: "var(--primary)",
-  gold: "var(--gold)",
+  gold: "var(--chart-4)",
   sage: "var(--chart-3)",
-  blue: "var(--chart-4)",
+  blue: "var(--chart-2)",
   mauve: "var(--chart-5)",
   taupe: "var(--chart-6)",
 } as const;
@@ -36,19 +36,10 @@ function Stat({
 }) {
   const color = TONES[tone];
   return (
-    <div className={cn("hover-lift flex min-w-0 flex-col gap-3 rounded-2xl border bg-card p-3.5 shadow-xs sm:p-5", className)}>
-      <div className="flex items-center gap-2.5">
-        <span
-          aria-hidden
-          className="grid size-8 shrink-0 place-items-center rounded-xl sm:size-9"
-          style={{
-            backgroundColor: `color-mix(in oklch, ${color} 14%, var(--card))`,
-            color: `color-mix(in oklch, ${color} 80%, var(--foreground))`,
-          }}
-        >
-          <Icon className="size-[18px]" />
-        </span>
-        <dt className="line-clamp-2 min-w-0 text-[14px] font-semibold leading-tight text-muted-foreground">{label}</dt>
+    <div className={cn("flex min-w-0 flex-col gap-2.5 rounded-2xl border bg-card p-4 sm:px-5 sm:py-[18px]", className)}>
+      <div className="flex items-center gap-2">
+        <Icon aria-hidden className="size-4 shrink-0 opacity-80" strokeWidth={1.8} style={{ color: `color-mix(in oklch, ${color} 70%, var(--muted-foreground))` }} />
+        <dt className="line-clamp-2 min-w-0 text-[13px] font-medium leading-tight text-muted-foreground sm:text-[14px]">{label}</dt>
       </div>
       <dd className="min-w-0">
         {children}
@@ -66,7 +57,7 @@ function Figure({ children, placeholder }: { children: React.ReactNode; placehol
         "block truncate",
         placeholder
           ? "text-base font-medium leading-snug text-muted-foreground"
-          : "font-display text-[23px] font-semibold leading-none tabular sm:text-[28px]",
+          : "font-display text-[21px] font-bold leading-none tabular sm:text-[26px]",
       )}
     >
       {children}

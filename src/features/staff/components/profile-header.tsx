@@ -130,8 +130,7 @@ export function ProfileStats({ stats }: { stats: StaffMonthStats }) {
   const utilisation = stats.scheduledMinutes > 0 ? stats.bookedMinutes / stats.scheduledMinutes : null;
   return (
     <section aria-labelledby="staff-month" className="grid gap-3">
-      <h2 id="staff-month" className="flex items-center gap-2.5 text-[13px] font-semibold uppercase tracking-[0.14em] text-gold-foreground">
-        <span aria-hidden className="h-px w-6 bg-gold" />
+      <h2 id="staff-month" className="font-display text-[17px] font-bold">
         {t("staff.stats.thisMonth")}
       </h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">

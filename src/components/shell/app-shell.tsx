@@ -54,14 +54,14 @@ export function AppShell({
         <aside
           className={cn(
             "sticky top-0 hidden h-dvh shrink-0 border-e border-sidebar-border transition-[width] duration-300 ease-[var(--ease-out)] lg:block no-print",
-            collapsed ? "w-[84px]" : "w-[272px]",
+            collapsed ? "w-[76px]" : "w-[248px]",
           )}
         >
           <Sidebar collapsed={collapsed} onToggle={toggleCollapsed} orgs={orgs} />
         </aside>
 
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-          <SheetContent side="start" className="w-[300px] border-sidebar-border p-0" showClose={false}>
+          <SheetContent side="start" className="w-[288px] border-sidebar-border p-0" showClose={false}>
             <SheetTitle className="sr-only">{t("nav.openMenu")}</SheetTitle>
             <Sidebar collapsed={false} orgs={orgs} scope="mobile" onNavigate={() => setMobileOpen(false)} />
           </SheetContent>

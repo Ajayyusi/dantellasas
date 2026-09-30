@@ -27,7 +27,7 @@ function renderTip(
   const point = payload?.[0]?.payload as DailyPoint | undefined;
   if (!active || !point) return null;
   return (
-    <div className="rounded-xl border bg-popover px-3.5 py-2.5 text-[13px] shadow-lg" dir={f.dir}>
+    <div className="rounded-lg border bg-popover px-3 py-2.5 text-[13px] shadow-md" dir={f.dir}>
       <p className="font-medium text-muted-foreground">{f.day(point.dateKey)}</p>
       <p className="mt-0.5 text-[14px] font-semibold tabular">
         {f.label}: {f.money(point.value)}

@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-/** Placeholder with a soft champagne shimmer while content loads. */
+/** Placeholder with a soft shimmer while content loads. */
 function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div

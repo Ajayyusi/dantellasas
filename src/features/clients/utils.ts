@@ -62,7 +62,7 @@ export function averageSpendMinor(c: ClientDTO): number {
 }
 
 /** Stable accent colour for a client's avatar, derived from the id. */
-const AVATAR_COLORS = ["#965660", "#a25c43", "#90693b", "#507357", "#4b6d8a", "#7d5279", "#715f53", "#4f7b80"];
+const AVATAR_COLORS = ["#a8406a", "#3f5f99", "#2f7a55", "#8a5a0b", "#6a4c96", "#5f595c", "#2e6b73", "#9a4b34"];
 export function avatarColor(id: string): string {
   let h = 0;
   for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;

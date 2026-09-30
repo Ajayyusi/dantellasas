@@ -113,7 +113,7 @@ export function MembershipsTab({
               );
             }
             return (
-              <li key={p.id} className={cn("flex flex-col rounded-xl border bg-card shadow-sm", !p.active && "opacity-70")}>
+              <li key={p.id} className={cn("flex flex-col rounded-xl border bg-card", !p.active && "opacity-70")}>
                 <div className="flex items-start gap-3 p-4 pb-2">
                   <button
                     type="button"

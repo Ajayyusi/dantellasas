@@ -4,77 +4,86 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Dantella design tokens. Every colour in the product comes from these
- * variables, so a tenant accent (Settings › Appearance) or a theme is a
- * variable change. Light by default: warm ivory surfaces, champagne and
- * blush fills, cocoa text, a dusty-rose accent and a whisper of gold for
- * highlights. Status colours appear only where they carry meaning.
+ * Dantella design tokens — "Blush Studio · Soft". Every colour in the product
+ * comes from these variables, so a tenant accent (Settings › Appearance) or a
+ * theme is a variable change. Quiet neutral surfaces, white cards with fine
+ * borders, near-black ink and ONE rose accent used where it matters (primary
+ * actions, the active item, today). Status colours are a dot plus a label.
  */
 :root {
-  --radius: 0.75rem;
+  --radius: 0.625rem;
 
-  --background: oklch(0.982 0.009 78);
-  --foreground: oklch(0.27 0.025 35);
-  --card: oklch(0.997 0.004 80);
+  --background: #f7f6f6;
+  --foreground: #1d1a1c;
+  --card: #ffffff;
   --card-foreground: var(--foreground);
-  --popover: oklch(0.997 0.004 80);
+  --popover: #ffffff;
   --popover-foreground: var(--foreground);
 
-  --primary: oklch(0.53 0.085 10);
-  --primary-foreground: oklch(0.99 0.005 80);
-  --secondary: oklch(0.955 0.013 65);
-  --secondary-foreground: oklch(0.3 0.025 35);
-  --muted: oklch(0.955 0.012 70);
-  --muted-foreground: oklch(0.5 0.022 45);
-  --accent: oklch(0.94 0.018 45);
-  --accent-foreground: oklch(0.27 0.025 35);
-  --destructive: oklch(0.55 0.16 25);
-  --destructive-foreground: oklch(0.99 0.005 80);
+  --primary: #a8406a;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f2f3;
+  --secondary-foreground: var(--foreground);
+  --muted: #f4f2f3;
+  --muted-foreground: #6b6468;
+  --accent: #f6f0f3;
+  --accent-foreground: var(--foreground);
+  --destructive: #b42318;
+  --destructive-foreground: #ffffff;
 
-  --border: oklch(0.905 0.014 65);
-  --input: oklch(0.87 0.016 60);
-  --ring: color-mix(in oklch, var(--primary) 45%, transparent);
+  --border: #eae6e7;
+  --input: #e3dee0;
+  --ring: color-mix(in oklch, var(--primary) 40%, transparent);
 
-  /* Brand accents: a soft tint of the primary, champagne gold for highlights. */
-  --primary-soft: color-mix(in oklch, var(--primary) 11%, var(--card));
-  --gold: oklch(0.72 0.085 78);
-  --gold-soft: oklch(0.94 0.035 85);
-  --gold-foreground: oklch(0.42 0.06 70);
-  --blush: oklch(0.95 0.022 25);
-  --champagne: oklch(0.955 0.02 80);
-  --cocoa: oklch(0.34 0.04 30);
+  /* Accent tints; "gold" is the highlight role (top item, loyalty, pinned). */
+  --primary-soft: color-mix(in oklch, var(--primary) 8%, var(--card));
+  --gold: color-mix(in oklch, var(--primary) 45%, var(--card));
+  --gold-soft: color-mix(in oklch, var(--primary) 8%, var(--card));
+  --gold-foreground: color-mix(in oklch, var(--primary) 82%, var(--foreground));
+  --blush: color-mix(in oklch, var(--primary) 5%, var(--card));
+  --champagne: #f4f2f3;
+  --cocoa: #1d1a1c;
 
-  --sidebar: oklch(0.967 0.014 72);
-  --sidebar-foreground: oklch(0.38 0.025 40);
-  --sidebar-accent: oklch(0.935 0.02 55);
-  --sidebar-border: oklch(0.905 0.016 65);
+  --sidebar: #ffffff;
+  --sidebar-foreground: #4e474b;
+  --sidebar-accent: color-mix(in oklch, var(--primary) 8%, var(--card));
+  --sidebar-border: var(--border);
 
-  --success: oklch(0.52 0.09 150);
-  --warning: oklch(0.7 0.13 72);
-  --info: oklch(0.54 0.07 245);
+  --success: #2f7a55;
+  --warning: #c98a1c;
+  --info: #3f5f99;
   --danger: var(--destructive);
 
-  /* Appointment statuses */
-  --status-booked: oklch(0.6 0.075 245);
-  --status-confirmed: oklch(0.55 0.09 310);
-  --status-checked_in: oklch(0.68 0.11 75);
-  --status-in_service: oklch(0.56 0.11 5);
-  --status-completed: oklch(0.57 0.09 150);
-  --status-cancelled: oklch(0.64 0.015 60);
-  --status-no_show: oklch(0.57 0.14 30);
+  /* Appointment statuses: the dot (and calendar tint) and the readable label. */
+  --status-booked: #6f8cc4;
+  --status-confirmed: #b24b72;
+  --status-checked_in: #8e6bb8;
+  --status-in_service: #d49a2a;
+  --status-completed: #3f9a6c;
+  --status-cancelled: #a9a2a5;
+  --status-no_show: #d25546;
+  --status-booked-fg: #3f5f99;
+  --status-confirmed-fg: #8e3558;
+  --status-checked_in-fg: #6a4c96;
+  --status-in_service-fg: #8a5a0b;
+  --status-completed-fg: #2f7a55;
+  --status-cancelled-fg: #5f595c;
+  --status-no_show-fg: #b03a2e;
 
-  /* Chart palette: rose, champagne, sage, dusty blue, mauve, taupe */
+  /* Chart palette: rose, dusty blue, green, amber, violet, grey. */
   --chart-1: var(--primary);
-  --chart-2: oklch(0.72 0.09 78);
-  --chart-3: oklch(0.64 0.075 150);
-  --chart-4: oklch(0.62 0.065 240);
-  --chart-5: oklch(0.6 0.085 320);
-  --chart-6: oklch(0.63 0.03 55);
+  --chart-2: #6f8cc4;
+  --chart-3: #3f9a6c;
+  --chart-4: #d49a2a;
+  --chart-5: #8e6bb8;
+  --chart-6: #a9a2a5;
+  /* Quiet bars and fills next to the accent. */
+  --chart-muted: #eae5e7;
 
-  --shadow-xs: 0 1px 2px oklch(0.35 0.03 40 / 0.06);
-  --shadow-sm: 0 1px 2px oklch(0.35 0.03 40 / 0.05), 0 3px 10px -4px oklch(0.35 0.03 40 / 0.08);
-  --shadow-md: 0 10px 28px -12px oklch(0.35 0.04 40 / 0.18), 0 2px 6px -2px oklch(0.35 0.03 40 / 0.06);
-  --shadow-lg: 0 28px 56px -20px oklch(0.35 0.04 40 / 0.26), 0 6px 16px -6px oklch(0.35 0.03 40 / 0.08);
+  --shadow-xs: 0 1px 2px rgb(29 26 28 / 0.05);
+  --shadow-sm: 0 1px 2px rgb(29 26 28 / 0.04), 0 2px 6px -2px rgb(29 26 28 / 0.06);
+  --shadow-md: 0 8px 24px -8px rgb(29 26 28 / 0.14), 0 2px 6px -2px rgb(29 26 28 / 0.06);
+  --shadow-lg: 0 20px 44px -16px rgb(29 26 28 / 0.22), 0 4px 12px -4px rgb(29 26 28 / 0.08);
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -88,69 +97,78 @@
   }
 }
 
-/* Optional warm "espresso" theme — never pure black. */
+/* Dark theme: warm near-black, never pure black; a lighter rose for contrast. */
 .dark {
-  --background: oklch(0.2 0.012 40);
-  --foreground: oklch(0.94 0.012 75);
-  --card: oklch(0.235 0.013 40);
+  --background: #151314;
+  --foreground: #f3eff1;
+  --card: #1d1a1c;
   --card-foreground: var(--foreground);
-  --popover: oklch(0.25 0.014 40);
+  --popover: #221f21;
   --popover-foreground: var(--foreground);
 
-  --primary: oklch(0.74 0.08 12);
-  --primary-foreground: oklch(0.2 0.02 20);
-  --secondary: oklch(0.29 0.014 40);
-  --secondary-foreground: oklch(0.94 0.012 75);
-  --muted: oklch(0.28 0.013 40);
-  --muted-foreground: oklch(0.74 0.02 60);
-  --accent: oklch(0.31 0.016 35);
-  --accent-foreground: oklch(0.95 0.01 75);
-  --destructive: oklch(0.68 0.15 25);
-  --destructive-foreground: oklch(0.18 0.02 25);
+  --primary: #d0739a;
+  --primary-foreground: #1d1a1c;
+  --secondary: #262225;
+  --secondary-foreground: var(--foreground);
+  --muted: #262225;
+  --muted-foreground: #aba2a7;
+  --accent: #2b2528;
+  --accent-foreground: var(--foreground);
+  --destructive: #ef7065;
+  --destructive-foreground: #1d1a1c;
 
-  --border: oklch(0.95 0.02 70 / 11%);
-  --input: oklch(0.95 0.02 70 / 17%);
+  --border: rgb(255 255 255 / 0.09);
+  --input: rgb(255 255 255 / 0.15);
 
-  --primary-soft: color-mix(in oklch, var(--primary) 16%, var(--card));
-  --gold: oklch(0.78 0.08 80);
-  --gold-soft: oklch(0.34 0.03 75);
-  --gold-foreground: oklch(0.85 0.07 82);
-  --blush: oklch(0.3 0.025 20);
-  --champagne: oklch(0.3 0.02 70);
-  --cocoa: oklch(0.9 0.02 60);
+  --primary-soft: color-mix(in oklch, var(--primary) 14%, var(--card));
+  --gold: color-mix(in oklch, var(--primary) 55%, var(--card));
+  --gold-soft: color-mix(in oklch, var(--primary) 14%, var(--card));
+  --gold-foreground: color-mix(in oklch, var(--primary) 70%, var(--foreground));
+  --blush: color-mix(in oklch, var(--primary) 8%, var(--card));
+  --champagne: #262225;
+  --cocoa: #f3eff1;
 
-  --sidebar: oklch(0.215 0.013 40);
-  --sidebar-foreground: oklch(0.86 0.015 70);
-  --sidebar-accent: oklch(0.29 0.018 35);
-  --sidebar-border: oklch(0.95 0.02 70 / 9%);
+  --sidebar: #1a1719;
+  --sidebar-foreground: #c9c1c5;
+  --sidebar-accent: color-mix(in oklch, var(--primary) 14%, var(--card));
+  --sidebar-border: var(--border);
 
-  --success: oklch(0.72 0.1 150);
-  --warning: oklch(0.8 0.12 78);
-  --info: oklch(0.72 0.08 245);
+  --success: #5fb889;
+  --warning: #e0b04f;
+  --info: #8fa8d8;
 
-  --status-booked: oklch(0.72 0.07 245);
-  --status-confirmed: oklch(0.7 0.09 310);
-  --status-checked_in: oklch(0.8 0.11 80);
-  --status-in_service: oklch(0.72 0.1 8);
-  --status-completed: oklch(0.72 0.09 150);
-  --status-cancelled: oklch(0.62 0.015 60);
-  --status-no_show: oklch(0.7 0.13 30);
+  --status-booked: #8fa8d8;
+  --status-confirmed: #d27a9a;
+  --status-checked_in: #a88bd0;
+  --status-in_service: #e0b04f;
+  --status-completed: #5fb889;
+  --status-cancelled: #8e868a;
+  --status-no_show: #e57366;
+  --status-booked-fg: #a9bde3;
+  --status-confirmed-fg: #e6a3bc;
+  --status-checked_in-fg: #c2abe0;
+  --status-in_service-fg: #ecc877;
+  --status-completed-fg: #86cba6;
+  --status-cancelled-fg: #b3abaf;
+  --status-no_show-fg: #f0998f;
 
-  --chart-2: oklch(0.78 0.08 80);
-  --chart-3: oklch(0.72 0.07 150);
-  --chart-4: oklch(0.72 0.06 240);
-  --chart-5: oklch(0.72 0.08 320);
-  --chart-6: oklch(0.7 0.03 60);
+  --chart-2: #8fa8d8;
+  --chart-3: #5fb889;
+  --chart-4: #e0b04f;
+  --chart-5: #a88bd0;
+  --chart-6: #8e868a;
+  --chart-muted: #2f2a2d;
 
-  --shadow-xs: 0 1px 2px oklch(0.1 0.01 40 / 0.35);
-  --shadow-sm: 0 1px 2px oklch(0.1 0.01 40 / 0.35), 0 3px 10px -4px oklch(0.1 0.01 40 / 0.4);
-  --shadow-md: 0 10px 28px -12px oklch(0.1 0.01 40 / 0.6);
-  --shadow-lg: 0 28px 56px -20px oklch(0.1 0.01 40 / 0.7);
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4), 0 2px 6px -2px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 8px 24px -8px rgb(0 0 0 / 0.6);
+  --shadow-lg: 0 20px 44px -16px rgb(0 0 0 / 0.7);
 }
 
 @theme inline {
-  --font-sans: var(--font-dm-sans), var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-cormorant), var(--font-arabic-display), ui-serif, Georgia, serif;
+  --font-sans: var(--font-jakarta), var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
+  /* Headings use the same family, heavier and tighter (see font-display). */
+  --font-display: var(--font-jakarta), var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Readable scale: body and tables at 15px, captions at 13px. */
@@ -211,13 +229,15 @@
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
   --color-chart-6: var(--chart-6);
+  --color-chart-muted: var(--chart-muted);
 
+  /* Controls 10px, cards 16px, large surfaces 20px. */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-xl: calc(var(--radius) + 2px);
+  --radius-2xl: calc(var(--radius) + 6px);
+  --radius-3xl: calc(var(--radius) + 10px);
 
   --shadow-xs: var(--shadow-xs);
   --shadow-sm: var(--shadow-sm);
@@ -228,17 +248,6 @@
 
   --animate-fade-up: fade-up 0.45s var(--ease-out) both;
   --animate-shimmer: shimmer 1.6s ease-in-out infinite;
-  --animate-float: float 7s ease-in-out infinite;
-
-  @keyframes float {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-8px);
-    }
-  }
 
   @keyframes fade-up {
     from {
@@ -270,7 +279,6 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
-    font-feature-settings: "ss01";
   }
   h1,
   h2,
@@ -301,44 +309,34 @@
   }
 }
 
-/* Serif display face for titles and the brand; lining figures for numbers. */
+/* Titles, hero names and big figures: the UI face, tighter. */
 @utility font-display {
   font-family: var(--font-display);
-  font-variant-numeric: lining-nums;
-  letter-spacing: -0.01em;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: -0.025em;
   [dir="rtl"] & {
     letter-spacing: 0;
   }
 }
 
-/* Card that lifts gently on hover (pointer devices only). */
+/* Card that responds quietly on hover (pointer devices only). */
 @utility hover-lift {
   transition:
-    transform 0.25s var(--ease-out),
-    box-shadow 0.25s var(--ease-out),
-    border-color 0.25s var(--ease-out);
+    transform 0.2s var(--ease-out),
+    box-shadow 0.2s var(--ease-out),
+    border-color 0.2s var(--ease-out);
   @media (hover: hover) {
     &:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-      border-color: color-mix(in oklch, var(--primary) 18%, var(--border));
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+      border-color: color-mix(in oklch, var(--foreground) 14%, var(--border));
     }
   }
 }
 
-/* Soft brand wash used on the login panel, welcome banners and empty states. */
+/* Flat rose tint for the brand panel on the sign-in pages. */
 @utility bg-brand-wash {
-  background:
-    radial-gradient(120% 90% at 0% 0%, color-mix(in oklch, var(--primary) 14%, transparent) 0%, transparent 55%),
-    radial-gradient(90% 80% at 100% 100%, color-mix(in oklch, var(--gold) 22%, transparent) 0%, transparent 60%),
-    var(--champagne);
-}
-
-@utility text-gold-gradient {
-  background: linear-gradient(100deg, var(--gold-foreground), var(--gold) 55%, var(--gold-foreground));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  background: color-mix(in oklch, var(--primary) 7%, var(--card));
 }
 
 @layer utilities {

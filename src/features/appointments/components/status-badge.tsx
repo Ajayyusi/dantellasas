@@ -8,10 +8,15 @@ export function statusColor(status: AppointmentStatus): string {
   return `var(--status-${status})`;
 }
 
+/** The readable label colour for a status (darker than its dot). */
+export function statusTextColor(status: AppointmentStatus): string {
+  return `var(--status-${status}-fg)`;
+}
+
 export function AppointmentStatusBadge({ status, className }: { status: AppointmentStatus; className?: string }) {
   const { t } = useI18n();
   return (
-    <StatusPill color={statusColor(status)} className={className}>
+    <StatusPill color={statusColor(status)} textColor={statusTextColor(status)} className={className}>
       {t(`appointments.status.${status}`)}
     </StatusPill>
   );

@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Page title row: an optional eyebrow (section), a serif title, a description
- * or meta line, and actions aligned to the end.
+ * Page title row: an optional eyebrow (section), the title, a description or
+ * meta line, and actions aligned to the end.
  */
 export function PageHeader({
   title,
@@ -20,19 +20,14 @@ export function PageHeader({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col gap-5 pb-7 sm:flex-row sm:items-end sm:justify-between", className)}>
+    <div className={cn("flex flex-col gap-4 pb-6 sm:flex-row sm:items-end sm:justify-between", className)}>
       <div className="min-w-0">
-        {eyebrow ? (
-          <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-gold-foreground">
-            <span aria-hidden className="h-px w-6 bg-gold" />
-            {eyebrow}
-          </div>
-        ) : null}
-        <h1 className="font-display text-[34px] font-semibold leading-[1.1] text-foreground sm:text-[38px]">{title}</h1>
-        {description ? <div className="mt-2 max-w-2xl text-base text-muted-foreground">{description}</div> : null}
+        {eyebrow ? <div className="mb-1.5 text-[13px] font-semibold text-primary">{eyebrow}</div> : null}
+        <h1 className="font-display text-[28px] font-bold leading-[1.15] text-foreground sm:text-[30px]">{title}</h1>
+        {description ? <div className="mt-1.5 max-w-2xl text-[15px] text-muted-foreground">{description}</div> : null}
         {children}
       </div>
-      {actions ? <div className="flex flex-wrap items-center gap-2.5">{actions}</div> : null}
+      {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
     </div>
   );
 }
@@ -50,7 +45,7 @@ export function PageContainer({
   return (
     <div
       className={cn(
-        "mx-auto w-full animate-fade-up px-4 py-7 sm:px-6 lg:px-10 lg:py-9",
+        "mx-auto w-full animate-fade-up px-4 py-6 sm:px-6 lg:px-8 lg:py-7",
         wide ? "max-w-[1680px]" : "max-w-[1400px]",
         className,
       )}
@@ -77,15 +72,15 @@ export function SectionCard({
   contentClassName?: string;
 }) {
   return (
-    <section className={cn("rounded-2xl border bg-card text-card-foreground shadow-sm", className)}>
-      <div className="flex flex-wrap items-start justify-between gap-3 px-6 pt-6 pb-4">
+    <section className={cn("rounded-2xl border bg-card text-card-foreground", className)}>
+      <div className="flex flex-wrap items-start justify-between gap-3 px-5 pt-5 pb-3 sm:px-6">
         <div className="min-w-0">
-          <h2 className="text-lg font-semibold leading-snug tracking-tight">{title}</h2>
+          <h2 className="text-[17px] font-semibold leading-snug tracking-[-0.01em]">{title}</h2>
           {description ? <p className="mt-0.5 text-[14px] text-muted-foreground">{description}</p> : null}
         </div>
         {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
       </div>
-      <div className={cn("px-6 pb-6", contentClassName)}>{children}</div>
+      <div className={cn("px-5 pb-5 sm:px-6", contentClassName)}>{children}</div>
     </section>
   );
 }

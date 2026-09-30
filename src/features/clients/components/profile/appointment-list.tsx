@@ -24,11 +24,11 @@ export function AppointmentRow({ appointment: a, compact }: { appointment: Appoi
   return (
     <Link
       href={`/appointments?date=${a.dateKey}&appointment=${a.id}`}
-      className="flex items-center gap-3.5 px-5 py-3.5 outline-none transition-colors hover:bg-primary-soft/55 focus-visible:bg-primary-soft/55"
+      className="flex items-center gap-3.5 px-5 py-3.5 outline-none transition-colors hover:bg-muted/60 focus-visible:bg-muted/60"
     >
-      <div className="grid w-14 shrink-0 place-items-center rounded-xl border bg-gradient-to-b from-primary-soft to-card py-1.5 text-center leading-tight">
-        <span className="text-[12px] font-semibold uppercase tracking-wide text-primary">{org.date(a.startAt, "weekday")}</span>
-        <span className="font-display text-[22px] font-semibold tabular">{org.date(a.startAt, "dayNumber")}</span>
+      <div className="grid w-13 shrink-0 place-items-center rounded-xl bg-muted py-1.5 text-center leading-tight">
+        <span className="text-[12px] font-semibold text-primary">{org.date(a.startAt, "weekday")}</span>
+        <span className="font-display text-[19px] font-bold tabular">{org.date(a.startAt, "dayNumber")}</span>
       </div>
       <div className={cn("grid min-w-0 flex-1 gap-0.5", muted && "opacity-70")}>
         <div className="flex flex-wrap items-center gap-x-2 text-[15px]">
@@ -65,7 +65,7 @@ export function AppointmentsTab({ clientId, appointments, archived }: { clientId
   const org = useOrg();
   if (appointments.length === 0) {
     return (
-      <div className="rounded-2xl border bg-card shadow-sm">
+      <div className="rounded-2xl border bg-card">
         <EmptyState
           icon={CalendarIcon}
           title={t("clients.appointments.empty")}
@@ -85,7 +85,7 @@ export function AppointmentsTab({ clientId, appointments, archived }: { clientId
     );
   }
   return (
-    <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
+    <div className="overflow-hidden rounded-2xl border bg-card">
       <ul className="divide-y">
         {appointments.map((a) => (
           <li key={a.id}>

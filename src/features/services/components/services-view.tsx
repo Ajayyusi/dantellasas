@@ -197,16 +197,11 @@ export function ServicesView({
     <article
       key={s.id}
       className={cn(
-        "group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border bg-card shadow-xs transition-[box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:shadow-md",
+        "group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border bg-card transition-[box-shadow,border-color] duration-150 hover:border-[color-mix(in_oklch,var(--primary)_28%,var(--border))] hover:shadow-sm",
         !s.active && "opacity-60",
       )}
     >
-      <span aria-hidden className="h-1" style={{ backgroundColor: color }} />
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -end-10 -top-10 size-28 rounded-full opacity-[0.09] transition-opacity group-hover:opacity-[0.16]"
-        style={{ backgroundColor: color }}
-      />
+      <span aria-hidden className="absolute inset-x-0 top-0 h-[3px]" style={{ backgroundColor: color }} />
       <button
         type="button"
         onClick={() => edit(s)}
@@ -219,7 +214,7 @@ export function ServicesView({
             <ClockIcon className="size-3.5" />
             {formatDuration(s.durationMin, locale)}
           </span>
-          <span className="font-display text-[24px] font-semibold leading-none tabular">{org.money(s.priceMinor)}</span>
+          <span className="font-display text-[19px] font-bold leading-none tabular">{org.money(s.priceMinor)}</span>
         </span>
       </button>
       <div className="relative flex items-center gap-2 border-t bg-muted/25 px-4 py-2.5 text-[13px]">
@@ -272,7 +267,7 @@ export function ServicesView({
       />
 
       {services.length === 0 && categories.length === 0 ? (
-        <div className="rounded-2xl border bg-card shadow-sm">
+        <div className="rounded-2xl border bg-card">
           <EmptyState
             icon={ScissorsIcon}
             title={t("services.empty")}
@@ -291,7 +286,7 @@ export function ServicesView({
         <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
           <aside className="hidden lg:block">
             <div className="sticky top-20 grid gap-1">
-              <div className="px-2 pb-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{t("services.categories")}</div>
+              <div className="px-2 pb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">{t("services.categories")}</div>
               <SortableList
                 items={categories}
                 onReorder={reorderCategories}
@@ -370,11 +365,11 @@ export function ServicesView({
                 <section
                   key={key}
                   id={`cat-${key}`}
-                  className={cn("scroll-mt-20", !cards && "overflow-hidden rounded-2xl border bg-card shadow-sm")}
+                  className={cn("scroll-mt-20", !cards && "overflow-hidden rounded-2xl border bg-card")}
                 >
                   <header className={cn("flex items-center gap-3", cards ? "mb-3 px-1" : "border-b bg-muted/30 px-4 py-3 sm:px-5")}>
-                    <span className="size-3 rounded-full ring-4 ring-card" style={{ backgroundColor: color }} />
-                    <h2 className={cn("font-semibold", cards ? "font-display text-[24px]" : "text-base")}>
+                    <span className="size-2.5 rounded-full" style={{ backgroundColor: color }} />
+                    <h2 className={cn("font-semibold", cards ? "font-display text-[18px] font-bold" : "text-base")}>
                       {category ? localName(category, locale) : t("services.uncategorized")}
                     </h2>
                     <Badge variant="neutral">{items.length}</Badge>

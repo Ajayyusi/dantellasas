@@ -59,7 +59,7 @@ export function AccountMenu({
           <div className="min-w-0">
             <div className="truncate text-sm font-semibold">{name}</div>
             <div className="truncate text-xs text-muted-foreground">{org.user.email}</div>
-            <div className="mt-1 text-xs font-semibold text-gold-foreground">{role}</div>
+            <div className="mt-1 text-xs font-semibold text-primary">{role}</div>
           </div>
         </div>
         <DropdownMenuSeparator />

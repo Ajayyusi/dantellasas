@@ -50,8 +50,8 @@ export function OnboardingForm({ defaultLocale, allowDemo }: { defaultLocale: Lo
   return (
     <form onSubmit={onSubmit} className="grid gap-6" noValidate>
       <div className="grid gap-1.5">
-        <h1 className="font-display text-[34px] font-semibold leading-tight">{t("onboarding.title")}</h1>
-        <p className="text-[16px] text-muted-foreground">{t("onboarding.subtitle")}</p>
+        <h1 className="font-display text-[28px] font-bold leading-tight tracking-[-0.03em]">{t("onboarding.title")}</h1>
+        <p className="text-[15px] text-muted-foreground">{t("onboarding.subtitle")}</p>
       </div>
       <div className="grid gap-4">
         <Field label={t("onboarding.businessName")} htmlFor="businessName" error={errors.businessName ? te(errors.businessName) : null} required>
@@ -61,7 +61,7 @@ export function OnboardingForm({ defaultLocale, allowDemo }: { defaultLocale: Lo
             onChange={(e) => setBusinessName(e.target.value)}
             placeholder={t("onboarding.businessNamePlaceholder")}
             aria-invalid={!!errors.businessName}
-            className="h-12"
+            className="h-11"
           />
         </Field>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -72,11 +72,11 @@ export function OnboardingForm({ defaultLocale, allowDemo }: { defaultLocale: Lo
               onChange={(e) => setBranchName(e.target.value)}
               placeholder={t("onboarding.branchNamePlaceholder")}
               aria-invalid={!!errors.branchName}
-              className="h-12"
+              className="h-11"
             />
           </Field>
           <Field label={t("onboarding.phone")} htmlFor="phone" optionalLabel={t("common.optional")}>
-            <Input id="phone" type="tel" dir="ltr" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+971 4 000 0000" className="h-12" />
+            <Input id="phone" type="tel" dir="ltr" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+971 4 000 0000" className="h-11" />
           </Field>
         </div>
         <Field label={t("onboarding.defaultLanguage")}>

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, DM_Sans, El_Messiri, IBM_Plex_Sans_Arabic } from "next/font/google";
+import { Plus_Jakarta_Sans, Readex_Pro } from "next/font/google";
 import Script from "next/script";
 
 import { AppProviders } from "@/components/providers/app-providers";
@@ -8,25 +8,10 @@ import { getI18n } from "@/lib/i18n/server";
 
 import "./globals.css";
 
-const sans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans", display: "swap" });
-const display = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-cormorant",
-  display: "swap",
-});
-const arabic = IBM_Plex_Sans_Arabic({
-  subsets: ["arabic"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-arabic",
-  display: "swap",
-});
-const arabicDisplay = El_Messiri({
-  subsets: ["arabic"],
-  weight: ["500", "600", "700"],
-  variable: "--font-arabic-display",
-  display: "swap",
-});
+// One family for the whole UI (headings are heavier and tighter); Arabic
+// characters fall through to Readex Pro, which shares its geometric feel.
+const sans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta", display: "swap" });
+const arabic = Readex_Pro({ subsets: ["arabic"], variable: "--font-arabic", display: "swap" });
 
 export const metadata: Metadata = {
   title: { default: brand.name, template: `%s · ${brand.name}` },
@@ -36,8 +21,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fbf7f1" },
-    { media: "(prefers-color-scheme: dark)", color: "#2a211d" },
+    { media: "(prefers-color-scheme: light)", color: "#f7f6f6" },
+    { media: "(prefers-color-scheme: dark)", color: "#151314" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -53,7 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html
       lang={locale}
       dir={dir}
-      className={`${sans.variable} ${display.variable} ${arabic.variable} ${arabicDisplay.variable}`}
+      className={`${sans.variable} ${arabic.variable}`}
       suppressHydrationWarning
     >
       <body className="min-h-dvh font-sans">

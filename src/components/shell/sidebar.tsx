@@ -53,10 +53,10 @@ export function Sidebar({
   const tipSide = dir === "rtl" ? "left" : "right";
 
   return (
-    <div className="flex h-full flex-col bg-[linear-gradient(180deg,var(--sidebar),color-mix(in_oklch,var(--sidebar)_92%,var(--blush)))]">
-      <div className={cn("flex h-[76px] shrink-0 items-center px-5", collapsed && "justify-center px-0")}>
+    <div className="flex h-full flex-col bg-sidebar">
+      <div className={cn("flex h-16 shrink-0 items-center px-5", collapsed && "justify-center px-0")}>
         <Link href="/dashboard" onClick={onNavigate} className="rounded-xl outline-none focus-visible:outline-2 focus-visible:outline-ring">
-          {collapsed ? <BrandEmblem className="size-10" /> : <BrandMark tagline={t("shell.brandTagline")} />}
+          {collapsed ? <BrandEmblem className="size-9" /> : <BrandMark tagline={t("shell.brandTagline")} />}
         </Link>
       </div>
 
@@ -67,15 +67,15 @@ export function Sidebar({
               type="button"
               aria-label={t("shell.organization")}
               className={cn(
-                "flex min-w-0 items-center gap-3 rounded-xl border border-sidebar-border bg-card/70 p-2 text-start shadow-xs outline-none transition-colors hover:bg-card focus-visible:outline-2 focus-visible:outline-ring",
-                collapsed ? "size-12 justify-center p-0" : "w-full",
+                "flex min-w-0 items-center gap-2.5 rounded-xl border border-sidebar-border bg-card p-2 text-start outline-none transition-colors hover:bg-muted/60 focus-visible:outline-2 focus-visible:outline-ring",
+                collapsed ? "size-11 justify-center p-0" : "w-full",
               )}
             >
               {org.settings.business.logoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element -- tenant logo served from Storage
-                <img src={org.settings.business.logoUrl} alt="" className="size-9 shrink-0 rounded-lg object-cover" />
+                <img src={org.settings.business.logoUrl} alt="" className="size-8 shrink-0 rounded-lg object-cover" />
               ) : (
-                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary-soft text-[13px] font-semibold text-primary">
+                <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-muted text-[12px] font-bold text-foreground/80">
                   {initials(displayName)}
                 </span>
               )}
@@ -128,11 +128,9 @@ export function Sidebar({
             {collapsed ? (
               <div aria-hidden className="mx-auto mb-2 h-px w-8 bg-sidebar-border" />
             ) : (
-              <div className="flex items-center gap-2 px-3 pb-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/85">
-                {t(section.label)}
-              </div>
+              <div className="px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">{t(section.label)}</div>
             )}
-            <ul className="grid gap-1">
+            <ul className="grid gap-0.5">
               {section.items.map((item) => {
                 const active = isActiveHref(pathname, item.href);
                 const Icon = item.icon;
@@ -142,9 +140,9 @@ export function Sidebar({
                     onClick={onNavigate}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "group relative flex h-11 items-center gap-3 rounded-xl px-3 text-[15px] font-medium text-sidebar-foreground outline-none transition-colors duration-200",
-                      "hover:bg-sidebar-accent/70 hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring",
-                      active && "text-foreground",
+                      "group relative flex h-10 items-center gap-3 rounded-lg px-3 text-[14px] font-medium text-sidebar-foreground outline-none transition-colors duration-150",
+                      "hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring",
+                      active && "font-semibold text-foreground",
                       collapsed && "justify-center px-0",
                     )}
                   >
@@ -152,18 +150,16 @@ export function Sidebar({
                       <motion.span
                         layoutId={`${scope}-nav-active`}
                         aria-hidden
-                        className="absolute inset-0 rounded-xl border border-sidebar-border bg-card shadow-sm"
+                        className="absolute inset-0 rounded-lg bg-sidebar-accent"
                         transition={{ type: "spring", stiffness: 520, damping: 42, mass: 0.9 }}
-                      >
-                        <span className="absolute inset-y-2.5 start-0 w-[3px] rounded-full bg-gradient-to-b from-primary to-gold" />
-                      </motion.span>
+                      />
                     ) : null}
                     <Icon
                       className={cn(
-                        "relative size-5 shrink-0 transition-colors",
+                        "relative size-[18px] shrink-0 transition-colors",
                         active ? "text-primary" : "text-muted-foreground group-hover:text-foreground",
                       )}
-                      strokeWidth={active ? 2 : 1.75}
+                      strokeWidth={1.8}
                     />
                     {!collapsed && <span className="relative truncate">{t(item.label)}</span>}
                   </Link>
@@ -192,15 +188,15 @@ export function Sidebar({
             type="button"
             aria-label={t("shell.account")}
             className={cn(
-              "flex min-w-0 items-center gap-3 rounded-xl p-2 text-start outline-none transition-colors hover:bg-sidebar-accent/70 focus-visible:outline-2 focus-visible:outline-ring",
+              "flex min-w-0 items-center gap-2.5 rounded-lg p-2 text-start outline-none transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring",
               collapsed ? "justify-center" : "w-full",
             )}
           >
-            <PersonAvatar name={userName} className="size-9" />
+            <PersonAvatar name={userName} className="size-8 text-[12px]" />
             {!collapsed && (
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm font-semibold leading-tight rtl:text-right" dir="auto">{userName}</span>
-                <span className="block truncate text-xs text-gold-foreground">{roleLabel}</span>
+                <span className="block truncate text-xs text-muted-foreground">{roleLabel}</span>
               </span>
             )}
           </button>

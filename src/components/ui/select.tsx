@@ -24,7 +24,7 @@ function SelectTrigger({
       className={cn(
         fieldControl,
         "flex items-center justify-between gap-2 whitespace-nowrap px-3.5 data-[placeholder]:text-muted-foreground data-[state=open]:border-[color-mix(in_oklch,var(--primary)_55%,var(--input))] data-[state=open]:ring-4 data-[state=open]:ring-ring/25 [&>span]:truncate",
-        size === "sm" ? "h-9 px-3 text-[14px]" : "h-11",
+        size === "sm" ? "h-9 px-3 text-[14px]" : "h-10",
         className,
       )}
       {...props}
@@ -71,7 +71,7 @@ function SelectItem({ className, children, ...props }: React.ComponentProps<type
   return (
     <SelectPrimitive.Item
       className={cn(
-        "relative flex w-full cursor-default select-none items-center gap-2 rounded-lg py-2 pe-9 ps-2.5 text-sm outline-none transition-colors focus:bg-accent data-[state=checked]:font-medium data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "relative flex w-full cursor-default select-none items-center gap-2 rounded-md py-2 pe-9 ps-2.5 text-sm outline-none transition-colors focus:bg-muted data-[state=checked]:font-semibold data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className,
       )}
       {...props}

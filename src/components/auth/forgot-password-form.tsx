@@ -37,8 +37,8 @@ export function ForgotPasswordForm() {
   return (
     <div className="grid gap-6">
       <div className="grid gap-1.5">
-        <h1 className="font-display text-[34px] font-semibold leading-tight">{t("auth.forgotTitle")}</h1>
-        <p className="text-[16px] text-muted-foreground">{t("auth.forgotSubtitle")}</p>
+        <h1 className="font-display text-[28px] font-bold leading-tight tracking-[-0.03em]">{t("auth.forgotTitle")}</h1>
+        <p className="text-[15px] text-muted-foreground">{t("auth.forgotSubtitle")}</p>
       </div>
       {sent ? (
         <div role="status" className="flex gap-3 rounded-lg border bg-card p-4 text-sm">
@@ -55,7 +55,7 @@ export function ForgotPasswordForm() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="h-12"
+              className="h-11"
               dir="ltr"
             />
           </Field>

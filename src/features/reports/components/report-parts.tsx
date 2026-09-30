@@ -60,11 +60,11 @@ export function Notice({ children, tone = "info", className }: { children: React
       role={tone === "warning" ? "status" : undefined}
       className={cn(
         "flex items-start gap-2.5 rounded-xl border px-4 py-3 text-[14px] leading-relaxed",
-        tone === "warning" ? "border-warning/40 bg-warning/10 text-foreground" : "border-border/80 bg-champagne/40 text-muted-foreground",
+        tone === "warning" ? "border-warning/40 bg-warning/10 text-foreground" : "border-border bg-muted/50 text-muted-foreground",
         className,
       )}
     >
-      <Icon className={cn("mt-0.5 size-4 shrink-0", tone === "warning" ? "text-warning" : "text-gold-foreground")} aria-hidden />
+      <Icon className={cn("mt-0.5 size-4 shrink-0", tone === "warning" ? "text-warning" : "text-muted-foreground")} aria-hidden />
       <span>{children}</span>
     </p>
   );
@@ -83,7 +83,7 @@ export interface BarItem {
  * value on one line, a thin single-colour bar underneath scaled to the max.
  */
 export function BarList({ items, empty }: { items: BarItem[]; empty?: React.ReactNode }) {
-  const { locale, dir } = useI18n();
+  const { locale } = useI18n();
   const max = Math.max(0, ...items.map((i) => i.value));
   const total = items.reduce((s, i) => s + Math.max(0, i.value), 0);
   if (items.length === 0) return <>{empty ?? null}</>;
@@ -98,14 +98,8 @@ export function BarList({ items, empty }: { items: BarItem[]; empty?: React.Reac
               <span className="ms-2 text-[13px] font-normal text-muted-foreground">{i.hint ?? (total > 0 ? formatPercent(Math.max(0, i.value) / total, locale) : "")}</span>
             </span>
           </div>
-          <div className="h-2 overflow-hidden rounded-full bg-muted" aria-hidden>
-            <div
-              className="h-full rounded-full"
-              style={{
-                width: `${max > 0 ? Math.max(0, (i.value / max) * 100) : 0}%`,
-                background: `linear-gradient(${dir === "rtl" ? "270deg" : "90deg"}, var(--primary), color-mix(in oklch, var(--primary) 55%, var(--gold)))`,
-              }}
-            />
+          <div className="h-1.5 overflow-hidden rounded-full bg-muted" aria-hidden>
+            <div className="h-full rounded-full bg-primary" style={{ width: `${max > 0 ? Math.max(0, (i.value / max) * 100) : 0}%` }} />
           </div>
         </li>
       ))}

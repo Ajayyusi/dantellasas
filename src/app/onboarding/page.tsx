@@ -16,13 +16,13 @@ export default async function OnboardingPage() {
   if (res.reason === "unauthenticated") redirect("/login");
   const { t, locale } = await getI18n();
   return (
-    <div className="flex min-h-dvh flex-col bg-brand-wash">
+    <div className="flex min-h-dvh flex-col bg-background">
       <header className="flex items-center justify-between p-5 sm:p-7">
         <BrandMark tagline={t("shell.brandTagline")} />
         <LanguageSwitcher variant="outline" />
       </header>
       <main className="flex flex-1 items-start justify-center px-4 pb-16 pt-4 sm:pt-10">
-        <div className="w-full max-w-xl animate-fade-up rounded-3xl border bg-card p-7 shadow-lg sm:p-10">
+        <div className="w-full max-w-xl animate-fade-up rounded-2xl border bg-card p-6 shadow-sm sm:p-9">
           <OnboardingForm defaultLocale={locale} allowDemo={getServerEnv().ALLOW_DEMO_DATA} />
         </div>
       </main>

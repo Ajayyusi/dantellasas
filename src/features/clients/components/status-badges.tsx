@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 export function AppointmentStatusBadge({ status, className }: { status: AppointmentStatus; className?: string }) {
   const { t } = useI18n();
   return (
-    <StatusPill color={`var(--status-${status})`} className={className}>
+    <StatusPill color={`var(--status-${status})`} textColor={`var(--status-${status}-fg)`} className={className}>
       {t(`clients.appointmentStatus.${status}`)}
     </StatusPill>
   );

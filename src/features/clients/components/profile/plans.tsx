@@ -15,7 +15,7 @@ function Progress({ used, total }: { used: number; total: number }) {
   const pct = total > 0 ? Math.min(100, Math.round((used / total) * 100)) : 0;
   return (
     <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted" role="progressbar" aria-valuenow={used} aria-valuemin={0} aria-valuemax={total}>
-      <div className="h-full rounded-full bg-gradient-to-r from-primary to-[color-mix(in_oklch,var(--primary)_55%,var(--gold))] rtl:bg-gradient-to-l" style={{ width: `${pct}%` }} />
+      <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
     </div>
   );
 }
@@ -26,7 +26,7 @@ export function PackageCard({ pkg, className }: { pkg: ClientPackageDTO; classNa
   const org = useOrg();
   const inactive = pkg.status !== "active";
   return (
-    <div className={cn("grid grid-cols-1 gap-3 rounded-2xl border bg-card p-5 shadow-xs", inactive && "opacity-75", className)}>
+    <div className={cn("grid grid-cols-1 gap-3 rounded-2xl border bg-card p-5", inactive && "opacity-75", className)}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-3">
           <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary-soft text-primary">
@@ -90,15 +90,15 @@ export function MembershipCard({ membership: m, className }: { membership: Clien
   return (
     <div
       className={cn(
-        "grid grid-cols-1 gap-2.5 rounded-2xl border bg-card p-5 shadow-xs",
-        m.status === "active" && "border-[color-mix(in_oklch,var(--gold)_40%,var(--border))] bg-[linear-gradient(135deg,color-mix(in_oklch,var(--gold)_10%,var(--card)),var(--card)_60%)]",
+        "grid grid-cols-1 gap-2.5 rounded-2xl border bg-card p-5",
+        m.status === "active" && "border-[color-mix(in_oklch,var(--primary)_28%,var(--border))] bg-[color-mix(in_oklch,var(--primary)_4%,var(--card))]",
         m.status !== "active" && "opacity-75",
         className,
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-3">
-          <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-gold-soft text-gold-foreground ring-1 ring-gold/40">
+          <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary-soft text-primary">
             <CrownIcon className="size-[18px]" />
           </div>
           <div className="min-w-0">
@@ -131,7 +131,7 @@ export function PackagesTab({ packages }: { packages: ClientPackageDTO[] }) {
   const { t } = useI18n();
   if (packages.length === 0) {
     return (
-      <div className="rounded-2xl border bg-card shadow-sm">
+      <div className="rounded-2xl border bg-card">
         <EmptyState icon={PackageIcon} title={t("clients.packages.empty")} description={t("clients.packages.emptyHint")} />
       </div>
     );
@@ -149,7 +149,7 @@ export function MembershipsTab({ memberships }: { memberships: ClientMembershipD
   const { t } = useI18n();
   if (memberships.length === 0) {
     return (
-      <div className="rounded-2xl border bg-card shadow-sm">
+      <div className="rounded-2xl border bg-card">
         <EmptyState icon={CrownIcon} title={t("clients.memberships.empty")} description={t("clients.memberships.emptyHint")} />
       </div>
     );

@@ -52,7 +52,7 @@ function SheetContent({
         {side === "bottom" ? <div aria-hidden className="mx-auto mt-2.5 h-1.5 w-12 shrink-0 rounded-full bg-muted" /> : null}
         {children}
         {showClose && (
-          <SheetPrimitive.Close className="absolute end-5 top-5 grid size-9 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
+          <SheetPrimitive.Close className="absolute end-4 top-4 grid size-9 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
             <XIcon className="size-[18px]" />
             <span className="sr-only">Close</span>
           </SheetPrimitive.Close>
@@ -66,7 +66,7 @@ function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sheet-header"
-      className={cn("flex flex-col gap-1.5 border-b px-7 pt-7 pb-5 pe-16", className)}
+      className={cn("flex flex-col gap-1 border-b px-6 pt-6 pb-4 pe-16", className)}
       {...props}
     />
   );
@@ -74,7 +74,7 @@ function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
 
 function SheetBody({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div data-slot="sheet-body" className={cn("flex-1 content-start overflow-y-auto px-7 py-6 scrollbar-thin", className)} {...props} />
+    <div data-slot="sheet-body" className={cn("flex-1 content-start overflow-y-auto px-6 py-5 scrollbar-thin", className)} {...props} />
   );
 }
 
@@ -82,7 +82,7 @@ function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sheet-footer"
-      className={cn("flex flex-wrap items-center justify-end gap-2.5 border-t bg-muted/40 px-7 py-4", className)}
+      className={cn("flex flex-wrap items-center justify-end gap-2 border-t bg-muted/40 px-6 py-4", className)}
       {...props}
     />
   );
@@ -92,7 +92,7 @@ function SheetTitle({ className, ...props }: React.ComponentProps<typeof SheetPr
   return (
     <SheetPrimitive.Title
       data-slot="sheet-title"
-      className={cn("font-display text-[28px] font-semibold leading-tight", className)}
+      className={cn("font-display text-[20px] font-bold leading-tight", className)}
       {...props}
     />
   );

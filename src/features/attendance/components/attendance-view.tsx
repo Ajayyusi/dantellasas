@@ -129,7 +129,7 @@ export function AttendanceView({
           </TabsTrigger>
         </TabsList>
         <TabsContent value="board">
-          <p className="mb-4 font-display text-[26px] font-semibold leading-tight">{org.dateKey(today, "dateLong")}</p>
+          <p className="mb-4 font-display text-[19px] font-bold leading-tight">{org.dateKey(today, "dateLong")}</p>
           <TodayBoard scheduled={board.scheduled} others={board.others} now={now} />
         </TabsContent>
         <TabsContent value="records">

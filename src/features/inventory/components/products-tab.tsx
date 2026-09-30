@@ -42,7 +42,7 @@ import { StockStatusBadge } from "./stock-badge";
 const STATUSES: StockStatus[] = ["in_stock", "low", "out", "untracked"];
 /** Products are hidden by default: the SKU sits under the product name instead. */
 const HIDDEN_COLUMNS = { sku: false };
-const THUMB_TONES = ["#965660", "#90693b", "#507357", "#4b6d8a", "#7d5279", "#a25c43", "#715f53", "#4f7b80"];
+const THUMB_TONES = ["#a8406a", "#8a5a0b", "#2f7a55", "#3f5f99", "#6a4c96", "#9a4b34", "#5f595c", "#2e6b73"];
 
 /** Monogram tile standing in for a product photo, tinted per category. */
 function ProductThumb({ product, locale }: { product: ProductRow; locale: string }) {
@@ -54,14 +54,13 @@ function ProductThumb({ product, locale }: { product: ProductRow; locale: string
   return (
     <span
       aria-hidden
-      className="relative grid size-11 shrink-0 place-items-center overflow-hidden rounded-xl font-display text-[21px] font-semibold"
+      className="grid size-10 shrink-0 place-items-center rounded-xl font-display text-[16px] font-bold"
       style={{
-        background: `linear-gradient(145deg, color-mix(in oklch, ${tone} 16%, var(--card)), color-mix(in oklch, ${tone} 6%, var(--card)))`,
+        backgroundColor: `color-mix(in oklch, ${tone} 11%, var(--card))`,
         color: `color-mix(in oklch, ${tone} 85%, var(--foreground))`,
       }}
     >
       {letter}
-      <span className="absolute inset-x-2.5 bottom-1.5 h-[3px] rounded-full opacity-40" style={{ backgroundColor: tone }} />
     </span>
   );
 }

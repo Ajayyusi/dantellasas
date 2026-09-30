@@ -34,8 +34,8 @@ export function NoteCard({ note, clientId, editable }: { note: ClientNoteView; c
   return (
     <article
       className={cn(
-        "group grid grid-cols-1 gap-2.5 rounded-2xl border bg-card p-5 shadow-xs",
-        note.pinned && "border-[color-mix(in_oklch,var(--gold)_45%,transparent)] bg-[color-mix(in_oklch,var(--gold)_9%,var(--card))]",
+        "group grid grid-cols-1 gap-2.5 rounded-2xl border bg-card p-5",
+        note.pinned && "border-[color-mix(in_oklch,var(--primary)_28%,var(--border))] bg-[color-mix(in_oklch,var(--primary)_4%,var(--card))]",
       )}
     >
       <p className="whitespace-pre-wrap break-words text-[15px] leading-relaxed" dir="auto">
@@ -44,7 +44,7 @@ export function NoteCard({ note, clientId, editable }: { note: ClientNoteView; c
       <div className="flex items-center justify-between gap-2">
         <span className="flex min-w-0 items-center gap-2 text-[13px] text-muted-foreground">
           {note.pinned ? (
-            <span className="inline-flex items-center gap-1 font-semibold text-gold-foreground">
+            <span className="inline-flex items-center gap-1 font-semibold text-primary">
               <PinIcon className="size-3.5" />
               {t("clients.notes.pinned")}
             </span>

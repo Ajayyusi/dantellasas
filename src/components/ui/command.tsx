@@ -59,7 +59,7 @@ function CommandItem({ className, ...props }: React.ComponentProps<typeof Comman
   return (
     <CommandPrimitive.Item
       className={cn(
-        "relative flex cursor-default select-none items-center gap-3 rounded-lg px-2.5 py-2.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-primary-soft data-[disabled=true]:opacity-50 [&_svg]:size-[18px] [&_svg]:shrink-0 [&_svg]:text-muted-foreground",
+        "relative flex cursor-default select-none items-center gap-3 rounded-md px-2.5 py-2.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-muted data-[disabled=true]:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-muted-foreground",
         className,
       )}
       {...props}

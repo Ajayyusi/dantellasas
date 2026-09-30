@@ -157,8 +157,8 @@ export function MarketingView({
     <PageContainer>
       <PageHeader title={t("marketing.title")} description={t("marketing.description")} />
 
-      <div className="mb-6 flex items-start gap-3 rounded-2xl border border-[color-mix(in_oklch,var(--gold)_40%,var(--border))] bg-[color-mix(in_oklch,var(--champagne)_55%,var(--card))] px-5 py-3.5 text-[15px] leading-relaxed">
-        <InfoIcon className="mt-1 size-4 shrink-0 text-gold-foreground" />
+      <div className="mb-6 flex items-start gap-3 rounded-xl border bg-muted/50 px-4 py-3 text-[14px] leading-relaxed text-muted-foreground">
+        <InfoIcon className="mt-0.5 size-4 shrink-0" />
         <p>{t("marketing.noSending")}</p>
       </div>
 
@@ -177,20 +177,20 @@ export function MarketingView({
                   aria-selected={active}
                   onClick={() => setSelected(a.key)}
                   className={cn(
-                    "hover-lift flex flex-col gap-2 rounded-2xl border bg-card p-5 text-start shadow-xs outline-none transition-colors hover:border-primary/35 focus-visible:outline-2 focus-visible:outline-ring",
-                    active && "border-primary/60 bg-[color-mix(in_oklch,var(--primary)_5%,var(--card))] ring-2 ring-primary/20",
+                    "flex flex-col gap-2 rounded-2xl border bg-card p-5 text-start outline-none transition-colors hover:border-[color-mix(in_oklch,var(--primary)_35%,var(--border))] focus-visible:outline-2 focus-visible:outline-ring",
+                    active && "border-primary bg-[color-mix(in_oklch,var(--primary)_4%,var(--card))] ring-1 ring-primary",
                   )}
                 >
                   <span className="flex items-center justify-between gap-2">
                     <span
                       className={cn(
-                        "grid size-10 place-items-center rounded-xl bg-muted text-muted-foreground transition-colors",
-                        active && "bg-primary text-primary-foreground shadow-sm",
+                        "grid size-9 place-items-center rounded-lg bg-muted text-muted-foreground transition-colors",
+                        active && "bg-primary-soft text-primary",
                       )}
                     >
-                      <Icon className="size-5" />
+                      <Icon className="size-[18px]" />
                     </span>
-                    <span className="font-display text-[32px] font-semibold leading-none tabular">
+                    <span className="font-display text-[26px] font-bold leading-none tabular">
                       {count}
                       {a.capped ? "+" : ""}
                     </span>

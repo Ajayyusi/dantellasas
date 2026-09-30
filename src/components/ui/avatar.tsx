@@ -32,7 +32,7 @@ function AvatarFallback({ className, ...props }: React.ComponentProps<typeof Ava
 }
 
 /** Brand tones for initials when a person has no colour of their own. */
-const AVATAR_TONES = ["#965660", "#a25c43", "#90693b", "#507357", "#4b6d8a", "#7d5279", "#715f53", "#4f7b80"];
+const AVATAR_TONES = ["#a8406a", "#3f5f99", "#2f7a55", "#8a5a0b", "#6a4c96", "#5f595c", "#2e6b73", "#9a4b34"];
 
 function toneFor(name: string): string {
   let h = 0;
@@ -56,7 +56,7 @@ function PersonAvatar({
   return (
     <Avatar className={className}>
       {src ? <AvatarImage src={src} alt="" /> : null}
-      <AvatarFallback style={{ backgroundColor: `color-mix(in oklch, ${tone} 16%, var(--card))`, color: tone }}>
+      <AvatarFallback style={{ backgroundColor: `color-mix(in oklch, ${tone} 11%, var(--card))`, color: tone }}>
         {initials(name)}
       </AvatarFallback>
     </Avatar>

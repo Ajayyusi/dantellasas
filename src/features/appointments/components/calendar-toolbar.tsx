@@ -81,8 +81,8 @@ export function CalendarToolbar({
         </Button>
         <Popover open={pickerOpen} onOpenChange={setPickerOpen}>
           <PopoverTrigger asChild>
-            <Button variant="ghost" className="h-12 gap-2.5 px-2.5 font-display text-[26px] font-semibold tracking-normal" aria-label={t("appointments.pickDate")}>
-              <CalendarIcon className="size-5 text-primary" />
+            <Button variant="ghost" className="h-11 gap-2 px-2.5 font-display text-[20px] font-bold sm:text-[22px]" aria-label={t("appointments.pickDate")}>
+              <CalendarIcon className="size-[18px] text-muted-foreground" />
               <span className="hidden sm:inline">{label}</span>
               <span className="sm:hidden">{shortLabel}</span>
             </Button>

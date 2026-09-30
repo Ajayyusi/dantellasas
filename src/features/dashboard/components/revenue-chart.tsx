@@ -10,7 +10,7 @@ import type { SeriesPoint } from "../aggregate";
 /** Shared tooltip shell for the dashboard charts. */
 export function TooltipCard({ title, rows }: { title: string; rows: { label: string; value: string; swatch: string; dashed?: boolean }[] }) {
   return (
-    <div className="min-w-44 rounded-xl border bg-popover px-3.5 py-2.5 text-[14px] shadow-md">
+    <div className="min-w-44 rounded-lg border bg-popover px-3 py-2.5 text-[13px] shadow-md">
       <div className="mb-1.5 font-semibold">{title}</div>
       {rows.map((r) => (
         <div key={r.label} className="flex items-center gap-2 py-0.5">
@@ -45,7 +45,7 @@ function RevenueTooltip({ active, payload, label }: Partial<TooltipContentProps<
 
 export const axisTick = { fontSize: 12, fill: "var(--muted-foreground)" };
 
-/** Daily net revenue as a soft area, with the previous period as a dashed line. */
+/** Daily net revenue as a light area, with the previous period as a dashed line. */
 export function RevenueChart({ data }: { data: SeriesPoint[] }) {
   const org = useOrg();
   const { dir } = useI18n();
@@ -56,8 +56,8 @@ export function RevenueChart({ data }: { data: SeriesPoint[] }) {
         <ComposedChart data={data} margin={{ top: 10, right: 6, bottom: 0, left: 6 }}>
           <defs>
             <linearGradient id="dash-revenue-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--chart-1)" stopOpacity={0.3} />
-              <stop offset="100%" stopColor="var(--chart-1)" stopOpacity={0.02} />
+              <stop offset="0%" stopColor="var(--chart-1)" stopOpacity={0.14} />
+              <stop offset="100%" stopColor="var(--chart-1)" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid vertical={false} stroke="var(--border)" strokeDasharray="3 5" />
@@ -79,7 +79,7 @@ export function RevenueChart({ data }: { data: SeriesPoint[] }) {
             tick={axisTick}
             tickFormatter={(v: number) => org.money(v, { compact: true })}
           />
-          <Tooltip cursor={{ stroke: "var(--gold)", strokeWidth: 1, strokeDasharray: "3 3" }} content={<RevenueTooltip />} />
+          <Tooltip cursor={{ stroke: "var(--muted-foreground)", strokeOpacity: 0.4, strokeWidth: 1, strokeDasharray: "3 3" }} content={<RevenueTooltip />} />
           <Line
             dataKey="prevNetMinor"
             type="monotone"
@@ -95,11 +95,11 @@ export function RevenueChart({ data }: { data: SeriesPoint[] }) {
             dataKey="netMinor"
             type="monotone"
             stroke="var(--chart-1)"
-            strokeWidth={2.5}
+            strokeWidth={2}
             fill="url(#dash-revenue-fill)"
             dot={false}
-            activeDot={{ r: 5, fill: "var(--card)", stroke: "var(--chart-1)", strokeWidth: 2.5 }}
-            animationDuration={900}
+            activeDot={{ r: 4.5, fill: "var(--card)", stroke: "var(--chart-1)", strokeWidth: 2 }}
+            animationDuration={800}
             animationEasing="ease-out"
           />
         </ComposedChart>

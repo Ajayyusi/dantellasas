@@ -44,18 +44,8 @@ function Tile({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="group relative flex min-h-[92px] flex-col justify-between overflow-hidden rounded-xl border bg-card p-3.5 text-start shadow-xs outline-none transition-[box-shadow,border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring active:translate-y-0 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
+      className="group relative flex min-h-[88px] flex-col justify-between overflow-hidden rounded-xl border bg-card p-3.5 text-start outline-none transition-[box-shadow,border-color,transform] duration-150 hover:border-[color-mix(in_oklch,var(--primary)_35%,var(--border))] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
     >
-      {accent ? (
-        <>
-          <span aria-hidden className="absolute inset-x-0 top-0 h-[3px]" style={{ backgroundColor: accent }} />
-          <span
-            aria-hidden
-            className="pointer-events-none absolute -end-8 -top-8 size-20 rounded-full opacity-[0.13] transition-opacity group-hover:opacity-25"
-            style={{ backgroundColor: accent }}
-          />
-        </>
-      ) : null}
       <span
         aria-hidden
         className="absolute end-2.5 top-2.5 grid size-6 scale-75 place-items-center rounded-full bg-primary text-primary-foreground opacity-0 shadow-sm transition-all duration-200 group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100"
@@ -64,7 +54,10 @@ function Tile({
       </span>
       <span className="relative line-clamp-2 pe-6 text-[15px] font-semibold leading-snug">{title}</span>
       <span className="relative mt-2.5 flex items-end justify-between gap-2">
-        <span className="truncate text-[13px] text-muted-foreground">{meta}</span>
+        <span className="flex min-w-0 items-center gap-1.5 text-[13px] text-muted-foreground">
+          {accent ? <span aria-hidden className="size-1.5 shrink-0 rounded-full" style={{ backgroundColor: accent }} /> : null}
+          <span className="truncate">{meta}</span>
+        </span>
         <span className="shrink-0 text-[15px] font-semibold tabular">{price}</span>
       </span>
     </button>
@@ -111,7 +104,7 @@ export function CatalogPanel({ catalog, onPick }: { catalog: PosCatalog; onPick:
       </div>
 
       {tab === "services" ? (
-        <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
+        <div className="flex shrink-0 gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
           {[{ id: "all", name: t("pos.allCategories"), nameAr: "", color: "" }, ...catalog.categories].map((c) => (
             <button
               key={c.id}
@@ -119,10 +112,10 @@ export function CatalogPanel({ catalog, onPick }: { catalog: PosCatalog; onPick:
               onClick={() => setCategory(c.id)}
               className={cn(
                 "flex h-9 shrink-0 items-center gap-2 rounded-full border px-3.5 text-[14px] font-semibold transition-colors",
-                category === c.id ? "border-primary bg-primary text-primary-foreground shadow-sm" : "bg-card text-foreground/80 hover:border-primary/30 hover:bg-primary-soft",
+                category === c.id ? "border-primary bg-primary text-primary-foreground" : "bg-card text-foreground/80 hover:bg-muted",
               )}
             >
-              {c.color ? <span className="size-2.5 rounded-full ring-2 ring-card/70" style={{ backgroundColor: c.color }} /> : null}
+              {c.color ? <span className="size-2 rounded-full ring-2 ring-card/70" style={{ backgroundColor: c.color }} /> : null}
               {c.id === "all" ? c.name : localName(c, locale)}
             </button>
           ))}
@@ -171,9 +164,9 @@ export function CatalogPanel({ catalog, onPick }: { catalog: PosCatalog; onPick:
           <button
             type="button"
             onClick={() => onPick({ type: "gift_card" })}
-            className="col-span-full flex items-center gap-3.5 rounded-2xl border border-dashed border-[color-mix(in_oklch,var(--gold)_55%,var(--border))] bg-card p-5 text-start transition-colors hover:bg-gold-soft/50"
+            className="col-span-full flex items-center gap-3.5 rounded-xl border border-dashed bg-card p-4 text-start transition-colors hover:bg-muted/60"
           >
-            <span className="grid size-11 place-items-center rounded-full bg-gold-soft text-gold-foreground ring-1 ring-gold/40">
+            <span className="grid size-10 place-items-center rounded-lg bg-primary-soft text-primary">
               <GiftIcon className="size-5" />
             </span>
             <span className="text-[15px] font-semibold">{t("pos.addGiftCard")}</span>
@@ -181,13 +174,13 @@ export function CatalogPanel({ catalog, onPick }: { catalog: PosCatalog; onPick:
         ) : null}
         {tab === "services" && services.length === 0 ? (
           <p className="col-span-full py-12 text-center text-[15px] text-muted-foreground">
-            <SparklesIcon className="mx-auto mb-2 size-6 text-gold" />
+            <SparklesIcon className="mx-auto mb-2 size-6 text-muted-foreground" />
             {t("common.noResults")}
           </p>
         ) : null}
         {tab === "products" && products.length === 0 ? (
           <p className="col-span-full py-12 text-center text-[15px] text-muted-foreground">
-            <PackageIcon className="mx-auto mb-2 size-6 text-gold" />
+            <PackageIcon className="mx-auto mb-2 size-6 text-muted-foreground" />
             {t("common.noResults")}
           </p>
         ) : null}

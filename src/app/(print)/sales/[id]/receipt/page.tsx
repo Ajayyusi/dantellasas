@@ -42,27 +42,23 @@ export default async function ReceiptPage({ params }: PageProps<"/sales/[id]/rec
   }
 
   return (
-    <main className="min-h-dvh bg-brand-wash py-8 print:bg-none print:bg-white print:py-0">
+    <main className="min-h-dvh bg-background py-8 print:bg-none print:bg-white print:py-0">
       <div className="no-print mx-auto mb-4 flex max-w-[380px] justify-end px-4">
         <PrintButton label={t("pos.printReceipt")} />
       </div>
-      <article className="mx-auto max-w-[380px] rounded-2xl border border-neutral-200 bg-white px-6 py-7 text-[14px] leading-relaxed text-neutral-900 shadow-md print:max-w-none print:rounded-none print:border-0 print:px-0 print:py-0 print:shadow-none">
+      <article className="mx-auto max-w-[380px] rounded-2xl border border-neutral-200 bg-white px-6 py-7 text-[14px] leading-relaxed text-neutral-900 shadow-sm print:max-w-none print:rounded-none print:border-0 print:px-0 print:py-0 print:shadow-none">
         <header className="text-center">
           {s.business.logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element -- tenant logo from Storage, printed as-is
             <img src={s.business.logoUrl} alt="" className="mx-auto mb-2 h-12 w-auto object-contain" />
           ) : null}
-          <h1 className="font-display text-[24px] font-semibold leading-tight">{s.business.displayName || ctx.org.name}</h1>
+          <h1 className="font-display text-[20px] font-bold leading-tight">{s.business.displayName || ctx.org.name}</h1>
           {s.business.legalName ? <p>{s.business.legalName}</p> : null}
           {branch?.address || s.business.address ? <p className="text-neutral-600">{branch?.address || s.business.address}</p> : null}
           {branch?.phone || s.business.phone ? <p className="text-neutral-600" dir="ltr">{branch?.phone || s.business.phone}</p> : null}
           {s.business.trn ? <p className="mt-1 font-medium">{t("sales.receipt.trn", { trn: s.business.trn })}</p> : null}
           {s.receipts.header ? <p className="mt-2 whitespace-pre-wrap">{s.receipts.header}</p> : null}
-          <p className="mt-3 flex items-center justify-center gap-2.5 text-[13px] font-semibold uppercase tracking-[0.14em]">
-            <span aria-hidden className="h-px w-8 bg-neutral-300" />
-            {t("sales.receipt.title")}
-            <span aria-hidden className="h-px w-8 bg-neutral-300" />
-          </p>
+          <p className="mt-3 text-[13px] font-semibold uppercase tracking-[0.08em] text-neutral-600">{t("sales.receipt.title")}</p>
         </header>
 
         <dl className="mt-4 grid grid-cols-[auto_1fr] gap-x-3 border-y border-dashed border-neutral-300 py-2">

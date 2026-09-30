@@ -4,6 +4,7 @@ import { Bar, CartesianGrid, Cell, ComposedChart, Line, Pie, PieChart, Responsiv
 
 import { useOrg } from "@/components/providers/org-provider";
 import { statusColor } from "@/features/appointments/components/status-badge";
+import { todayKey } from "@/lib/dates";
 import { useI18n } from "@/lib/i18n/client";
 import { formatNumber } from "@/lib/money";
 import { APPOINTMENT_STATUSES, type AppointmentStatus } from "@/lib/types";
@@ -20,18 +21,19 @@ function BookingsTooltip({ active, payload, label }: Partial<TooltipContentProps
     <TooltipCard
       title={org.dateKey(String(label), "weekdayDate")}
       rows={[
-        { label: t("dashboard.revenue.current"), value: formatNumber(point.count, locale), swatch: "var(--chart-2)" },
+        { label: t("dashboard.revenue.current"), value: formatNumber(point.count, locale), swatch: "var(--chart-1)" },
         { label: t("dashboard.revenue.previous"), value: formatNumber(point.prevCount, locale), swatch: "var(--muted-foreground)", dashed: true },
       ]}
     />
   );
 }
 
-/** Bookings per day as champagne bars, the previous period as a dashed line. */
+/** Bookings per day as quiet bars with today in the accent, the previous period as a dashed line. */
 export function BookingsChart({ data }: { data: BookingPoint[] }) {
   const org = useOrg();
   const { dir } = useI18n();
   const dense = data.length > 20;
+  const today = todayKey(org.timezone);
   return (
     <div className="h-64 w-full" dir="ltr">
       <ResponsiveContainer width="100%" height="100%">
@@ -48,8 +50,12 @@ export function BookingsChart({ data }: { data: BookingPoint[] }) {
             minTickGap={10}
           />
           <YAxis orientation={dir === "rtl" ? "right" : "left"} tickLine={false} axisLine={false} width={40} tick={axisTick} allowDecimals={false} />
-          <Tooltip cursor={{ fill: "var(--accent)", opacity: 0.55 }} content={<BookingsTooltip />} />
-          <Bar dataKey="count" fill="var(--chart-2)" radius={[6, 6, 2, 2]} maxBarSize={30} animationDuration={800} />
+          <Tooltip cursor={{ fill: "var(--muted)", opacity: 0.8 }} content={<BookingsTooltip />} />
+          <Bar dataKey="count" radius={[5, 5, 0, 0]} maxBarSize={28} animationDuration={700}>
+            {data.map((p) => (
+              <Cell key={p.dateKey} fill={p.dateKey === today ? "var(--chart-1)" : "var(--chart-muted)"} />
+            ))}
+          </Bar>
           <Line dataKey="prevCount" type="monotone" stroke="var(--muted-foreground)" strokeOpacity={0.45} strokeWidth={1.5} strokeDasharray="4 4" dot={false} isAnimationActive={false} />
         </ComposedChart>
       </ResponsiveContainer>
@@ -70,7 +76,7 @@ export function StatusDonut({ statuses }: { statuses: Partial<Record<Appointment
         <div className="relative mx-auto size-[170px]" dir="ltr">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
-              <Pie data={rows} dataKey="value" nameKey="status" innerRadius={58} outerRadius={82} paddingAngle={2} cornerRadius={5} stroke="none" animationDuration={800}>
+              <Pie data={rows} dataKey="value" nameKey="status" innerRadius={62} outerRadius={80} paddingAngle={2} cornerRadius={4} stroke="none" animationDuration={700}>
                 {rows.map((r) => (
                   <Cell key={r.status} fill={statusColor(r.status)} />
                 ))}
@@ -78,8 +84,8 @@ export function StatusDonut({ statuses }: { statuses: Partial<Record<Appointment
             </PieChart>
           </ResponsiveContainer>
           <div className="pointer-events-none absolute inset-0 grid place-content-center text-center">
-            <span className="font-display text-[32px] font-semibold leading-none tabular">{formatNumber(total, locale)}</span>
-            <span className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">{t("dashboard.kpi.appointments")}</span>
+            <span className="font-display text-[26px] font-bold leading-none tabular">{formatNumber(total, locale)}</span>
+            <span className="mt-1 text-xs font-medium text-muted-foreground">{t("dashboard.kpi.appointments")}</span>
           </div>
         </div>
         <ul className="grid min-w-0 gap-2.5 text-sm">
@@ -102,7 +108,7 @@ export function RetentionDonut({ retention }: { retention: Retention }) {
   const { t, locale } = useI18n();
   const data = [
     { key: "returning", value: retention.returning, color: "var(--chart-1)", label: t("dashboard.retention.returning") },
-    { key: "fresh", value: retention.fresh, color: "var(--chart-2)", label: t("dashboard.retention.fresh") },
+    { key: "fresh", value: retention.fresh, color: "var(--chart-muted)", label: t("dashboard.retention.fresh") },
   ];
   if (retention.current === 0) return <p className="grid h-56 place-items-center text-sm text-muted-foreground">{t("dashboard.retention.empty")}</p>;
   const rate = retention.rate === null ? null : `${Math.round(retention.rate * 100)}%`;
@@ -111,7 +117,7 @@ export function RetentionDonut({ retention }: { retention: Retention }) {
       <div className="relative mx-auto size-[170px]" dir="ltr">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
-            <Pie data={data} dataKey="value" nameKey="key" innerRadius={58} outerRadius={82} paddingAngle={3} cornerRadius={6} stroke="none" startAngle={90} endAngle={-270} animationDuration={800}>
+            <Pie data={data} dataKey="value" nameKey="key" innerRadius={62} outerRadius={80} paddingAngle={2} cornerRadius={4} stroke="none" startAngle={90} endAngle={-270} animationDuration={700}>
               {data.map((d) => (
                 <Cell key={d.key} fill={d.color} />
               ))}
@@ -119,8 +125,8 @@ export function RetentionDonut({ retention }: { retention: Retention }) {
           </PieChart>
         </ResponsiveContainer>
         <div className="pointer-events-none absolute inset-0 grid place-content-center text-center">
-          <span className="font-display text-[32px] font-semibold leading-none tabular">{rate ?? formatNumber(retention.returning, locale)}</span>
-          <span className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">{t("dashboard.retention.returning")}</span>
+          <span className="font-display text-[26px] font-bold leading-none tabular">{rate ?? formatNumber(retention.returning, locale)}</span>
+          <span className="mt-1 text-xs font-medium text-muted-foreground">{t("dashboard.retention.returning")}</span>
         </div>
       </div>
       <ul className="grid min-w-0 gap-2.5 text-sm">

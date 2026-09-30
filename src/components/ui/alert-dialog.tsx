@@ -25,7 +25,7 @@ function AlertDialogContent({
       <AlertDialogPrimitive.Content
         data-slot="alert-dialog-content"
         className={cn(
-          "fixed start-1/2 top-1/2 z-50 grid w-[calc(100%-2rem)] max-w-md -translate-y-1/2 gap-5 rounded-3xl border bg-popover p-7 shadow-lg ltr:-translate-x-1/2 rtl:translate-x-1/2",
+          "fixed start-1/2 top-1/2 z-50 grid w-[calc(100%-2rem)] max-w-md -translate-y-1/2 gap-5 rounded-2xl border bg-popover p-6 shadow-lg ltr:-translate-x-1/2 rtl:translate-x-1/2",
           "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-[0.96] data-[state=open]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 duration-200 ease-out",
           className,
         )}
@@ -42,7 +42,7 @@ function AlertDialogFooter({ className, ...props }: React.ComponentProps<"div">)
   return <div className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", className)} {...props} />;
 }
 function AlertDialogTitle({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Title>) {
-  return <AlertDialogPrimitive.Title className={cn("font-display text-[26px] font-semibold leading-tight", className)} {...props} />;
+  return <AlertDialogPrimitive.Title className={cn("font-display text-[19px] font-bold leading-tight", className)} {...props} />;
 }
 function AlertDialogDescription({
   className,

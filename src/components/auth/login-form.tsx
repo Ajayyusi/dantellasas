@@ -45,8 +45,8 @@ export function LoginForm() {
   return (
     <div className="grid gap-6">
       <div className="grid gap-1.5">
-        <h1 className="font-display text-[34px] font-semibold leading-tight">{t("auth.signInTitle")}</h1>
-        <p className="text-[16px] text-muted-foreground">{t("auth.signInSubtitle")}</p>
+        <h1 className="font-display text-[28px] font-bold leading-tight tracking-[-0.03em]">{t("auth.signInTitle")}</h1>
+        <p className="text-[15px] text-muted-foreground">{t("auth.signInSubtitle")}</p>
       </div>
       <form onSubmit={onSubmit} className="grid gap-4" noValidate>
         <Field label={t("auth.email")} htmlFor="email">
@@ -58,7 +58,7 @@ export function LoginForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="h-12"
+            className="h-11"
             dir="ltr"
           />
         </Field>
@@ -78,7 +78,7 @@ export function LoginForm() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="h-12"
+            className="h-11"
           />
         </Field>
         {error ? (

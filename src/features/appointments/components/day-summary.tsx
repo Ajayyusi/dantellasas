@@ -16,16 +16,18 @@ export function DaySummary({ appointments }: { appointments: AppointmentDTO[] })
     { label: t("appointments.summaryBar.booked"), value: String(active.length), color: "var(--status-booked)" },
     { label: t("appointments.summaryBar.arrived"), value: String(arrived), color: "var(--status-checked_in)" },
     { label: t("appointments.summaryBar.done"), value: String(done), color: "var(--status-completed)" },
-    { label: t("appointments.summaryBar.value"), value: org.money(value), color: "var(--gold)" },
+    { label: t("appointments.summaryBar.value"), value: org.money(value), color: "var(--primary)" },
   ];
   return (
     <dl className="mb-4 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap">
       {items.map((i) => (
-        <div key={i.label} className="flex items-center gap-3 rounded-xl border bg-card px-4 py-2.5 shadow-xs">
-          <span aria-hidden className="h-8 w-1 shrink-0 rounded-full" style={{ backgroundColor: i.color }} />
+        <div key={i.label} className="flex min-w-0 items-center gap-3 rounded-xl border bg-card px-4 py-2.5">
           <div className="min-w-0">
-            <dt className="truncate text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">{i.label}</dt>
-            <dd className="font-display text-[22px] font-semibold leading-tight tabular">{i.value}</dd>
+            <dt className="flex items-center gap-1.5 truncate text-[13px] font-medium text-muted-foreground">
+              <span aria-hidden className="size-1.5 shrink-0 rounded-full" style={{ backgroundColor: i.color }} />
+              {i.label}
+            </dt>
+            <dd className="mt-0.5 font-display text-[19px] font-bold leading-tight tabular">{i.value}</dd>
           </div>
         </div>
       ))}

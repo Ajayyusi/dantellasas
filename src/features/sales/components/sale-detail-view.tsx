@@ -71,7 +71,7 @@ function Row({ label, value, tone }: { label: string; value: string; tone?: "mut
 function Fact({ label, children, className }: { label: string; children: React.ReactNode; className?: string }) {
   return (
     <div className={cn("grid min-w-0 gap-1", className)}>
-      <dt className="text-[12px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{label}</dt>
+      <dt className="text-[13px] font-medium text-muted-foreground">{label}</dt>
       <dd className="min-w-0 text-[15px] font-medium">{children}</dd>
     </div>
   );
@@ -113,7 +113,7 @@ export function SaleDetailView({ tx }: { tx: TransactionDTO }) {
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="font-display text-[34px] font-semibold leading-tight tabular sm:text-[38px]" dir="ltr">
+            <h1 className="font-display text-[26px] font-bold leading-tight tabular sm:text-[28px]" dir="ltr">
               {tx.number}
             </h1>
             <TransactionStatusBadge status={tx.status} />
@@ -152,8 +152,7 @@ export function SaleDetailView({ tx }: { tx: TransactionDTO }) {
       </div>
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
-        <article className="relative min-w-0 overflow-hidden rounded-3xl border bg-card shadow-sm">
-          <div aria-hidden className="h-1.5 bg-[linear-gradient(90deg,var(--primary),var(--gold),var(--primary))]" />
+        <article className="relative min-w-0 overflow-hidden rounded-2xl border bg-card">
           <header className="flex flex-col gap-5 border-b border-dashed px-5 py-6 sm:flex-row sm:items-start sm:justify-between sm:px-8">
             <div className="flex min-w-0 items-center gap-3.5">
               {business.logoUrl ? (
@@ -163,7 +162,7 @@ export function SaleDetailView({ tx }: { tx: TransactionDTO }) {
                 <BrandEmblem className="size-12 shrink-0" />
               )}
               <div className="min-w-0">
-                <p className="truncate font-display text-[24px] font-semibold leading-tight" dir="auto">
+                <p className="truncate font-display text-[19px] font-bold leading-tight" dir="auto">
                   {businessName}
                 </p>
                 <p className="truncate text-[14px] text-muted-foreground">
@@ -171,7 +170,7 @@ export function SaleDetailView({ tx }: { tx: TransactionDTO }) {
                 </p>
               </div>
             </div>
-            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-gold-foreground sm:pt-2 sm:text-end">
+            <p className="text-[13px] font-semibold text-primary sm:pt-2 sm:text-end">
               {org.settings.tax.enabled ? t("sales.taxInvoice") : t("sales.invoice")}
             </p>
           </header>
@@ -238,7 +237,7 @@ export function SaleDetailView({ tx }: { tx: TransactionDTO }) {
             </Table>
           </div>
 
-          <div className="flex justify-end border-t bg-[linear-gradient(180deg,color-mix(in_oklch,var(--champagne)_40%,var(--card)),var(--card))] px-5 py-5 sm:px-8">
+          <div className="flex justify-end border-t bg-muted/35 px-5 py-5 sm:px-8">
             <dl className="grid w-full max-w-sm gap-2 text-[15px]">
               <Row label={t("pos.subtotal")} value={org.money(tx.subtotalMinor)} tone="muted" />
               {discounts.map((d) => (
@@ -252,7 +251,7 @@ export function SaleDetailView({ tx }: { tx: TransactionDTO }) {
               {tx.tipMinor > 0 ? <Row label={tipStaff ? t("sales.tip", { name: tipStaff }) : t("pos.tip")} value={org.money(tx.tipMinor)} tone="muted" /> : null}
               <div className="mt-1 flex items-baseline justify-between gap-4 border-t border-dashed pt-3">
                 <dt className="text-base font-semibold">{t("pos.total")}</dt>
-                <dd className="font-display text-[32px] font-semibold leading-none tabular">{org.money(tx.totalMinor + tx.tipMinor)}</dd>
+                <dd className="font-display text-[26px] font-bold leading-none tabular">{org.money(tx.totalMinor + tx.tipMinor)}</dd>
               </div>
               {tx.paidMinor > 0 && tx.paidMinor !== tx.totalMinor + tx.tipMinor ? <Row label={t("pos.paid")} value={org.money(tx.paidMinor)} tone="muted" /> : null}
               {tx.refundedMinor > 0 ? <Row label={t("sales.summary.refunds")} value={`−${org.money(tx.refundedMinor)}`} tone="accent" /> : null}
@@ -284,13 +283,13 @@ export function SaleDetailView({ tx }: { tx: TransactionDTO }) {
           {tx.appointmentId ? (
             <Link
               href={`/appointments?date=${tx.dateKey}&appointment=${tx.appointmentId}`}
-              className="hover-lift flex items-center gap-3 rounded-2xl border bg-card px-5 py-4 shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="flex items-center gap-3 rounded-2xl border bg-card px-5 py-4 outline-none transition-colors hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring"
             >
               <span aria-hidden className="grid size-10 place-items-center rounded-xl bg-primary-soft text-primary">
                 <CalendarIcon className="size-5" />
               </span>
               <span className="grid">
-                <span className="text-[13px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">{t("sales.appointment")}</span>
+                <span className="text-[13px] font-medium text-muted-foreground">{t("sales.appointment")}</span>
                 <span className="text-[15px] font-semibold text-primary">{t("sales.viewAppointment")}</span>
               </span>
             </Link>
@@ -322,7 +321,7 @@ export function SaleDetailView({ tx }: { tx: TransactionDTO }) {
           {tx.notes ? (
             <SectionCard title={t("pos.notes")}>
               <p className="flex gap-2.5 whitespace-pre-wrap text-[15px] text-muted-foreground" dir="auto">
-                <StickyNoteIcon className="mt-0.5 size-4 shrink-0 text-gold-foreground" />
+                <StickyNoteIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                 {tx.notes}
               </p>
             </SectionCard>

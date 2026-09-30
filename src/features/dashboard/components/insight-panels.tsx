@@ -13,8 +13,8 @@ import type { BusyHours, CategoryRow } from "../aggregate";
 const SUNDAY = "2026-09-27";
 
 function heat(count: number, max: number): string {
-  if (!count || !max) return "color-mix(in oklch, var(--muted) 70%, var(--card))";
-  const pct = Math.round(14 + (count / max) * 76);
+  if (!count || !max) return "var(--muted)";
+  const pct = Math.round(12 + (count / max) * 80);
   return `color-mix(in oklch, var(--primary) ${pct}%, var(--card))`;
 }
 
@@ -60,7 +60,7 @@ export function BusyHeatmap({ busy }: { busy: BusyHours }) {
                     <span
                       key={h}
                       title={label}
-                      className="h-7 rounded-md transition-transform duration-150 hover:scale-110"
+                      className="h-7 rounded-[5px] transition-transform duration-150 hover:scale-110"
                       style={{ backgroundColor: heat(count, busy.max) }}
                     />
                   );
@@ -81,9 +81,9 @@ export function BusyHeatmap({ busy }: { busy: BusyHours }) {
   );
 }
 
-/** Service revenue by category as refined proportional bars. */
+/** Service revenue by category as proportional bars. */
 export function CategoryBars({ rows }: { rows: CategoryRow[] }) {
-  const { t, locale, dir } = useI18n();
+  const { t, locale } = useI18n();
   const org = useOrg();
   if (rows.length === 0) return <p className="grid h-56 place-items-center text-sm text-muted-foreground">{t("dashboard.categories.empty")}</p>;
   const total = rows.reduce((s, r) => s + r.revenueMinor, 0);
@@ -101,13 +101,10 @@ export function CategoryBars({ rows }: { rows: CategoryRow[] }) {
               <span className="shrink-0 font-semibold tabular">{org.money(r.revenueMinor)}</span>
               <span className="w-11 shrink-0 text-end text-xs text-muted-foreground tabular">{Math.round((r.revenueMinor / total) * 100)}%</span>
             </div>
-            <div className="h-2 overflow-hidden rounded-full bg-muted">
+            <div className="h-1.5 overflow-hidden rounded-full bg-muted">
               <div
                 className="h-full animate-fade-up rounded-full"
-                style={{
-                  width: `${Math.max(3, (r.revenueMinor / max) * 100)}%`,
-                  background: `linear-gradient(${dir === "rtl" ? "270deg" : "90deg"}, ${color}, color-mix(in oklch, ${color} 65%, var(--gold)))`,
-                }}
+                style={{ width: `${Math.max(3, (r.revenueMinor / max) * 100)}%`, backgroundColor: color }}
               />
             </div>
           </li>

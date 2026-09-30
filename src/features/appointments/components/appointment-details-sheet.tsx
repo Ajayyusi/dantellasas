@@ -190,7 +190,7 @@ export function AppointmentDetailsSheet({
             ) : null}
 
             <section className="grid gap-2">
-              <h3 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{t("appointments.details.services")}</h3>
+              <h3 className="text-[13px] font-semibold text-muted-foreground">{t("appointments.details.services")}</h3>
               <ul className="divide-y overflow-hidden rounded-xl border bg-card">
                 {a.items.map((i) => (
                   <li key={i.id} className="flex items-center gap-3 px-4 py-3">
@@ -208,7 +208,7 @@ export function AppointmentDetailsSheet({
                 ))}
                 <li className="flex items-baseline justify-between bg-muted/40 px-4 py-3">
                   <span className="text-[15px] font-semibold">{t("appointments.details.total")}</span>
-                  <span className="font-display text-[24px] font-semibold leading-none tabular">{org.money(a.totalMinor)}</span>
+                  <span className="font-display text-[20px] font-bold leading-none tabular">{org.money(a.totalMinor)}</span>
                 </li>
               </ul>
               {staffList.length > 0 ? (
@@ -225,8 +225,8 @@ export function AppointmentDetailsSheet({
 
             {a.notes ? (
               <section className="grid gap-1">
-                <h3 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{t("appointments.details.notes")}</h3>
-                <p className="whitespace-pre-wrap rounded-xl bg-[color-mix(in_oklch,var(--gold)_9%,var(--card))] px-4 py-3 text-[15px] leading-relaxed" dir="auto">
+                <h3 className="text-[13px] font-semibold text-muted-foreground">{t("appointments.details.notes")}</h3>
+                <p className="whitespace-pre-wrap rounded-xl bg-muted px-4 py-3 text-[15px] leading-relaxed" dir="auto">
                   {a.notes}
                 </p>
               </section>

@@ -179,7 +179,7 @@ export function DataTable<T>({
   const hideable = table.getAllLeafColumns().filter((c) => c.getCanHide() && typeof c.columnDef.header === "string");
 
   return (
-    <div className={cn("overflow-hidden rounded-2xl border bg-card shadow-sm", className)}>
+    <div className={cn("overflow-hidden rounded-2xl border bg-card", className)}>
       <div className="flex flex-wrap items-center gap-2.5 border-b px-4 py-3.5 sm:px-5">
         {searchText ? (
           <div className="relative min-w-0 flex-1 basis-full sm:max-w-xs sm:basis-auto">

@@ -3,27 +3,18 @@ import { AlertTriangleIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-/** Branded emblem: the icon in a champagne-and-blush disc with a fine gold ring. */
+/** The empty-state icon on a quiet rounded tile. */
 function Emblem({ icon: Icon, compact, tone = "brand" }: { icon: LucideIcon; compact?: boolean; tone?: "brand" | "danger" }) {
   return (
-    <div className={cn("relative grid shrink-0 place-items-center", compact ? "size-14" : "size-20")}>
-      <span
-        aria-hidden
-        className={cn(
-          "absolute inset-0 rounded-full border border-dashed",
-          tone === "danger" ? "border-destructive/30" : "border-gold/55",
-        )}
-      />
-      <span
-        className={cn(
-          "grid place-items-center rounded-full shadow-sm ring-1 ring-border",
-          compact ? "size-11" : "size-16",
-          tone === "danger" ? "bg-destructive/8 text-destructive" : "bg-brand-wash text-primary",
-        )}
-      >
-        <Icon className={compact ? "size-5" : "size-7"} strokeWidth={1.6} />
-      </span>
-    </div>
+    <span
+      className={cn(
+        "grid shrink-0 place-items-center rounded-2xl",
+        compact ? "size-12" : "size-14",
+        tone === "danger" ? "bg-destructive/8 text-destructive" : "bg-muted text-muted-foreground",
+      )}
+    >
+      <Icon className={compact ? "size-5" : "size-6"} strokeWidth={1.7} />
+    </span>
   );
 }
 
@@ -53,7 +44,7 @@ export function EmptyState({
     >
       {icon ? <Emblem icon={icon} compact={compact} /> : null}
       <div className="grid max-w-md gap-1.5">
-        <p className={cn("font-display font-semibold leading-tight", compact ? "text-xl" : "text-[26px]")}>{title}</p>
+        <p className={cn("font-display font-bold leading-tight", compact ? "text-[16px]" : "text-[19px]")}>{title}</p>
         {description ? <p className="text-sm leading-relaxed text-muted-foreground">{description}</p> : null}
       </div>
       {action ? <div className="mt-1 flex flex-wrap justify-center gap-2">{action}</div> : null}
@@ -76,7 +67,7 @@ export function ErrorState({
     <div role="alert" className={cn("flex animate-fade-up flex-col items-center gap-4 px-6 py-16 text-center", className)}>
       <Emblem icon={AlertTriangleIcon} tone="danger" />
       <div className="grid max-w-md gap-1.5">
-        <p className="font-display text-[26px] font-semibold leading-tight">{title}</p>
+        <p className="font-display text-[19px] font-bold leading-tight">{title}</p>
         {description ? <p className="text-sm leading-relaxed text-muted-foreground">{description}</p> : null}
       </div>
       {action ? <div className="mt-1">{action}</div> : null}

@@ -109,7 +109,7 @@ export function ClientsView({
       ) : null}
 
       {clients.length === 0 ? (
-        <div className="rounded-2xl border bg-card shadow-sm">
+        <div className="rounded-2xl border bg-card">
           {status === "archived" ? (
             <EmptyState icon={ArchiveIcon} title={t("clients.emptyArchived")} description={t("clients.emptyArchivedHint")} />
           ) : (

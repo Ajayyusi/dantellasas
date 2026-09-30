@@ -164,9 +164,9 @@ export function CalendarView({
     const count = visible.filter((a) => a.dateKey === dayKey && a.items.some((i) => i.staffId === s.id)).length;
     return (
       <div className="flex items-center gap-2.5">
-        <PersonAvatar name={s.displayName} src={s.photoUrl} color={s.color} className="size-9 text-[13px]" />
+        <PersonAvatar name={s.displayName} src={s.photoUrl} color={s.color} className="size-8 text-[12px]" />
         <div className="min-w-0">
-          <div className="truncate text-[15px] font-semibold leading-tight">{s.displayName}</div>
+          <div className="truncate text-[14px] font-semibold leading-tight">{s.displayName}</div>
           <div className="mt-0.5 text-xs font-medium text-muted-foreground">{t("appointments.appointmentsCount", { count })}</div>
         </div>
       </div>
@@ -175,8 +175,8 @@ export function CalendarView({
 
   const dayHeader = (key: string) => (
     <div className={cn("text-center", key === today && "text-primary")}>
-      <div className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">{org.dateKey(key, "weekday")}</div>
-      <div className="font-display text-[26px] font-semibold leading-tight tabular">{org.dateKey(key, "dayNumber")}</div>
+      <div className="text-xs font-medium text-muted-foreground">{org.dateKey(key, "weekday")}</div>
+      <div className="font-display text-[20px] font-bold leading-tight tabular">{org.dateKey(key, "dayNumber")}</div>
     </div>
   );
 

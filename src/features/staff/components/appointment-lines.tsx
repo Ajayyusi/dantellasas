@@ -47,7 +47,7 @@ export function AppointmentLines({
     );
   }
   return (
-    <ul className="divide-y overflow-hidden rounded-xl border bg-card shadow-sm">
+    <ul className="divide-y overflow-hidden rounded-xl border bg-card">
       {lines.map((l) => {
         const muted = l.status === "cancelled" || l.status === "no_show";
         return (

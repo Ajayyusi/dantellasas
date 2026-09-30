@@ -41,7 +41,7 @@ export function PageSkeleton({ variant = "table" }: { variant?: "table" | "cards
           <Skeleton className="h-96 rounded-2xl" />
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
+        <div className="overflow-hidden rounded-2xl border bg-card">
           <div className="flex gap-3 border-b p-5">
             <Skeleton className="h-11 w-72" />
             <Skeleton className="h-11 w-36" />

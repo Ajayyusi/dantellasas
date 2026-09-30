@@ -53,7 +53,7 @@ export function ActivityTab({ activity }: { activity: ClientActivityView[] }) {
 
   if (activity.length === 0) {
     return (
-      <div className="rounded-2xl border bg-card shadow-sm">
+      <div className="rounded-2xl border bg-card">
         <EmptyState icon={HistoryIcon} title={t("clients.activity.empty")} />
       </div>
     );

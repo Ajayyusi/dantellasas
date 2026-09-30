@@ -98,6 +98,5 @@ export function activeNav(sections: NavSection[], pathname: string): { section: 
 export const MOBILE_TABS: { href: string; short: TKey }[] = [
   { href: "/dashboard", short: "nav.short.dashboard" },
   { href: "/appointments", short: "nav.short.appointments" },
-  { href: "/pos", short: "nav.short.checkout" },
   { href: "/clients", short: "nav.short.clients" },
 ];

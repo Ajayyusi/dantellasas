@@ -205,8 +205,8 @@ export function OverviewTab({
                         aria-hidden
                         className={
                           i === 0
-                            ? "grid size-8 shrink-0 place-items-center rounded-full bg-gold-soft text-gold-foreground ring-1 ring-gold/50"
-                            : "grid size-8 shrink-0 place-items-center rounded-full bg-primary-soft text-primary"
+                            ? "grid size-8 shrink-0 place-items-center rounded-lg bg-primary text-primary-foreground"
+                            : "grid size-8 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary"
                         }
                       >
                         <HeartIcon className="size-4" />

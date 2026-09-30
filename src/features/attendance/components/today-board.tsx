@@ -33,13 +33,13 @@ function BoardCard({ entry, now, canClock }: { entry: BoardEntry; now: number; c
   return (
     <li
       className={cn(
-        "hover-lift relative flex flex-col gap-3 overflow-hidden rounded-2xl border bg-card p-5 shadow-xs",
-        state === "in" && "border-success/40 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--success)_7%,var(--card)),var(--card)_45%)]",
-        state === "on_break" && "border-warning/50 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--warning)_9%,var(--card)),var(--card)_45%)]",
+        "relative flex flex-col gap-3 overflow-hidden rounded-2xl border bg-card p-5",
+        state === "in" && "border-[color-mix(in_oklch,var(--success)_35%,var(--border))]",
+        state === "on_break" && "border-[color-mix(in_oklch,var(--warning)_45%,var(--border))]",
       )}
     >
       <div className="flex items-start gap-3">
-        <PersonAvatar name={staff.displayName} src={staff.photoUrl} color={staff.color} className="size-11 text-[15px]" />
+        <PersonAvatar name={staff.displayName} src={staff.photoUrl} color={staff.color} className="size-10 text-[13px]" />
         <div className="min-w-0 flex-1">
           <div className="truncate text-[15px] font-semibold">{staff.displayName}</div>
           <div className="truncate text-[14px] text-muted-foreground">
@@ -92,7 +92,7 @@ export function TodayBoard({ scheduled, others, now }: { scheduled: BoardEntry[]
         ))}
       </ul>
       {scheduled.length === 0 ? (
-        <div className="rounded-2xl border bg-card shadow-sm">
+        <div className="rounded-2xl border bg-card">
           <EmptyState compact icon={UsersIcon} title={t("attendance.board.empty")} description={t("attendance.board.emptyHint")} />
         </div>
       ) : (

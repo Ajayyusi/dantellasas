@@ -161,7 +161,7 @@ export function TimeGrid({
   }
 
   return (
-    <div className="relative overflow-auto rounded-2xl border bg-card shadow-sm scrollbar-thin" style={{ maxHeight: "calc(100dvh - 13rem)" }}>
+    <div className="relative overflow-auto rounded-2xl border bg-card scrollbar-thin" style={{ maxHeight: "calc(100dvh - 13rem)" }}>
       <div className="min-w-fit">
         {/* Header */}
         <div className="sticky top-0 z-20 flex border-b bg-card/95 backdrop-blur-sm">
@@ -169,7 +169,7 @@ export function TimeGrid({
           {columns.map((c) => (
             <div
               key={c.key}
-              className={cn("relative flex-1 border-e px-3 py-2.5 last:border-e-0", c.isToday && "bg-primary-soft/70 after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:rounded-full after:bg-gradient-to-r after:from-primary after:to-gold")}
+              className={cn("relative flex-1 border-e px-3 py-2.5 last:border-e-0", c.isToday && "bg-primary-soft/60 after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:rounded-full after:bg-primary")}
               style={{ minWidth: columnMinWidth }}
             >
               {c.header}
@@ -184,7 +184,7 @@ export function TimeGrid({
             {labelHours.map((m) => (
               <div
                 key={m}
-                className="absolute inset-x-0 -translate-y-2 whitespace-nowrap pe-2.5 text-end text-[12px] font-semibold tabular text-muted-foreground"
+                className="absolute inset-x-0 -translate-y-2 whitespace-nowrap pe-2.5 text-end text-[12px] font-medium tabular text-muted-foreground"
                 style={{ top: y(m) }}
               >
                 {formatHour(m, locale)}
@@ -244,8 +244,8 @@ export function TimeGrid({
 
                 {c.isToday && nowMinute !== null && nowMinute >= dayStart && nowMinute <= dayEnd ? (
                   <div className="pointer-events-none absolute inset-x-0 z-[5] flex items-center" style={{ top: y(nowMinute) }}>
-                    <span className="-ms-1.5 size-3 shrink-0 rounded-full bg-primary ring-4 ring-primary/15" />
-                    <span className="h-[2px] flex-1 rounded-full bg-gradient-to-r from-primary via-primary/80 to-gold rtl:bg-gradient-to-l" />
+                    <span className="-ms-1.5 size-2.5 shrink-0 rounded-full bg-primary ring-4 ring-primary/15" />
+                    <span className="h-[1.5px] flex-1 bg-primary" />
                   </div>
                 ) : null}
 
@@ -320,8 +320,8 @@ function EventBlock({
         }
       }}
       className={cn(
-        "group absolute z-10 cursor-pointer touch-none select-none overflow-hidden rounded-lg border border-s-[3px] px-2.5 py-1.5 text-start shadow-xs outline-none",
-        "transition-[box-shadow,transform,filter] duration-200 ease-out hover:z-20 hover:-translate-y-px hover:shadow-md hover:brightness-[1.02] focus-visible:ring-2 focus-visible:ring-ring",
+        "group absolute z-10 cursor-pointer touch-none select-none overflow-hidden rounded-lg border border-s-[3px] px-2.5 py-1.5 text-start outline-none",
+        "transition-[box-shadow,transform] duration-150 ease-out hover:z-20 hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring",
         a.status === "completed" && "opacity-80",
         (a.status === "cancelled" || a.status === "no_show") && "opacity-70",
         dragging && "opacity-35",
@@ -331,14 +331,14 @@ function EventBlock({
         height,
         insetInlineStart: `calc(${offsetPct}% + 3px)`,
         width: `calc(${widthPct}% - 6px)`,
-        borderColor: `color-mix(in oklch, ${color} 30%, var(--border))`,
+        borderColor: `color-mix(in oklch, ${color} 20%, var(--border))`,
         borderInlineStartColor: color,
-        background: `linear-gradient(180deg, color-mix(in oklch, ${color} 13%, var(--card)), color-mix(in oklch, ${color} 7%, var(--card)))`,
+        backgroundColor: `color-mix(in oklch, ${color} 9%, var(--card))`,
       }}
     >
       <div className="flex items-center gap-1.5">
         {ev.accent ? <span className="size-2 shrink-0 rounded-full ring-2 ring-card" style={{ backgroundColor: ev.accent }} /> : null}
-        <span className="truncate text-[13.5px] font-semibold leading-tight text-foreground">{a.clientName}</span>
+        <span className="truncate text-[13px] font-semibold leading-tight text-foreground">{a.clientName}</span>
         {a.status === "completed" ? (
           <CheckIcon className="ms-auto size-3.5 shrink-0 text-success" strokeWidth={2.5} />
         ) : (
@@ -347,7 +347,7 @@ function EventBlock({
       </div>
       {!compact ? (
         <>
-          <div className="mt-0.5 truncate text-[12.5px] font-medium leading-snug text-foreground/75">{ev.line.serviceName}</div>
+          <div className="mt-0.5 truncate text-[12.5px] leading-snug text-foreground/75">{ev.line.serviceName}</div>
           <div className="truncate text-[12px] tabular text-muted-foreground">
             {formatClock(ev.start, locale)} – {formatClock(ev.end, locale)}
           </div>

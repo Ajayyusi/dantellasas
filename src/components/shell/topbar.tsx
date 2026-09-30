@@ -58,30 +58,29 @@ export function Topbar({ leading, onOpenCommand }: { leading?: React.ReactNode; 
   const canClient = org.can("create_customers");
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-background/80 px-3 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 sm:px-6 no-print">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-2.5 border-b bg-card/90 px-3 backdrop-blur-md supports-[backdrop-filter]:bg-card/80 sm:px-6 no-print">
       {leading}
 
       {current ? (
-        <div className="hidden min-w-0 shrink-0 flex-col 2xl:flex">
-          <span className="text-[12px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{t(current.section.label)}</span>
-          <span className="truncate text-[15px] font-semibold leading-tight">
-            {t(current.item.label)}
-            <span className="ms-2 font-normal text-muted-foreground">· {org.dateKey(todayKey(org.timezone), "weekdayDate")}</span>
-          </span>
+        <div className="hidden min-w-0 shrink-0 items-center gap-2 text-[14px] 2xl:flex">
+          <span className="text-muted-foreground">{t(current.section.label)}</span>
+          <span aria-hidden className="text-muted-foreground/60">/</span>
+          <span className="truncate font-semibold">{t(current.item.label)}</span>
+          <span className="ms-1 text-muted-foreground">· {org.dateKey(todayKey(org.timezone), "weekdayDate")}</span>
         </div>
       ) : null}
 
       <button
         type="button"
         onClick={onOpenCommand}
-        className="flex h-11 min-w-0 flex-1 items-center gap-2.5 rounded-xl border border-input bg-card px-3.5 text-sm text-muted-foreground shadow-xs outline-none transition-[border-color,box-shadow] hover:border-[color-mix(in_oklch,var(--primary)_25%,var(--input))] focus-visible:outline-2 focus-visible:outline-ring sm:max-w-md 2xl:ms-6"
+        className="flex h-10 min-w-0 flex-1 items-center gap-2.5 rounded-lg bg-muted px-3 text-[14px] text-muted-foreground outline-none transition-colors hover:bg-[color-mix(in_oklch,var(--foreground)_7%,var(--muted))] focus-visible:outline-2 focus-visible:outline-ring sm:max-w-md 2xl:ms-6"
       >
-        <SearchIcon className="size-[18px] shrink-0" />
+        <SearchIcon className="size-4 shrink-0" />
         <span className="truncate">
           <span className="hidden sm:inline">{t("shell.search")}</span>
           <span className="sm:hidden">{t("shell.searchShort")}</span>
         </span>
-        <kbd className="ms-auto hidden shrink-0 whitespace-nowrap rounded-md border bg-muted px-1.5 py-0.5 font-sans text-[12px] font-semibold text-muted-foreground lg:inline">
+        <kbd className="ms-auto hidden shrink-0 whitespace-nowrap rounded-md border bg-card px-1.5 py-0.5 font-sans text-[12px] font-semibold text-muted-foreground lg:inline">
           {isMac ? "⌘K" : "Ctrl K"}
         </kbd>
       </button>
@@ -94,10 +93,10 @@ export function Topbar({ leading, onOpenCommand }: { leading?: React.ReactNode; 
                 variant="outline"
                 size="sm"
                 disabled={pending}
-                className="hidden max-w-52 rounded-full md:inline-flex"
+                className="hidden max-w-52 md:inline-flex"
                 aria-label={t("shell.switchBranch")}
               >
-                <MapPinIcon className="text-primary" />
+                <MapPinIcon className="text-muted-foreground" />
                 <span className="truncate">{branchLabel}</span>
                 {org.branches.length > 1 ? <ChevronDownIcon className="size-3.5 text-muted-foreground" /> : null}
               </Button>
@@ -121,6 +120,15 @@ export function Topbar({ leading, onOpenCommand }: { leading?: React.ReactNode; 
           </DropdownMenu>
         ) : null}
 
+        {canSale ? (
+          <Button asChild variant="outline" size="sm" className="hidden xl:inline-flex">
+            <Link href="/pos">
+              <ShoppingBagIcon />
+              {t("nav.checkout")}
+            </Link>
+          </Button>
+        ) : null}
+
         {canAppointment ? (
           <Button asChild size="sm" className="hidden sm:inline-flex">
             <Link href="/appointments?new=1">
@@ -133,7 +141,7 @@ export function Topbar({ leading, onOpenCommand }: { leading?: React.ReactNode; 
         {canAppointment || canSale || canClient ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="soft" size="icon-sm" aria-label={t("shell.quickActions")}>
+              <Button variant="outline" size="icon-sm" className="hidden lg:inline-flex" aria-label={t("shell.quickActions")}>
                 <PlusIcon />
               </Button>
             </DropdownMenuTrigger>
@@ -176,7 +184,7 @@ export function Topbar({ leading, onOpenCommand }: { leading?: React.ReactNode; 
             className="ms-1 rounded-full outline-none transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             aria-label={t("shell.account")}
           >
-            <PersonAvatar name={org.user.name || org.user.email} className="size-9" />
+            <PersonAvatar name={org.user.name || org.user.email} className="size-9 text-[12px]" />
           </button>
         </AccountMenu>
       </div>

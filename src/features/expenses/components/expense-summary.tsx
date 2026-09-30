@@ -26,7 +26,7 @@ export function ExpenseSummary({
   count: number;
   byCategory: CategoryTotal[];
 }) {
-  const { t, locale, dir } = useI18n();
+  const { t, locale } = useI18n();
   const org = useOrg();
   const top = byCategory.slice(0, 3);
   return (
@@ -40,8 +40,8 @@ export function ExpenseSummary({
         value={formatNumber(count, locale)}
         hint={count > 0 ? t("expenses.average", { amount: org.money(Math.round(totalMinor / count)) }) : undefined}
       />
-      <Card className="px-5 py-5 sm:px-6">
-        <p className="text-[14px] font-semibold text-muted-foreground">{t("expenses.topCategories")}</p>
+      <Card className="p-4 sm:px-5 sm:py-[18px]">
+        <p className="text-[13px] font-medium text-muted-foreground sm:text-[14px]">{t("expenses.topCategories")}</p>
         {top.length === 0 ? (
           <p className="mt-2 text-[15px] text-muted-foreground">—</p>
         ) : (
@@ -54,11 +54,8 @@ export function ExpenseSummary({
                 </div>
                 <div className="h-1.5 overflow-hidden rounded-full bg-muted">
                   <div
-                    className="h-full rounded-full"
-                    style={{
-                      width: `${totalMinor > 0 ? Math.max(3, Math.round((c.amountMinor / totalMinor) * 100)) : 0}%`,
-                      background: `linear-gradient(${dir === "rtl" ? "270deg" : "90deg"}, var(--primary), color-mix(in oklch, var(--primary) 55%, var(--gold)))`,
-                    }}
+                    className="h-full rounded-full bg-primary"
+                    style={{ width: `${totalMinor > 0 ? Math.max(3, Math.round((c.amountMinor / totalMinor) * 100)) : 0}%` }}
                   />
                 </div>
               </li>

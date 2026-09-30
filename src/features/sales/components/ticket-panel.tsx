@@ -88,7 +88,7 @@ export function TicketPanel({
           : "";
 
   return (
-    <div className="flex min-h-0 flex-col overflow-hidden rounded-2xl border bg-card shadow-sm">
+    <div className="flex min-h-0 flex-col overflow-hidden rounded-2xl border bg-card">
       <div className="border-b p-4">
         <ClientPicker value={client} onChange={onClientChange} />
         {wallet?.membership ? (
@@ -103,11 +103,10 @@ export function TicketPanel({
       <div className="min-h-0 flex-1 overflow-y-auto scrollbar-thin">
         {lines.length === 0 ? (
           <div className="flex flex-col items-center gap-2 px-8 py-14 text-center">
-            <span className="relative mb-2 grid size-16 place-items-center rounded-full bg-brand-wash text-primary">
-              <span aria-hidden className="absolute inset-0 rounded-full border border-dashed border-gold/60" />
-              <ShoppingBagIcon className="size-7" strokeWidth={1.6} />
+            <span className="mb-2 grid size-14 place-items-center rounded-2xl bg-muted text-muted-foreground">
+              <ShoppingBagIcon className="size-6" strokeWidth={1.7} />
             </span>
-            <p className="font-display text-[22px] font-semibold leading-tight">{t("pos.emptyTicket")}</p>
+            <p className="font-display text-[17px] font-bold leading-tight">{t("pos.emptyTicket")}</p>
             <p className="max-w-64 text-[14px] text-muted-foreground">{t("pos.emptyTicketHint")}</p>
           </div>
         ) : (
@@ -209,7 +208,7 @@ export function TicketPanel({
         )}
       </div>
 
-      <div className="grid gap-3.5 border-t bg-[linear-gradient(180deg,color-mix(in_oklch,var(--champagne)_45%,var(--card)),var(--card))] p-4">
+      <div className="grid gap-3.5 border-t bg-muted/35 p-4">
         <div className="flex flex-wrap gap-2">
           <Popover>
             <PopoverTrigger asChild>
@@ -312,10 +311,10 @@ export function TicketPanel({
           ) : null}
           <div className="mt-1.5 flex items-baseline justify-between border-t border-dashed pt-3">
             <dt className="text-base font-semibold">{t("pos.total")}</dt>
-            <dd className="font-display text-[32px] font-semibold leading-none tabular">{org.money(pricing.dueMinor)}</dd>
+            <dd className="font-display text-[26px] font-bold leading-none tabular">{org.money(pricing.dueMinor)}</dd>
           </div>
         </dl>
-        <Button size="lg" className={cn("h-13 w-full rounded-2xl text-[17px]")} disabled={lines.length === 0} onClick={onCharge}>
+        <Button size="lg" className={cn("h-12 w-full rounded-xl text-[16px]")} disabled={lines.length === 0} onClick={onCharge}>
           {t("pos.charge", { amount: org.money(pricing.dueMinor) })}
         </Button>
       </div>

@@ -112,14 +112,14 @@ export function ProfileHeader({
           <PersonAvatar
             name={client.fullName}
             color={avatarColor(client.id)}
-            className={cn(profileAvatarClass, membership && "ring-[color-mix(in_oklch,var(--gold)_65%,var(--card))]")}
+            className={cn(profileAvatarClass, membership && "ring-2 ring-[color-mix(in_oklch,var(--primary)_45%,var(--card))] ring-offset-2 ring-offset-card")}
           />
         }
         title={client.fullName}
         badges={
           <>
             {membership ? (
-              <Badge variant="gold" className="h-7 gap-1.5 px-3 text-[13px]">
+              <Badge variant="primary" className="h-7 gap-1.5 px-2.5 text-[13px]">
                 <CrownIcon className="size-3.5" />
                 {t("clients.profile.member", { plan: membership.planName })}
               </Badge>

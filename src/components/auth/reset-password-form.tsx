@@ -56,13 +56,13 @@ export function ResetPasswordForm({ code }: { code: string | null }) {
   return (
     <div className="grid gap-6">
       <div className="grid gap-1.5">
-        <h1 className="font-display text-[34px] font-semibold leading-tight">{t("auth.resetTitle")}</h1>
-        <p className="text-[16px] text-muted-foreground">{email || t("auth.resetSubtitle")}</p>
+        <h1 className="font-display text-[28px] font-bold leading-tight tracking-[-0.03em]">{t("auth.resetTitle")}</h1>
+        <p className="text-[15px] text-muted-foreground">{email || t("auth.resetSubtitle")}</p>
       </div>
       {phase === "checking" ? (
         <div className="grid gap-3">
-          <Skeleton className="h-12" />
-          <Skeleton className="h-12" />
+          <Skeleton className="h-11" />
+          <Skeleton className="h-11" />
         </div>
       ) : phase === "invalid" ? (
         <div className="grid gap-4">
@@ -86,10 +86,10 @@ export function ResetPasswordForm({ code }: { code: string | null }) {
       ) : (
         <form onSubmit={onSubmit} className="grid gap-4" noValidate>
           <Field label={t("auth.newPassword")} htmlFor="password">
-            <Input id="password" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} className="h-12" />
+            <Input id="password" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} className="h-11" />
           </Field>
           <Field label={t("auth.confirmPassword")} htmlFor="confirm">
-            <Input id="confirm" type="password" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} className="h-12" />
+            <Input id="confirm" type="password" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} className="h-11" />
           </Field>
           {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
           <Button type="submit" size="lg" disabled={pending}>

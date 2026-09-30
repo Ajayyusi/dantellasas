@@ -70,9 +70,9 @@ function Detail({ card }: { card: GiftCardDTO }) {
         </SheetDescription>
       </SheetHeader>
       <SheetBody className="grid content-start gap-5">
-        <div className="rounded-xl bg-gradient-to-br from-primary/90 to-primary p-5 text-primary-foreground shadow-sm">
+        <div className="rounded-2xl bg-primary p-5 text-primary-foreground">
           <div className="text-[14px] opacity-80">{t("catalog.giftCards.balance")}</div>
-          <div className="mt-1 text-3xl font-semibold tabular">{org.money(card.status === "void" ? 0 : card.balanceMinor)}</div>
+          <div className="mt-1 font-display text-[28px] font-bold tabular">{org.money(card.status === "void" ? 0 : card.balanceMinor)}</div>
           <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-primary-foreground/25" aria-hidden>
             <div className="h-full rounded-full bg-primary-foreground" style={{ width: `${100 - usedPct}%` }} />
           </div>
