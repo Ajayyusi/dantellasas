@@ -31,6 +31,10 @@ describe("currentColor", () => {
     expect(STAFF_COLORS).toContain("#7a323b");
   });
 
+  it("moves teal-grey to light blue", () => {
+    expect(currentColor("#4f7b80")).toBe("#4a78b0");
+  });
+
   it("ignores case and leaves other colours alone", () => {
     expect(currentColor("#965660")).toBe("#a8406a");
     expect(currentColor("#4B6D8A")).toBe("#3f5f99");

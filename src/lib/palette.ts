@@ -16,7 +16,7 @@ const PREVIOUS_COLORS: Record<string, string> = {
   "#4b6d8a": "#3f5f99",
   "#7d5279": "#6a4c96",
   "#715f53": "#5f595c",
-  "#4f7b80": "#2e6b73",
+  "#4f7b80": "#4a78b0",
   // Original palette
   "#8b3a62": "#a8406a",
   "#b4536e": "#b8527d",
