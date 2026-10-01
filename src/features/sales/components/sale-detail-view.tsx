@@ -210,7 +210,8 @@ export function SaleDetailView({ tx }: { tx: TransactionDTO }) {
               <TableBody>
                 {tx.items.map((i) => (
                   <TableRow key={i.id} className="hover:bg-transparent">
-                    <TableCell className="sm:ps-8">
+                    {/* Names wrap so Qty and Amount stay on screen on phones. */}
+                    <TableCell className="whitespace-normal break-words sm:ps-8">
                       <div className="text-[15px] font-semibold">{i.name}</div>
                       <div className="text-[13px] text-muted-foreground">
                         {[
