@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckIcon, ChevronsUpDownIcon, PanelLeftCloseIcon, PanelLeftOpenIcon } from "lucide-react";
+import { CheckIcon, ChevronsUpDownIcon, PanelLeftCloseIcon, PanelLeftOpenIcon, PlusIcon } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -110,13 +110,19 @@ export function Sidebar({
                 {o.id === org.orgId ? <CheckIcon className="!text-primary" /> : null}
               </DropdownMenuItem>
             ))}
+            {org.user.roleKey === "owner" || org.can("manage_settings") ? <DropdownMenuSeparator /> : null}
+            {org.user.roleKey === "owner" ? (
+              <DropdownMenuItem asChild>
+                <Link href="/onboarding?another=1">
+                  <PlusIcon />
+                  {t("shell.addBusiness")}
+                </Link>
+              </DropdownMenuItem>
+            ) : null}
             {org.can("manage_settings") ? (
-              <>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/settings">{t("nav.settings")}</Link>
-                </DropdownMenuItem>
-              </>
+              <DropdownMenuItem asChild>
+                <Link href="/settings">{t("nav.settings")}</Link>
+              </DropdownMenuItem>
             ) : null}
           </DropdownMenuContent>
         </DropdownMenu>

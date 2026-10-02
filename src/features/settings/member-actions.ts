@@ -1,13 +1,11 @@
 "use server";
 
-import { randomBytes } from "node:crypto";
-
 import { FieldValue } from "firebase-admin/firestore";
 
 import { action, fail } from "@/lib/actions";
 import { audit, diff } from "@/lib/audit";
+import { findOrCreateAuthUser } from "@/lib/auth/accounts";
 import { db, orgCol, userRef } from "@/lib/db";
-import { getAdminAuth } from "@/lib/firebase/admin";
 import type { AppContext } from "@/lib/tenancy/context";
 import { toMember } from "@/lib/tenancy/mappers";
 import type { MemberDTO } from "@/lib/types";
@@ -29,27 +27,6 @@ export interface SetupLinkResult {
   displayName: string;
   created: boolean;
   link: string;
-}
-
-async function findOrCreateAuthUser(email: string, displayName: string): Promise<{ uid: string; created: boolean }> {
-  const auth = getAdminAuth();
-  try {
-    const user = await auth.getUserByEmail(email);
-    return { uid: user.uid, created: false };
-  } catch (err) {
-    if ((err as { code?: string }).code !== "auth/user-not-found") {
-      console.error("[settings] auth lookup failed", err);
-      fail("settings.errors.authUnavailable");
-    }
-  }
-  const user = await auth.createUser({
-    email,
-    displayName,
-    // Never shown to anyone: the user sets their own password via the setup link.
-    password: randomBytes(24).toString("base64url"),
-    emailVerified: false,
-  });
-  return { uid: user.uid, created: true };
 }
 
 async function loadMember(ctx: AppContext, uid: string): Promise<MemberDTO> {

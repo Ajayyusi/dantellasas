@@ -14,7 +14,16 @@ import { signOutEverywhere } from "@/lib/auth/client";
 import { useI18n } from "@/lib/i18n/client";
 import type { Locale } from "@/lib/i18n/config";
 
-export function OnboardingForm({ defaultLocale, allowDemo }: { defaultLocale: Locale; allowDemo: boolean }) {
+export function OnboardingForm({
+  defaultLocale,
+  allowDemo,
+  adding = false,
+}: {
+  defaultLocale: Locale;
+  allowDemo: boolean;
+  /** An owner adding a second business (from the business switcher). */
+  adding?: boolean;
+}) {
   const { t, te } = useI18n();
   const router = useRouter();
   const [businessName, setBusinessName] = useState("");
@@ -50,8 +59,8 @@ export function OnboardingForm({ defaultLocale, allowDemo }: { defaultLocale: Lo
   return (
     <form onSubmit={onSubmit} className="grid gap-6" noValidate>
       <div className="grid gap-1.5">
-        <h1 className="font-display text-[28px] font-bold leading-tight tracking-[-0.03em]">{t("onboarding.title")}</h1>
-        <p className="text-[15px] text-muted-foreground">{t("onboarding.subtitle")}</p>
+        <h1 className="font-display text-[28px] font-bold leading-tight tracking-[-0.03em]">{t(adding ? "onboarding.addTitle" : "onboarding.title")}</h1>
+        <p className="text-[15px] text-muted-foreground">{t(adding ? "onboarding.addSubtitle" : "onboarding.subtitle")}</p>
       </div>
       <div className="grid gap-4">
         <Field label={t("onboarding.businessName")} htmlFor="businessName" error={errors.businessName ? te(errors.businessName) : null} required>
@@ -101,16 +110,22 @@ export function OnboardingForm({ defaultLocale, allowDemo }: { defaultLocale: Lo
         </p>
       ) : null}
       <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={async () => {
-            await signOutEverywhere();
-            router.replace("/login");
-          }}
-        >
-          {t("onboarding.useAnother")}
-        </Button>
+        {adding ? (
+          <Button type="button" variant="ghost" onClick={() => router.push("/dashboard")}>
+            {t("onboarding.cancel")}
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={async () => {
+              await signOutEverywhere();
+              router.replace("/login");
+            }}
+          >
+            {t("onboarding.useAnother")}
+          </Button>
+        )}
         <Button type="submit" size="lg" disabled={pending || !businessName || !branchName}>
           {pending ? <Loader2Icon className="animate-spin" /> : null}
           {pending ? t("onboarding.creating") : t("onboarding.create")}

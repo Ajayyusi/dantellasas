@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOutIcon, MonitorIcon, MoonIcon, SunIcon, UserIcon } from "lucide-react";
+import { LogOutIcon, MonitorIcon, MoonIcon, ShieldCheckIcon, SunIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -69,6 +69,14 @@ export function AccountMenu({
             {t("shell.profile")}
           </Link>
         </DropdownMenuItem>
+        {org.user.platformAdmin ? (
+          <DropdownMenuItem asChild>
+            <Link href="/admin">
+              <ShieldCheckIcon />
+              {t("shell.platformAdmin")}
+            </Link>
+          </DropdownMenuItem>
+        ) : null}
         <DropdownMenuSeparator />
         <DropdownMenuLabel>{t("shell.theme")}</DropdownMenuLabel>
         <DropdownMenuRadioGroup value={theme} onValueChange={(v) => changeTheme(v as Theme)}>

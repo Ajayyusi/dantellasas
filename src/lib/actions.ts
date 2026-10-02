@@ -37,7 +37,7 @@ export function fail(
   throw new ActionError(code, fieldErrors, vars);
 }
 
-function fieldErrorsOf(error: z.ZodError): Record<string, string> {
+export function fieldErrorsOf(error: z.ZodError): Record<string, string> {
   const out: Record<string, string> = {};
   for (const issue of error.issues) {
     const key = issue.path.join(".") || "_";

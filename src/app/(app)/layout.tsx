@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { AppShell } from "@/components/shell/app-shell";
 import { SIDEBAR_COOKIE } from "@/lib/cookies";
 import { userRef } from "@/lib/db";
+import { listedAsPlatformAdmin } from "@/lib/platform/guard";
 import { DEFAULT_SETTINGS } from "@/lib/settings";
 import { getAppContext } from "@/lib/tenancy/context";
 
@@ -40,6 +41,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           email: ctx.session.email,
           roleName: ctx.member.roleName,
           roleKey: ctx.member.roleKey,
+          platformAdmin: listedAsPlatformAdmin(ctx.session.email),
         },
       }}
     >

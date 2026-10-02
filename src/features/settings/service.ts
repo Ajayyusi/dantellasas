@@ -1,9 +1,6 @@
 import "server-only";
 
-import { headers } from "next/headers";
-
 import { fail } from "@/lib/actions";
-import { getAdminAuth } from "@/lib/firebase/admin";
 import { ALL_PERMISSIONS, ORG_WIDE_ROLES, type RoleKey } from "@/lib/permissions";
 import { orgCol } from "@/lib/db";
 import type { AppContext } from "@/lib/tenancy/context";
@@ -58,30 +55,7 @@ export async function activeOwnerCount(ctx: AppContext): Promise<number> {
   return snap.docs.filter((d) => (d.get("status") ?? "active") === "active").length;
 }
 
-async function requestOrigin(): Promise<string> {
-  const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-  const local = /^(localhost|127\.0\.0\.1)(:\d+)?$/.test(host);
-  const proto = h.get("x-forwarded-proto")?.split(",")[0]?.trim() ?? (local ? "http" : "https");
-  return `${proto}://${host}`;
-}
-
-/**
- * A one-time link that opens the app's own reset-password page (so it works
- * the same with the Auth emulator and in production). The system sends no
- * email; the admin shares the link.
- */
-export async function passwordSetupLink(email: string): Promise<string> {
-  const raw = await getAdminAuth().generatePasswordResetLink(email);
-  let code: string | null = null;
-  try {
-    code = new URL(raw).searchParams.get("oobCode");
-  } catch {
-    code = null;
-  }
-  if (!code) return raw;
-  return `${await requestOrigin()}/reset-password?oobCode=${encodeURIComponent(code)}`;
-}
+export { passwordSetupLink } from "@/lib/auth/accounts";
 
 /** Permissions in catalogue order, de-duplicated. */
 export function normalizePermissions(list: readonly string[]): string[] {

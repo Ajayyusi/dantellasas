@@ -10,10 +10,13 @@ import { resolveContext } from "@/lib/tenancy/context";
 
 export const metadata: Metadata = { title: "Set up your business" };
 
-export default async function OnboardingPage() {
+export default async function OnboardingPage({ searchParams }: PageProps<"/onboarding">) {
+  const { another } = await searchParams;
   const res = await resolveContext();
-  if (res.ok) redirect("/");
-  if (res.reason === "unauthenticated") redirect("/login");
+  // ?another=1: an existing owner adds a second business from the business switcher.
+  const adding = res.ok && another === "1";
+  if (res.ok && !adding) redirect("/");
+  if (!res.ok && res.reason === "unauthenticated") redirect("/login");
   const { t, locale } = await getI18n();
   return (
     <div className="flex min-h-dvh flex-col bg-background">
@@ -23,7 +26,7 @@ export default async function OnboardingPage() {
       </header>
       <main className="flex flex-1 items-start justify-center px-4 pb-16 pt-4 sm:pt-10">
         <div className="w-full max-w-xl animate-fade-up rounded-2xl border bg-card p-6 shadow-sm sm:p-9">
-          <OnboardingForm defaultLocale={locale} allowDemo={getServerEnv().ALLOW_DEMO_DATA} />
+          <OnboardingForm defaultLocale={locale} allowDemo={getServerEnv().ALLOW_DEMO_DATA} adding={adding} />
         </div>
       </main>
     </div>

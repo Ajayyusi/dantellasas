@@ -21,7 +21,7 @@ export interface OrgClientContext {
   branchId: string | null;
   permissions: string[];
   staffId: string | null;
-  user: { uid: string; name: string; email: string; roleName: string; roleKey: string };
+  user: { uid: string; name: string; email: string; roleName: string; roleKey: string; platformAdmin: boolean };
 }
 
 interface OrgValue extends OrgClientContext {

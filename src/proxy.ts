@@ -10,6 +10,12 @@ const SESSION_COOKIE = "__session";
 export function proxy(req: NextRequest) {
   if (!req.cookies.has(SESSION_COOKIE)) {
     const url = req.nextUrl.clone();
+    // The platform admin has its own sign-in (Google), which always returns to /admin.
+    if (req.nextUrl.pathname === "/admin" || req.nextUrl.pathname.startsWith("/admin/")) {
+      url.pathname = "/admin/login";
+      url.search = "";
+      return NextResponse.redirect(url);
+    }
     const next = req.nextUrl.pathname + req.nextUrl.search;
     url.pathname = "/login";
     url.search = next && next !== "/" ? `?next=${encodeURIComponent(next)}` : "";
@@ -21,6 +27,6 @@ export function proxy(req: NextRequest) {
 export const config = {
   // Everything except public auth pages, API routes and static assets.
   matcher: [
-    "/((?!login|signup|forgot-password|reset-password|auth/action|api|_next|favicon.ico|icon|apple-icon|robots.txt|.*\\.(?:png|jpg|jpeg|svg|webp|ico|css|js|woff2?)$).*)",
+    "/((?!login|signup|forgot-password|reset-password|auth/action|admin/login|api|_next|favicon.ico|icon|apple-icon|robots.txt|.*\\.(?:png|jpg|jpeg|svg|webp|ico|css|js|woff2?)$).*)",
   ],
 };

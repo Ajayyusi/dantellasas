@@ -68,6 +68,8 @@ export interface ProvisionInput {
   branchName: string;
   phone?: string;
   defaultLocale: Locale;
+  /** Who created it, for the audit entry. Defaults to the owner (self sign-up). */
+  actor?: { uid: string; name: string };
 }
 
 /**
@@ -77,6 +79,8 @@ export interface ProvisionInput {
  */
 export async function provisionOrganization(input: ProvisionInput) {
   const firestore = db();
+  // Owners can run several businesses; keep the profile's original creation date.
+  const userExists = (await userRef(input.ownerUid).get()).exists;
   const org = orgRef(firestore.collection("organizations").doc().id);
   const orgId = org.id;
   const branch = orgCol(orgId, "branches").doc();
@@ -179,7 +183,7 @@ export async function provisionOrganization(input: ProvisionInput) {
       displayName: input.ownerName,
       locale: input.defaultLocale,
       lastOrgId: orgId,
-      createdAt: now,
+      ...(userExists ? {} : { createdAt: now }),
       updatedAt: now,
     },
     { merge: true },
@@ -190,8 +194,8 @@ export async function provisionOrganization(input: ProvisionInput) {
     entityId: orgId,
     summary: `${input.businessName} created`,
     branchId: null,
-    actorUid: input.ownerUid,
-    actorName: input.ownerName || input.ownerEmail,
+    actorUid: input.actor?.uid ?? input.ownerUid,
+    actorName: input.actor?.name ?? (input.ownerName || input.ownerEmail),
     at: now,
   });
 

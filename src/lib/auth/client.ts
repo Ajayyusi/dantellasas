@@ -3,8 +3,11 @@
 import {
   confirmPasswordReset,
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut as firebaseSignOut,
   updateProfile,
   verifyPasswordResetCode,
@@ -40,6 +43,36 @@ export async function signUpWithEmail(name: string, email: string, password: str
   if (name.trim()) await updateProfile(cred.user, { displayName: name.trim() });
   await establishSession(cred.user);
   return cred.user;
+}
+
+/** Google sign-in (used by the platform admin sign-in). */
+export async function signInWithGoogle() {
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: "select_account" });
+  const cred = await signInWithPopup(getClientAuth(), provider);
+  await establishSession(cred.user);
+  return cred.user;
+}
+
+/**
+ * Emails a confirmation link to the signed-in user. Returns false when this
+ * browser no longer holds the Firebase sign-in (the session cookie alone can't
+ * send it), so the caller can ask them to sign in again.
+ */
+export async function sendEmailConfirmation(continuePath: string): Promise<boolean> {
+  const auth = getClientAuth();
+  // The SDK restores the signed-in user asynchronously after a page load.
+  await auth.authStateReady();
+  const user = auth.currentUser;
+  if (!user) return false;
+  try {
+    await sendEmailVerification(user, { url: `${window.location.origin}${continuePath}` });
+  } catch (err) {
+    // An address that isn't an authorized domain can't be the continue URL; send a plain link instead.
+    if ((err as { code?: string })?.code !== "auth/unauthorized-continue-uri") throw err;
+    await sendEmailVerification(user);
+  }
+  return true;
 }
 
 export async function requestPasswordReset(email: string) {
@@ -84,6 +117,14 @@ export function authErrorKey(err: unknown): string {
     case "auth/expired-action-code":
     case "auth/invalid-action-code":
       return "auth.invalidLink";
+    case "auth/operation-not-allowed":
+      return "platform.login.errors.googleDisabled";
+    case "auth/unauthorized-domain":
+      return "platform.login.errors.unauthorizedDomain";
+    case "auth/popup-blocked":
+      return "platform.login.errors.popupBlocked";
+    case "auth/account-exists-with-different-credential":
+      return "platform.login.errors.otherAccount";
     default:
       return "errors.generic";
   }

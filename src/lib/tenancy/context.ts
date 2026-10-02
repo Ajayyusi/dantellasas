@@ -61,6 +61,7 @@ export const resolveContext = cache(async (): Promise<ContextResult> => {
   const cookieStore = await cookies();
   const orgIds = await candidateOrgIds(session.uid, cookieStore.get(ORG_COOKIE)?.value);
 
+  let suspended = false;
   for (const orgId of orgIds) {
     const [memberSnap, orgSnap] = await Promise.all([
       orgCol(orgId, "members").doc(session.uid).get(),
@@ -70,7 +71,10 @@ export const resolveContext = cache(async (): Promise<ContextResult> => {
     const member = toMember(memberSnap.id, memberSnap.data() ?? {});
     if (member.status !== "active") continue;
     const org = toOrganization(orgSnap.id, orgSnap.data() ?? {});
-    if (org.status !== "active") return { ok: false, reason: "suspended" };
+    if (org.status !== "active") {
+      suspended = true;
+      continue;
+    }
 
     const branchSnap = await orgCol(orgId, "branches").get();
     const allBranches = branchSnap.docs
@@ -107,7 +111,7 @@ export const resolveContext = cache(async (): Promise<ContextResult> => {
       },
     };
   }
-  return { ok: false, reason: "no_organization" };
+  return { ok: false, reason: suspended ? "suspended" : "no_organization" };
 });
 
 /** For pages/layouts: redirects when there is no usable context. */

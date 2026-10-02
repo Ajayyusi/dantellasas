@@ -69,6 +69,9 @@ export const auth = defineMessages({
       creating: "Setting things up…",
       signedInAs: "Signed in as {email}",
       useAnother: "Use a different account",
+      addTitle: "Add another business",
+      addSubtitle: "A separate business with its own clients, team, settings and reports. You'll be its owner.",
+      cancel: "Cancel",
     },
   },
   ar: {
@@ -139,6 +142,9 @@ export const auth = defineMessages({
       creating: "جارٍ الإعداد…",
       signedInAs: "مسجّل الدخول باسم {email}",
       useAnother: "استخدام حساب آخر",
+      addTitle: "إضافة نشاط تجاري آخر",
+      addSubtitle: "نشاط منفصل بعملائه وفريقه وإعداداته وتقاريره. ستكون مالكه.",
+      cancel: "إلغاء",
     },
   },
 });

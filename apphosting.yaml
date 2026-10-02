@@ -1,7 +1,8 @@
 # Firebase App Hosting configuration.
 # Firebase config (NEXT_PUBLIC_FIREBASE_*) is derived automatically from
 # FIREBASE_WEBAPP_CONFIG in next.config.ts; the Admin SDK uses the backend's
-# service account (Application Default Credentials). No secrets live here.
+# service account (Application Default Credentials). Secrets are only
+# referenced here; their values live in Secret Manager.
 runConfig:
   minInstances: 0
   maxInstances: 4
@@ -22,4 +23,9 @@ env:
   # Demo data loader in Settings → Data. Set to "false" to hide it.
   - variable: ALLOW_DEMO_DATA
     value: "true"
+    availability: [RUNTIME]
+  # Platform admins for /admin (comma-separated emails). A Secret Manager
+  # secret, so the addresses aren't published in this public repository.
+  - variable: PLATFORM_ADMIN_EMAILS
+    secret: platformAdminEmails
     availability: [RUNTIME]

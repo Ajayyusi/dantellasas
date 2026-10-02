@@ -22,7 +22,12 @@ Email/password is implemented, covering sign-up, login, forgot password,
 reset password (through the app's own `/auth/action` page), change password and
 logout everywhere. Sessions are httpOnly cookies verified on every request.
 
-Adding Google or phone sign-in only needs a client-side sign-in call.
+Google sign-in (`signInWithGoogle`) is used by the platform admin sign-in at
+`/admin/login`; it needs the Google provider enabled in Firebase →
+Authentication → Sign-in method. Offering it to salon users too only needs the
+button on `/login`.
+
+Adding phone sign-in only needs a client-side sign-in call.
 Everything after the ID token (session cookie, membership lookup) is
 method-agnostic. Phone sign-in additionally needs reCAPTCHA / App Check and
 planning for SMS costs.

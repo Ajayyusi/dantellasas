@@ -10,6 +10,8 @@ const serverSchema = z.object({
     .enum(["true", "false"])
     .default("true")
     .transform((v) => v === "true"),
+  /** Comma-separated emails of the people who run the platform (/admin). Empty = nobody. */
+  PLATFORM_ADMIN_EMAILS: z.string().default(""),
 });
 
 export type ServerEnv = z.infer<typeof serverSchema>;
