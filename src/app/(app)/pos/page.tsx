@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { PageContainer, PageHeader } from "@/components/common/page-header";
@@ -86,7 +87,10 @@ export default async function PosPage({ searchParams }: PageProps<"/pos">) {
   const clientId = str(params.client);
   if (appointmentId) {
     const appt = await getAppointment(ctx, appointmentId);
-    if (appt && appt.transactionId) redirect(`/sales/${appt.transactionId}`);
+    // Opening the checkout of a paid appointment shows its invoice instead — but not
+    // while the sale that just paid it re-renders this page, or the success panel
+    // (with the change to give) would be replaced before the cashier reads it.
+    if (appt && appt.transactionId && !(await headers()).has("next-action")) redirect(`/sales/${appt.transactionId}`);
     if (appt && appt.branchId === branchId && !["cancelled", "no_show"].includes(appt.status)) {
       const lines: PosLine[] = appt.items.map((item) => {
         const service = services.find((s) => s.id === item.serviceId);
